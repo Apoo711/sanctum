@@ -1,0 +1,38 @@
+<div class="bento-tile col-span-1 md:col-span-3 min-h-[60vh] flex flex-col items-center justify-center text-center p-8 relative overflow-hidden group">
+    
+    <!-- Background distortions -->
+    <div class="absolute inset-0 bg-sanctum-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000 mix-blend-overlay pointer-events-none"></div>
+
+    <div class="w-32 h-32 md:w-40 md:h-40 rounded-full border border-sanctum-accent/30 flex items-center justify-center mb-8 relative shadow-[0_0_40px_rgba(212,175,55,0.05)]">
+        <!-- Pulse rings -->
+        <div class="absolute inset-0 rounded-full border border-sanctum-accent/20 animate-ping" style="animation-duration: 3s;"></div>
+        <div class="absolute inset-2 rounded-full border border-sanctum-accent/40 animate-pulse" style="animation-duration: 2s;"></div>
+        <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-sanctum-bg to-sanctum-surface shadow-inner"></div>
+        
+        <span class="text-5xl md:text-6xl z-10 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)] filter sepia hue-rotate-[20deg]">🧭</span>
+        
+        <!-- Crosshair -->
+        <div class="absolute w-full h-[1px] bg-sanctum-accent/30 z-20"></div>
+        <div class="absolute h-full w-[1px] bg-sanctum-accent/30 z-20"></div>
+    </div>
+    
+    <div class="technical text-sanctum-accent/50 text-xs mb-4 tracking-[0.3em] uppercase">Error_Code: 404</div>
+    
+    <h1 class="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-br from-sanctum-text via-sanctum-text to-sanctum-accent mb-6 tracking-tight">
+        Void Encountered
+    </h1>
+    
+    <p class="text-sanctum-text/60 mb-10 max-w-lg text-lg sm:text-xl font-light leading-relaxed">
+        The requested archive coordinates point to empty space. The document you seek has either collapsed or yet to be written.
+    </p>
+    
+    <a href="/" class="group/btn relative px-8 py-4 overflow-hidden rounded-lg bg-sanctum-surface border border-sanctum-accent/30 shadow-[0_0_20px_rgba(212,175,55,0.05)] transition-all hover:shadow-[0_0_30px_rgba(212,175,55,0.15)] hover:border-sanctum-accent">
+        <div class="absolute inset-0 w-0 bg-sanctum-accent/10 transition-all duration-[250ms] ease-out group-hover/btn:w-full"></div>
+        <span class="relative text-sanctum-accent uppercase tracking-widest text-xs md:text-sm font-bold flex items-center gap-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 transition-transform group-hover/btn:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            Initiate Return Sequence
+        </span>
+    </a>
+</div>

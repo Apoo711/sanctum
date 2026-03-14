@@ -1,0 +1,38 @@
+#prospectus-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 2, 2, 0.98);
+    backdrop-filter: blur(20px);
+    z-index: 9999;
+    padding: 4rem;
+}
+
+.passport-booklet {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+}
+
+.passport-cover {
+    transform-style: preserve-3d;
+    transform-origin: left center;
+    transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.cover-front {
+    backface-visibility: hidden;
+    z-index: 2;
+}
+
+.cover-back {
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+    z-index: 1;
+}
+
+.passport-booklet.is-open {
+    transform: rotateY(-10deg) scale(1.05);
+}
+
+.passport-booklet.is-open .passport-cover {
+    transform: rotateY(-170deg);
+}

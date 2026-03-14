@@ -1,0 +1,35 @@
+:root {
+    --color-brass: #B5935B;
+    --color-ink: #1A1A1A;
+    --color-vellum: #F4F1EA;
+    --color-obsidian: #020202;
+    --color-walnut: #1A110A;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    /* The Candlelight Vignette */
+    background: radial-gradient(circle at center, var(--color-walnut) 0%, var(--color-obsidian) 100%) !important;
+    color: var(--color-vellum);
+    font-family: 'EB Garamond', serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Base Typography */
+h1, h2, h3 {
+    margin: 0;
+    color: var(--color-brass);
+}
+
+.technical {
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+}
+
+::selection {
+    background: rgba(181, 147, 91, 0.3);
+    color: var(--color-brass);
+}

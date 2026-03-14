@@ -1,0 +1,117 @@
+/* --- THE INSTRUMENT STRUCTURE --- */
+
+/* The Bento Tile */
+.bento-tile {
+    position: relative;
+    background: rgba(26, 15, 15, 0.15);
+    backdrop-filter: blur(20px);
+    border: 0.5px solid rgba(181, 147, 91, 0.25) !important;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+}
+
+.bento-tile:hover {
+    border-color: rgba(181, 147, 91, 0.8) !important;
+    box-shadow: 0 0 25px rgba(181, 147, 91, 0.15);
+}
+
+/* The Justified Header */
+.bento-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 0.5px solid rgba(181, 147, 91, 0.3) !important;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.bento-header h2 {
+    font-size: 0.85rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.25em !important;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--color-brass);
+    border-radius: 999px;
+    box-shadow: 0 0 8px var(--color-brass);
+}
+
+.metadata {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(181, 147, 91, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+}
+
+/* VCE Number Glow Restoration */
+.vce-number-glow {
+    text-shadow: 0 0 10px rgba(181, 147, 91, 0.4), 
+                 0 0 20px rgba(181, 147, 91, 0.2);
+    transition: text-shadow 0.3s ease;
+}
+
+.bento-tile:hover .vce-number-glow {
+    text-shadow: 0 0 15px rgba(181, 147, 91, 0.6), 
+                 0 0 30px rgba(181, 147, 91, 0.3);
+}
+
+/* Stealth Sidebar */
+.nav-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 4rem;
+    background: #1A0F0F;
+    border-right: 0.5px solid rgba(181, 147, 91, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2.5rem 0;
+    z-index: 100;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.nav-sidebar:hover {
+    width: 15rem;
+}
+
+.nav-label {
+    opacity: 0;
+    white-space: nowrap;
+    transition: opacity 0.3s ease;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+}
+
+.nav-sidebar:hover .nav-label {
+    opacity: 1;
+}
+
+/* Chess Toggles */
+.mode-btn {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.75rem;
+    border: 0.5px solid rgba(181, 147, 91, 0.3);
+    border-radius: 999px;
+    color: rgba(181, 147, 91, 0.5);
+    transition: all 0.3s ease;
+}
+
+.mode-btn.active {
+    background: #B5935B;
+    color: #020202;
+    border-color: #B5935B;
+}

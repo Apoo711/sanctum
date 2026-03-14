@@ -1,0 +1,16 @@
+{
+  "name": "apoo711.github.io",
+  "version": "1.0.0",
+  "description": "Horological Dark Academia Architectural Overhaul",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-ejs-layouts": "^2.5.1",
+    "marked": "^15.0.4"
+  }
+}
