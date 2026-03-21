@@ -1,0 +1,60 @@
+<%# chronicles.ejs — The Chronicles Index %>
+<link rel="stylesheet" href="/css/chronicles.css">
+
+<div class="chronicles-wrapper">
+
+  <%# Page Header %>
+  <header class="chronicles-header">
+    <div class="chronicles-header-eyebrow">
+      <span class="technical">SANCTUM_ARCHIVE</span>
+      <span class="chronicles-rule"></span>
+      <span class="technical">ENTRY_LOG</span>
+    </div>
+    <h1 class="chronicles-title">The Chronicles</h1>
+    <p class="chronicles-subtitle">Expedition logs, conceptual dispatches, and structural observations — rendered from raw manuscript.</p>
+    <div class="chronicles-ornament">⸻</div>
+  </header>
+
+  <%# Post List %>
+  <% if (posts.length === 0) { %>
+    <div class="chronicles-empty">
+      <p class="technical">NO_ENTRIES_INDEXED</p>
+      <p>The archive is awaiting its first manuscript.</p>
+    </div>
+  <% } else { %>
+    <ul class="chronicles-list" role="list">
+      <% posts.forEach((post, i) => { %>
+        <li class="chronicle-entry" style="animation-delay: <%= i * 80 %>ms">
+          <a href="/chronicles/<%= post.slug %>" class="chronicle-link">
+
+            <div class="chronicle-meta">
+              <time class="chronicle-date technical" datetime="<%= post.date %>">
+                <%= new Date(post.date).toLocaleDateString('en-AU', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+              </time>
+              <% if (post.tags && post.tags.length > 0) { %>
+                <div class="chronicle-tags">
+                  <% post.tags.slice(0, 3).forEach(tag => { %>
+                    <span class="chronicle-tag">#<%= tag %></span>
+                  <% }) %>
+                </div>
+              <% } %>
+            </div>
+
+            <h2 class="chronicle-entry-title"><%= post.title %></h2>
+
+            <% if (post.description) { %>
+              <p class="chronicle-excerpt"><%= post.description %></p>
+            <% } %>
+
+            <div class="chronicle-read-more">
+              <span>Read Manuscript</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </div>
+
+          </a>
+        </li>
+      <% }) %>
+    </ul>
+  <% } %>
+
+</div>

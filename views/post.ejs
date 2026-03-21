@@ -1,0 +1,64 @@
+<%# post.ejs — The Manuscript View %>
+<link rel="stylesheet" href="/css/chronicles.css">
+
+<div class="post-wrapper">
+
+  <%# Breadcrumb %>
+  <nav class="post-breadcrumb" aria-label="Breadcrumb">
+    <a href="/blog" class="post-back-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+      <span>The Chronicles</span>
+    </a>
+    <span class="post-breadcrumb-sep technical">/</span>
+    <span class="post-breadcrumb-current technical"><%= meta.title %></span>
+  </nav>
+
+  <%# Manuscript Container %>
+  <article class="manuscript">
+
+    <%# Drop-cap Header Area %>
+    <header class="manuscript-header">
+      <% if (meta.tags && meta.tags.length > 0) { %>
+        <div class="manuscript-tags">
+          <% meta.tags.forEach(tag => { %>
+            <span class="chronicle-tag">#<%= tag %></span>
+          <% }) %>
+        </div>
+      <% } %>
+
+      <h1 class="manuscript-title"><%= meta.title %></h1>
+
+      <% if (meta.description) { %>
+        <p class="manuscript-lede"><%= meta.description %></p>
+      <% } %>
+
+      <div class="manuscript-byline">
+        <div class="manuscript-byline-rule"></div>
+        <time class="technical" datetime="<%= meta.date %>">
+          <%= new Date(meta.date).toLocaleDateString('en-AU', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+        </time>
+        <div class="manuscript-byline-rule"></div>
+      </div>
+    </header>
+
+    <%# Manuscript Body — rendered Markdown HTML %>
+    <div class="manuscript-body prose-content">
+      <%- content %>
+    </div>
+
+    <%# Footer ornament %>
+    <footer class="manuscript-footer">
+      <div class="manuscript-colophon">
+        <div class="manuscript-colophon-rule"></div>
+        <span class="technical">END_OF_MANUSCRIPT</span>
+        <div class="manuscript-colophon-rule"></div>
+      </div>
+      <a href="/blog" class="post-back-link mt-6">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        <span>Return to Archives</span>
+      </a>
+    </footer>
+
+  </article>
+
+</div>
