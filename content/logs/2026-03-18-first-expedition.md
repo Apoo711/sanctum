@@ -34,12 +34,12 @@ There is no database. There is no CMS dashboard. Posts are files, committed to g
 
 The visual language of the Sanctum is built on four tokens:
 
-| Token | Hex | Role |
-|---|---|---|
-| Obsidian | `#020202` | Background, the void |
-| Walnut | `#1A110A` | Surface warmth |
+| Token      | Hex       | Role                          |
+|------------|-----------|-------------------------------|
+| Obsidian   | `#020202` | Background, the void          |
+| Walnut     | `#1A110A` | Surface warmth                |
 | Brass/Gold | `#B5935B` | Accent, borders, hover states |
-| Vellum | `#F4F1EA` | Primary reading text |
+| Vellum     | `#F4F1EA` | Primary reading text          |
 
 Typography is a deliberate pair: **EB Garamond** for titles and body (a classical serif with authentic ink-trap character), and **JetBrains Mono** for code fragments and technical labels.
 
