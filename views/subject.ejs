@@ -1,0 +1,146 @@
+<article class="bento-tile col-span-1 md:col-span-3 min-h-[60vh] flex flex-col overflow-hidden relative group">
+    
+    <!-- Background grid/glow elements -->
+    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMWgyMHYyMEgxVjF6IiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjEyLCAxNzUsIDU1LCAwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9zdmc+')] opacity-50 z-0"></div>
+
+    <div class="bento-header sticky top-0 bg-[#1A0F0F]/90 backdrop-blur z-20 shadow-sm border-b border-sanctum-accent/20">
+        <a href="/resources" class="text-sanctum-text/60 hover:text-sanctum-accent text-xs uppercase tracking-widest flex items-center gap-2 transition-all font-bold">
+            <div class="w-6 h-6 rounded-full bg-sanctum-bg border border-sanctum-accent/30 flex items-center justify-center group-hover:bg-sanctum-accent/10 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+            </div>
+            Return to Scriptorium
+        </a>
+        <div class="technical text-sanctum-text/50 text-[10px]">THE_SCRIPTORIUM // <%= subject.slug.toUpperCase() %></div>
+    </div>
+    
+    <div class="relative z-10 flex-1 w-full text-sanctum-text/70 min-h-[50vh] p-8 md:p-12 lg:p-16">
+        <header class="text-center mb-16 max-w-2xl mx-auto">
+            <!-- Decorative Subject Icon -->
+            <div class="w-16 h-16 border border-sanctum-accent/40 rounded-xl flex items-center justify-center text-sanctum-accent font-serif text-3xl mx-auto mb-6 bg-sanctum-accent/5 shadow-[0_0_15px_rgba(181,147,91,0.05)]">
+                <%= subject.glyph %>
+            </div>
+            
+            <h1 class="font-serif text-4xl md:text-5xl text-[#F4F1EA] mb-3 tracking-widest uppercase"><%= subject.name %></h1>
+            <div class="h-[1px] w-24 bg-sanctum-accent mx-auto mb-4 opacity-50"></div>
+            <p class="font-mono text-xs tracking-widest text-[#B5935B]/70 uppercase mb-6"><%= subject.subtitle %></p>
+            <p class="font-serif italic text-sm md:text-base text-sanctum-text/60 leading-relaxed"><%= subject.description %></p>
+        </header>
+
+        <div class="max-w-4xl mx-auto">
+            <h3 class="font-serif text-xs tracking-[0.25em] text-[#B5935B]/50 uppercase border-b border-sanctum-accent/20 pb-2 mb-6">Archival Manuscripts</h3>
+            
+            <div class="space-y-6">
+                <% subject.resources.forEach(function(res, index) { %>
+                    <div class="group/item flex flex-col md:flex-row md:items-center justify-between p-6 border border-sanctum-accent/15 bg-black/10 hover:bg-black/35 hover:border-sanctum-accent/50 transition-all duration-300 rounded-lg relative overflow-hidden">
+                        <!-- Left background glow for card -->
+                        <div class="absolute -left-12 -bottom-12 w-24 h-24 bg-sanctum-accent/5 rounded-full blur-xl pointer-events-none group-hover/item:bg-sanctum-accent/10 transition-colors"></div>
+                        
+                        <div class="flex items-start gap-4 flex-1 pr-4 z-10">
+                            <!-- Indexed Badge -->
+                            <div class="font-serif text-lg text-sanctum-accent/40 font-bold group-hover/item:text-sanctum-accent transition-colors pt-0.5">
+                                <%= String(index + 1).padStart(2, '0') %>
+                            </div>
+                            <div>
+                                <h4 class="font-serif text-lg text-[#F4F1EA] group-hover/item:text-sanctum-accent transition-colors">
+                                    <%= res.title %>
+                                </h4>
+                                <p class="font-sans text-xs text-sanctum-text/60 mt-2 leading-relaxed max-w-2xl">
+                                    <%= res.description %>
+                                </p>
+                                <div class="flex items-center gap-4 mt-3 font-mono text-[9px] text-sanctum-accent/40 tracking-wider">
+                                    <span>FORMAT: <strong class="text-sanctum-accent/70"><%= res.format %></strong></span>
+                                    <span class="w-1 h-1 bg-sanctum-accent/20 rounded-full"></span>
+                                    <span>SIZE: <strong class="text-sanctum-accent/70"><%= res.size %></strong></span>
+                                    <span class="w-1 h-1 bg-sanctum-accent/20 rounded-full"></span>
+                                    <span>INDEXED: <strong class="text-sanctum-accent/70"><%= res.date %></strong></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Access Action Button -->
+                        <button 
+                            onclick="accessResource('<%= res.title %>', '<%= res.format %>', '<%= res.size %>')"
+                            class="mt-4 md:mt-0 self-start md:self-center font-mono text-[10px] tracking-widest text-[#020202] hover:text-[#F4F1EA] bg-sanctum-accent hover:bg-transparent border border-sanctum-accent px-4 py-2.5 rounded transition-all duration-300 hover:shadow-[0_0_15px_rgba(181,147,91,0.2)] focus:outline-none whitespace-nowrap z-10"
+                        >
+                            ACCESS MANUSCRIPT
+                        </button>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+    </div>
+</article>
+
+<!-- Custom simulated terminal decanting popup -->
+<div id="decanting-vault" class="fixed bottom-6 right-6 w-80 bg-[#020202]/95 border border-sanctum-accent/30 rounded-lg shadow-2xl p-4 transform translate-y-24 opacity-0 transition-all duration-500 z-50 pointer-events-none font-mono text-xs">
+    <div class="flex items-center justify-between border-b border-sanctum-accent/20 pb-2 mb-3">
+        <span class="text-sanctum-accent font-bold tracking-widest uppercase text-[10px]">SANCTUM VAULT ACCESS</span>
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+    </div>
+    <div id="vault-logs" class="text-sanctum-text/70 space-y-1.5 min-h-[90px] leading-relaxed">
+        <!-- Logs populated via JS -->
+    </div>
+    <div class="mt-3 pt-2 border-t border-sanctum-accent/10 flex justify-between items-center text-[9px] text-sanctum-accent/40">
+        <span>EST_RTT // 24MS</span>
+        <span>VAULT_DECANTING</span>
+    </div>
+</div>
+
+<script>
+    let vaultTimer = null;
+    function accessResource(title, format, size) {
+        const vault = document.getElementById('decanting-vault');
+        const logsContainer = document.getElementById('vault-logs');
+        if (!vault || !logsContainer) return;
+
+        // Clear previous timeouts and initialize state
+        if (vaultTimer) clearTimeout(vaultTimer);
+        logsContainer.innerHTML = '';
+        
+        // Display vault container
+        vault.classList.remove('translate-y-24', 'opacity-0');
+        vault.classList.add('translate-y-0', 'opacity-100');
+
+        const logMessages = [
+            { text: `[VAULT] Requesting connection...`, color: 'text-sanctum-accent/50' },
+            { text: `[VAULT] decanting: "${title}"`, color: 'text-emerald-500' },
+            { text: `[DECRYPT] decoding signature (${format} // ${size})`, color: 'text-sanctum-accent/70' },
+            { text: `[VAULT] credentials verified.`, color: 'text-sanctum-accent/70' },
+            { text: `[SUCCESS] decanted successfully.`, color: 'text-emerald-400 font-bold' }
+        ];
+
+        let i = 0;
+        function printNextLog() {
+            if (i < logMessages.length) {
+                const line = document.createElement('div');
+                line.className = `${logMessages[i].color} animate-[pulse_0.1s_ease-out]`;
+                line.innerHTML = logMessages[i].text;
+                logsContainer.appendChild(line);
+                
+                // Audio or haptic cues could be simulated here, or standard console logging
+                i++;
+                let delay = 600;
+                if (i === 1) delay = 400;
+                if (i === 2) delay = 800;
+                if (i === 4) delay = 500;
+                
+                vaultTimer = setTimeout(printNextLog, delay);
+            } else {
+                // Trigger the redirect download to GitHub Releases
+                const subjectSlug = '<%= subject.slug %>';
+                const encodedTitle = encodeURIComponent(title);
+                window.location.href = `/resources/download/${subjectSlug}/${encodedTitle}`;
+
+                // Auto dismiss vault overlay after 4 seconds
+                vaultTimer = setTimeout(() => {
+                    vault.classList.add('translate-y-24', 'opacity-0');
+                    vault.classList.remove('translate-y-0', 'opacity-100');
+                }, 4000);
+            }
+        }
+
+        printNextLog();
+    }
+</script>

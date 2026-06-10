@@ -21,6 +21,7 @@ function initSidebar() {
 async function initChessToggles() {
     const ratingEl = document.getElementById('chess-rating');
     const labelEl = document.getElementById('chess-label');
+    if (!ratingEl || !labelEl) return;
     const iconContainer = document.querySelector('.bento-tile:nth-child(3) .w-16'); // Select the icon wrapper
     const buttons = document.querySelectorAll('.mode-btn');
     
@@ -76,6 +77,7 @@ async function fetchChessStats(username) {
 // 3. VCE Epoch Tracker with expanded content
 function initVceCountdown() {
     const el = document.getElementById('vce-countdown');
+    if (!el) return;
     const target = new Date('2026-10-26T09:00:00').getTime();
 
     function update() {
@@ -242,6 +244,8 @@ function initProspectusDrawer() {
             canClose: true,
             arrowKeys: true,
             initialActivePage: 0,
+            width: '100%',
+            height: '100%',
         });
     }
     if (document.getElementById('expedition-flipbook') && !expeditionBook) {
@@ -251,6 +255,8 @@ function initProspectusDrawer() {
             canClose: true,
             arrowKeys: true,
             initialActivePage: 0,
+            width: '100%',
+            height: '100%',
         });
     }
 
@@ -285,6 +291,12 @@ function openBooklet(bookId) {
     if (controls) {
         controls.classList.add('is-visible');
     }
+
+    const tableCloseBtn = document.getElementById('prospectus-close-btn');
+    if (tableCloseBtn) {
+        tableCloseBtn.style.opacity = '0';
+        tableCloseBtn.style.pointerEvents = 'none';
+    }
 }
 
 function closeBook() {
@@ -299,12 +311,35 @@ function closeBook() {
         controls.classList.remove('is-visible');
     }
 
+    // Restore table close button visibility
+    const tableCloseBtn = document.getElementById('prospectus-close-btn');
+    if (tableCloseBtn) {
+        tableCloseBtn.style.opacity = '1';
+        tableCloseBtn.style.pointerEvents = 'auto';
+    }
+
     // Best-effort attempt to reset to cover
     try {
-        if (visorBook && typeof visorBook.jumpToPage === 'function') visorBook.jumpToPage(0);
-        if (expeditionBook && typeof expeditionBook.jumpToPage === 'function') expeditionBook.jumpToPage(0);
+        if (visorBook && typeof visorBook.turnPage === 'function') visorBook.turnPage(0);
+        if (expeditionBook && typeof expeditionBook.turnPage === 'function') expeditionBook.turnPage(0);
     } catch (e) {}
 }
+
+function closeProspectusModal() {
+    const modal = document.getElementById('prospectus-modal');
+    if (modal) {
+        modal.classList.remove('is-visible');
+        closeBook();
+    }
+}
+window.closeProspectusModal = closeProspectusModal;
+
+// Keydown ESC key listener
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        closeProspectusModal();
+    }
+});
 
 function initProspectusInteraction() {}  // no-op shim — Scholar's Desk Overlay
 

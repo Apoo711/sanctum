@@ -22,74 +22,38 @@
             <p class="font-mono text-xs tracking-widest text-[#B5935B]/60 uppercase">Laboratory Notes & Catalogs</p>
         </header>
 
-        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16">
-            <!-- Specialist Maths Catalog -->
-            <section class="bg-black/10 p-6 md:p-8 rounded-lg border border-sanctum-accent/10 backdrop-blur-sm">
-                <div class="flex items-center gap-4 mb-8 border-b border-sanctum-accent/20 pb-4">
-                    <div class="w-10 h-10 border border-sanctum-accent/50 flex items-center justify-center text-sanctum-accent font-serif text-xl rounded-sm">
-                        ∫
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <% subjects.forEach(function(sub) { %>
+                <!-- <%= sub.name %> Card -->
+                <a href="/resources/<%= sub.slug %>" class="bento-tile hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 flex flex-col justify-between group/card bg-[#1A0F0F]/45 border border-sanctum-accent/20 rounded-xl p-6 min-h-[220px]">
+                    <div>
+                        <div class="flex items-center justify-between mb-4 border-b border-sanctum-accent/10 pb-3">
+                            <div class="w-10 h-10 border border-sanctum-accent/40 flex items-center justify-center text-sanctum-accent font-serif text-xl rounded-lg group-hover/card:border-sanctum-accent group-hover/card:bg-sanctum-accent/10 transition-all duration-300">
+                                <%= sub.glyph %>
+                            </div>
+                            <span class="metadata text-[9px] text-sanctum-accent/40 group-hover/card:text-sanctum-accent/70 transition-colors uppercase font-mono tracking-widest"><%= sub.slug.replace('-', '_') %> // dir</span>
+                        </div>
+                        
+                        <h2 class="font-serif text-xl tracking-widest uppercase text-[#F4F1EA] group-hover/card:text-sanctum-accent transition-colors mb-2">
+                            <%= sub.name %>
+                        </h2>
+                        
+                        <p class="font-sans text-xs text-sanctum-text/60 line-clamp-3 leading-relaxed mb-4">
+                            <%= sub.description %>
+                        </p>
                     </div>
-                    <h2 class="font-serif text-xl md:text-2xl tracking-widest uppercase text-[#F4F1EA]">Specialist Maths</h2>
-                </div>
-                
-                <ul class="space-y-4 font-mono text-xs md:text-sm">
-                    <li class="group cursor-pointer flex items-center justify-between p-4 border border-white/5 hover:border-sanctum-accent/50 bg-black/20 hover:bg-black/80 transition-all rounded-sm">
-                        <div class="flex items-center gap-3">
-                            <span class="text-sanctum-accent/40 font-bold group-hover:text-sanctum-accent">01</span>
-                            <span class="text-[#F4F1EA] group-hover:text-sanctum-accent transition-colors truncate max-w-[150px] md:max-w-[200px]">Complex Numbers</span>
-                        </div>
-                        <span class="text-[9px] md:text-[10px] text-sanctum-accent/50 tracking-widest uppercase">PDF // 2.4MB</span>
-                    </li>
-                    <li class="group cursor-pointer flex items-center justify-between p-4 border border-white/5 hover:border-sanctum-accent/50 bg-black/20 hover:bg-black/80 transition-all rounded-sm">
-                        <div class="flex items-center gap-3">
-                            <span class="text-sanctum-accent/40 font-bold group-hover:text-sanctum-accent">02</span>
-                            <span class="text-[#F4F1EA] group-hover:text-sanctum-accent transition-colors truncate max-w-[150px] md:max-w-[200px]">Vector Calculus</span>
-                        </div>
-                        <span class="text-[9px] md:text-[10px] text-sanctum-accent/50 tracking-widest uppercase">PDF // 3.1MB</span>
-                    </li>
-                    <li class="group cursor-pointer flex items-center justify-between p-4 border border-white/5 hover:border-sanctum-accent/50 bg-black/20 hover:bg-black/80 transition-all rounded-sm">
-                        <div class="flex items-center gap-3">
-                            <span class="text-sanctum-accent/40 font-bold group-hover:text-sanctum-accent">03</span>
-                            <span class="text-[#F4F1EA] group-hover:text-sanctum-accent transition-colors truncate max-w-[150px] md:max-w-[200px]">Diff. Equations</span>
-                        </div>
-                        <span class="text-[9px] md:text-[10px] text-sanctum-accent/50 tracking-widest uppercase">PDF // 1.8MB</span>
-                    </li>
-                </ul>
-            </section>
-
-            <!-- Systems Engineering Catalog -->
-            <section class="bg-black/10 p-6 md:p-8 rounded-lg border border-sanctum-accent/10 backdrop-blur-sm">
-                <div class="flex items-center gap-4 mb-8 border-b border-sanctum-accent/20 pb-4">
-                    <div class="w-10 h-10 border border-sanctum-accent/50 flex items-center justify-center text-sanctum-accent font-mono text-xl rounded-sm">
-                        ⚙
+                    
+                    <div class="flex items-center justify-between border-t border-sanctum-accent/10 pt-3 text-[10px] font-mono tracking-wider text-sanctum-accent/60 group-hover/card:text-sanctum-accent transition-colors">
+                        <span class="uppercase"><%= sub.resources.length %> Documents</span>
+                        <span class="flex items-center gap-1 font-bold">
+                            ENTER ARCHIVE 
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 transform group-hover/card:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7" />
+                            </svg>
+                        </span>
                     </div>
-                    <h2 class="font-serif text-xl md:text-2xl tracking-widest uppercase text-[#F4F1EA]">Systems Eng.</h2>
-                </div>
-                
-                <ul class="space-y-4 font-mono text-xs md:text-sm">
-                    <li class="group cursor-pointer flex items-center justify-between p-4 border border-white/5 hover:border-sanctum-accent/50 bg-black/20 hover:bg-black/80 transition-all rounded-sm">
-                        <div class="flex items-center gap-3">
-                            <span class="text-sanctum-accent/40 font-bold group-hover:text-sanctum-accent">01</span>
-                            <span class="text-[#F4F1EA] group-hover:text-sanctum-accent transition-colors truncate max-w-[150px] md:max-w-[200px]">Circuit Logic</span>
-                        </div>
-                        <span class="text-[9px] md:text-[10px] text-sanctum-accent/50 tracking-widest uppercase">PDF // 4.5MB</span>
-                    </li>
-                    <li class="group cursor-pointer flex items-center justify-between p-4 border border-white/5 hover:border-sanctum-accent/50 bg-black/20 hover:bg-black/80 transition-all rounded-sm">
-                        <div class="flex items-center gap-3">
-                            <span class="text-sanctum-accent/40 font-bold group-hover:text-sanctum-accent">02</span>
-                            <span class="text-[#F4F1EA] group-hover:text-sanctum-accent transition-colors truncate max-w-[150px] md:max-w-[200px]">Mechanical Advantage</span>
-                        </div>
-                        <span class="text-[9px] md:text-[10px] text-sanctum-accent/50 tracking-widest uppercase">PDF // 5.2MB</span>
-                    </li>
-                    <li class="group cursor-pointer flex items-center justify-between p-4 border border-white/5 hover:border-sanctum-accent/50 bg-black/20 hover:bg-black/80 transition-all rounded-sm">
-                        <div class="flex items-center gap-3">
-                            <span class="text-sanctum-accent/40 font-bold group-hover:text-sanctum-accent">03</span>
-                            <span class="text-[#F4F1EA] group-hover:text-sanctum-accent transition-colors truncate max-w-[150px] md:max-w-[200px]">Control Systems</span>
-                        </div>
-                        <span class="text-[9px] md:text-[10px] text-sanctum-accent/50 tracking-widest uppercase">PDF // 2.9MB</span>
-                    </li>
-                </ul>
-            </section>
+                </a>
+            <% }); %>
         </div>
     </div>
 </article>
