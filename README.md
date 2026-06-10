@@ -1,8 +1,4 @@
-# Sanctum | The Scholar's Desk
-
-![Sanctum Banner](public/images/banner.png)
-
-> **"Nuclear engine engaged. Sanctum Server running."**
+# Sanctum
 
 ## 🏛️ Overview
 
