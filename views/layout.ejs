@@ -48,12 +48,12 @@
     <!-- The Secret Sidebar (Compass Navigation) -->
     <nav id="sidebar" class="nav-sidebar group">
         
-        <!-- Logo/Astrolabe anchor -->
-        <div class="w-10 h-10 min-w-10 rounded-full border-[0.5px] border-sanctum-accent flex justify-center items-center relative group-hover:rotate-90 transition-transform duration-700">
+        <!-- Logo/Astrolabe anchor — clicking navigates home -->
+        <a href="/" aria-label="Return to Home" class="w-10 h-10 min-w-10 rounded-full border-[0.5px] border-sanctum-accent flex justify-center items-center relative group-hover:rotate-90 transition-transform duration-700">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B5935B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-        </div>
+        </a>
 
-        <div class="flex-1 flex flex-col items-start w-full px-5 md:px-7 mt-8 gap-10">
+        <div class="flex-1 flex flex-col items-start w-full mt-8 gap-10 pl-[22px] group-hover:pl-5 md:group-hover:pl-7 transition-all duration-300">
             <a href="/blog" class="flex items-center gap-6 w-full text-[#B5935B]/60 hover:text-[#B5935B] hover:drop-shadow-[0_0_8px_rgba(181,147,91,0.8)] font-serif tracking-widest text-xs uppercase" aria-label="Archives" style="white-space: nowrap;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open min-w-5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                 <span class="opacity-0 group-hover:opacity-100 text-[#B5935B]" style="white-space: nowrap; transition: opacity 0.3s ease-in-out;">The Chronicles</span>
@@ -76,144 +76,52 @@
         </div>
     </nav>
     
-    <!-- The Prospectus Overlay Fix -->
-    <div id="prospectus-overlay" class="hidden flex flex-col items-center justify-center p-8 md:p-16 custom-scrollbar overflow-y-auto">
-        <h2 class="font-serif text-3xl md:text-5xl text-sanctum-accent tracking-widest mb-4 font-bold select-none text-center drop-shadow-lg relative z-10">THE SCHOLAR'S DESK</h2>
-        <div class="h-[1px] w-full max-w-4xl bg-gradient-to-r from-transparent via-sanctum-accent/50 to-transparent mb-16 relative z-10"></div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl relative z-10">
-            <!-- Passport: Vietnam 2024 -->
-            <div class="passport-booklet relative w-full aspect-[1/1.4] cursor-pointer group" onclick="this.classList.toggle('is-open')">
-                
-                <!-- Inner Pages (Multi-Page Logic) -->
-                <div class="absolute inset-0 bg-[#F4F1EA] rounded-r-lg border-l-4 border-black shadow-inner flex flex-col p-4 items-center justify-between z-10 overflow-hidden" onclick="event.stopPropagation()">
-                    <!-- Navigation arrows removed in favor of direct clicking -->
-                    
-                    <!-- Page 1 -->
-                    <div id="vietnam-page-1" class="w-full flex-1 flex flex-col items-center justify-center passport-page active">
-                        <p class="font-serif text-[#1A1A1A] text-sm text-center font-bold">Expedition Logs<br><span class="text-xs font-mono font-normal opacity-50 mt-2 block">Infrastructure Deployment: Assisted in the manual construction of 4.2km of rural transit arteries in the Mekong region.</span></p>
-                    </div>
-                    <!-- Page 2 -->
-                    <div id="vietnam-page-2" class="w-full flex-1 flex flex-col items-center justify-center passport-page hidden">
-                        <p class="font-serif text-[#1A1A1A] text-sm text-center font-bold">Road-Building Log<br><span class="text-xs font-mono font-normal opacity-50 mt-2 block">Infrastructure Deployment: Assisted in the manual construction of 4.2km of rural transit arteries in the Mekong region.</span></p>
-                    </div>
-                    <!-- Page 3 -->
-                    <div id="vietnam-page-3" class="w-full flex-1 flex flex-col items-center justify-center passport-page hidden">
-                        <p class="font-serif text-[#1A1A1A] text-sm text-center font-bold">Field Photography<br><span class="text-xs font-mono font-normal opacity-50 mt-2 block">[Awaiting Asset Integration]</span></p>
-                    </div>
-                    
-                    <div class="font-mono text-[8px] text-[#1A1A1A]/40 tracking-widest mt-auto mb-1">PG. <span id="vietnam-page-nav">1</span></div>
-                </div>
+    <!-- =====================================================
+         THE PROSPECTUS — Scholar's Desk
+         Outer modal: fixed, opacity/pointer-events toggled
+         by JS via .is-visible class
+         ===================================================== -->
+    <div id="prospectus-modal">
 
-                <div class="passport-cover absolute inset-0 bg-[#3A1F1F] rounded-r-lg border-l-4 border-black shadow-[5px_5px_15px_rgba(0,0,0,0.5)] border border-[#1A0F0F] z-20">
-                    <!-- Front Cover Content -->
-                    <div class="absolute inset-0 flex flex-col items-center justify-center cover-front">
-                        <div class="w-12 h-12 border border-[#B5935B]/50 rounded-full mb-4 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#B5935B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plane"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.2-1.1.6L3 8l6 4-3 3-3-1-2 2 4 4 2-2-1-3 3-3 4 6c.4.2.8-.2 1.1-.6l1.2-1.8Z"/></svg>
-                        </div>
-                        <div class="font-serif text-[#B5935B] text-xl font-bold tracking-widest uppercase">Vietnam</div>
-                        <div class="font-mono text-[#B5935B]/50 text-xs tracking-widest mt-2">2024</div>
-                    </div>
-                    <!-- Inside Cover (Backface) -->
-                    <div class="absolute inset-0 bg-[#F4F1EA] cover-back border-r border-[#1A0F0F] shadow-inner flex items-center justify-center">
-                        <div class="w-16 h-16 border-2 border-dashed border-[#1A1A1A]/20 rotate-12 flex items-center justify-center opacity-50">
-                            <span class="font-mono text-[#1A1A1A]/40 text-[10px] uppercase">Entry Visa</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- Close the whole desk -->
+        <button class="prospectus-close-btn" id="prospectus-close-btn" aria-label="Close Prospectus">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+        </button>
 
-            <!-- Passport: Cambodia 2025 -->
-            <div class="passport-booklet relative w-full aspect-[1/1.4] cursor-pointer group" onclick="this.classList.toggle('is-open')">
-                
-                <div class="absolute inset-0 bg-[#F4F1EA] rounded-r-lg border-l-4 border-black shadow-inner flex flex-col p-4 items-center justify-between z-10 overflow-hidden" onclick="event.stopPropagation()">
-                    <!-- Navigation arrows removed in favor of direct clicking -->
-                    
-                    <!-- Page 1 -->
-                    <div id="cambodia-page-1" class="w-full flex-1 flex flex-col items-center justify-center passport-page active">
-                        <p class="font-serif text-[#1A1A1A] text-sm text-center font-bold">Expedition Logs<br><span class="text-xs font-mono font-normal opacity-50 mt-2 block">Clinical Outreach: Supported rural medical rotations and delivered primary literacy modules to regional students.</span></p>
-                    </div>
-                    <!-- Page 2 -->
-                    <div id="cambodia-page-2" class="w-full flex-1 flex flex-col items-center justify-center passport-page hidden">
-                        <p class="font-serif text-[#1A1A1A] text-sm text-center font-bold">Hospital Outreach Log<br><span class="text-xs font-mono font-normal opacity-50 mt-2 block">Clinical Outreach: Supported rural medical rotations and delivered primary literacy modules to regional students.</span></p>
-                    </div>
-                    <!-- Page 3 -->
-                    <div id="cambodia-page-3" class="w-full flex-1 flex flex-col items-center justify-center passport-page hidden">
-                        <p class="font-serif text-[#1A1A1A] text-sm text-center font-bold">Clinical Observations<br><span class="text-xs font-mono font-normal opacity-50 mt-2 block">[Field Notes Processing]</span></p>
-                    </div>
-                    
-                    <div class="font-mono text-[8px] text-[#1A1A1A]/40 tracking-widest mt-auto mb-1">PG. <span id="cambodia-page-nav">1</span></div>
-                </div>
+        <h2 class="prospectus-title">The Scholar's Desk</h2>
+        <div class="prospectus-rule"></div>
+        <p class="prospectus-hint">Click a volume to open it &mdash; use arrows to turn pages</p>
 
-                <div class="passport-cover absolute inset-0 bg-[#1F2A3A] rounded-r-lg border-l-4 border-black shadow-[5px_5px_15px_rgba(0,0,0,0.5)] border border-[#1A0F0F] z-20">
-                    <div class="absolute inset-0 flex flex-col items-center justify-center cover-front">
-                        <div class="w-12 h-12 border border-[#B5935B]/50 rounded-full mb-4 flex items-center justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#B5935B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21"/><line x1="9" x2="9" y1="3" y2="18"/><line x1="15" x2="15" y1="6" y2="21"/></svg>
-                        </div>
-                        <div class="font-serif text-[#B5935B] text-xl font-bold tracking-widest uppercase">Cambodia</div>
-                        <div class="font-mono text-[#B5935B]/50 text-xs tracking-widest mt-2">2025</div>
-                    </div>
-                    <div class="absolute inset-0 bg-[#F4F1EA] cover-back border-r border-[#1A0F0F] shadow-inner flex items-center justify-center">
-                        <div class="w-16 h-16 border-2 border-dashed border-[#1A1A1A]/20 -rotate-6 flex items-center justify-center opacity-50">
-                            <span class="font-mono text-[#1A1A1A]/40 text-[10px] uppercase">Entry Visa</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- ── DESK ── Booklets in resting card state (powered by flipbook-js) ── -->
+        <div class="prospectus-desk" id="prospectus-desk">
+            <%- include('booklet-modal') %>
+        </div><!-- /prospectus-desk -->
 
-            <!-- V.I.S.O.R Technical Dossier -->
-            <div class="relative w-full aspect-[1/1.4] z-10">
-                <div class="absolute inset-0 bg-[#0a0a0a] rounded-r-xl border-l-8 border-[#050505] shadow-[8px_8px_20px_rgba(0,0,0,0.8)] flex flex-col p-6 border-y border-r border-[#222]">
-                    <!-- Navigation arrows removed in favor of direct clicking -->
-
-                    <!-- Page 1 (Cover) -->
-                    <div id="visor-page-1" class="flex-1 w-full border-2 border-[#B5935B]/20 p-4 flex flex-col items-center justify-center text-center relative overflow-hidden active">
-                        <div class="absolute inset-0 bg-[#B5935B] opacity-[0.02] mix-blend-overlay pointer-events-none"></div>
-                        <div class="w-16 h-16 border border-[#B5935B]/40 flex items-center justify-center rotate-45 mb-6 group-hover:rotate-90 transition-transform duration-1000">
-                            <div class="w-8 h-8 bg-[#B5935B]/20 flex items-center justify-center -rotate-45">
-                                <span class="font-mono text-[#B5935B] text-xs">V</span>
-                            </div>
-                        </div>
-                        <h3 class="font-sans font-black tracking-tighter text-2xl text-[#F4F1EA] uppercase mb-1 drop-shadow-[0_0_10px_rgba(244,241,234,0.3)]">V.I.S.O.R</h3>
-                        <p class="font-serif text-[#F4F1EA]/50 text-xs uppercase tracking-widest">Technical Dossier</p>
-                        
-                        <div class="mt-auto pt-4 border-t border-[#B5935B]/20 w-full flex justify-end">
-                            <div class="font-mono text-[#8B0000] text-sm font-bold border-2 border-[#8B0000] rounded px-3 py-1 -rotate-6 uppercase tracking-widest inline-block opacity-90 text-[10px]">CLASSIFIED</div>
-                        </div>
-                    </div>
-                    
-                    <!-- Page 2 -->
-                    <div id="visor-page-2" class="flex-1 w-full border-2 border-[#B5935B]/20 p-4 flex flex-col items-center justify-center text-center relative overflow-hidden hidden">
-                        <h3 class="font-sans text-xl text-[#F4F1EA] uppercase mb-4 tracking-widest relative z-10 opacity-90">Technical Specs</h3>
-                        <p class="font-serif text-[#F4F1EA]/70 text-xs tracking-wide leading-relaxed relative z-10 px-2 text-justify">
-                            <strong class="text-[#B5935B] uppercase block text-center mb-2">Visual Inspection & Smart Occupational Relief</strong>
-                            Core logic handles realtime stereoscopic rendering for hazard identification. Low-latency edge computing enables sub-millisecond object detection.
-                        </p>
-                    </div>
-
-                    <!-- Page 3 -->
-                    <div id="visor-page-3" class="flex-1 w-full border-2 border-[#B5935B]/20 p-4 flex flex-col items-center justify-center text-center relative overflow-hidden hidden">
-                        <h3 class="font-sans text-xl text-[#F4F1EA] uppercase mb-4 tracking-widest relative z-10 opacity-90">System Schematic</h3>
-                        <p class="font-mono text-[#B5935B]/50 text-[10px] uppercase tracking-widest border border-[#B5935B]/20 p-4 relative z-10">
-                            [Awaiting Blueprint Render]
-                        </p>
-                    </div>
-                    
-                    <div class="font-mono text-[8px] text-[#F4F1EA]/30 tracking-widest mt-3 text-center w-full">PG. <span id="visor-page-nav">1</span></div>
-                </div>
+        <!-- Reading Overlay Controls: Fade in when a book is opened -->
+        <div id="reading-controls" class="reading-controls">
+            <button class="reading-close-btn" id="reading-close-btn" onclick="closeBook()" aria-label="Close book">
+                &larr;&nbsp; Close Book
+            </button>
+            <div class="reading-nav">
+                <button class="reading-nav-btn" id="read-prev-btn" aria-label="Previous page">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <div style="width: 40px;"></div> <!-- Spacer -->
+                <button class="reading-nav-btn" id="read-next-btn" aria-label="Next page">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
             </div>
         </div>
 
-        <button onclick="document.getElementById('prospectus-overlay').classList.add('hidden')" class="absolute top-8 right-8 text-sanctum-accent/40 hover:text-sanctum-accent outline-none z-50">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-        </button>
-    </div>
-    
+    </div><!-- /prospectus-modal -->
+
     <main class="w-full max-w-6xl relative z-10 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] ml-16" id="main-content">
         <%- body %>
     </main>
 
-    <!-- Client-side logic -->
+    <!-- Client-side logic & Dependencies -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flipbook-js@1.0.1/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/flipbook-js@1.0.1/dist/flipbook.umd.min.js"></script>
     <script defer src="/js/main.js"></script>
 </body>
 </html>

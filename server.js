@@ -60,6 +60,21 @@ app.get('/resources', (req, res) => {
     res.render('resources', { title: 'The Scriptorium' });
 });
 
+// Proxy endpoint to get YouTube Music Recently Played
+app.get('/api/recently-played', async (req, res) => {
+    try {
+        const response = await fetch('http://127.0.0.1:5000/api/recently-played');
+        const data = await response.json();
+        res.status(response.status).json(data);
+    } catch (err) {
+        console.error('[YTMusic Proxy Error]', err.message);
+        res.status(502).json({
+            status: 'error',
+            message: 'Unable to fetch music data from backend service'
+        });
+    }
+});
+
 // Blog post — delegates /blog/:slug to router
 app.use('/blog', blogRouter);
 

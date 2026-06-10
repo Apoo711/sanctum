@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initKatexLaboratory(); // Ensure KaTeX is explicitly called
     initProspectusDrawer(); // Restore Prospectus functionality
     initProspectusInteraction(); // Comprehensive interaction for passports/dossier
+    initRecentlyPlayed(); // Initialize Spotify/YTMusic Recently Played
 });
 
 // 1. Sidebar Stealth Logic
@@ -220,106 +221,210 @@ function initKatexLaboratory() {
     }
 }
 
-// 6. Prospectus Interaction & Desk Logic
+// ================================================================
+// 6. PROSPECTUS — Scholar's Desk  (FlipBook-js integration)
+// ================================================================
+
+let _activeBookId = null;
+let visorBook = null;
+let expeditionBook = null;
+
 function initProspectusDrawer() {
-    const trigger = document.getElementById('prospectus-btn');
-    const overlay = document.getElementById('prospectus-overlay');
-    
-    if (trigger && overlay) {
-        trigger.addEventListener('click', (e) => {
+    const trigger  = document.getElementById('prospectus-btn');
+    const modal    = document.getElementById('prospectus-modal');
+    const closeBtn = document.getElementById('prospectus-close-btn');
+
+    // Pre-initialize FlipBooks so they render on the desk immediately
+    if (document.getElementById('visor-flipbook') && !visorBook) {
+        visorBook = new FlipBook('visor-flipbook', {
+            nextButton: document.getElementById('read-next-btn'),
+            previousButton: document.getElementById('read-prev-btn'),
+            canClose: true,
+            arrowKeys: true,
+            initialActivePage: 0,
+        });
+    }
+    if (document.getElementById('expedition-flipbook') && !expeditionBook) {
+        expeditionBook = new FlipBook('expedition-flipbook', {
+            nextButton: document.getElementById('read-next-btn'),
+            previousButton: document.getElementById('read-prev-btn'),
+            canClose: true,
+            arrowKeys: true,
+            initialActivePage: 0,
+        });
+    }
+
+    if (trigger && modal) {
+        trigger.addEventListener('click', e => {
             e.preventDefault();
-            overlay.classList.toggle('hidden');
-            // Reset items when closing
-            if (overlay.classList.contains('hidden')) {
-                collapseAllProspectusItems();
-            }
+            modal.classList.toggle('is-visible');
+            if (!modal.classList.contains('is-visible')) closeBook();
+        });
+    }
+    if (closeBtn && modal) {
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('is-visible');
+            closeBook();
         });
     }
 }
 
-// Global state for prospectus items
-window.prospectusState = {
-    vietnam: { current: 1, total: 3 },
-    cambodia: { current: 1, total: 3 },
-    visor: { current: 1, total: 3 }
-};
+function openBooklet(bookId) {
+    const visorContainer = document.getElementById('visor-container');
+    const expContainer = document.getElementById('expedition-container');
+    const controls = document.getElementById('reading-controls');
 
-function initProspectusInteraction() {
-    const items = document.querySelectorAll('.passport-booklet, [data-booklet="visor"]');
-    
-    items.forEach(item => {
-        // Remove existing arrow-based navigation if any
-        const navContainer = item.querySelector('.page-navigation');
-        if (navContainer) navContainer.remove();
+    if (bookId === 'visor' && visorContainer) {
+        visorContainer.classList.add('is-reading');
+        if (expContainer) expContainer.classList.add('dimmed');
+    } else if (bookId === 'expeditions' && expContainer) {
+        expContainer.classList.add('is-reading');
+        if (visorContainer) visorContainer.classList.add('dimmed');
+    }
 
-        item.addEventListener('click', (e) => {
-            const bookletId = item.getAttribute('data-booklet') || (item.innerText.toLowerCase().includes('vietnam') ? 'vietnam' : 'cambodia');
-            
-            // If item is not enlarged/open, enlarge it and collapse others
-            if (!item.classList.contains('is-open') && !item.classList.contains('enlarged')) {
-                collapseAllProspectusItems();
-                item.classList.add('is-open', 'enlarged', 'scale-125', 'z-50');
-                return;
-            }
+    if (controls) {
+        controls.classList.add('is-visible');
+    }
+}
 
-            // If already open, handle page flipping
-            const rect = item.getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const isLeftSide = clickX < rect.width / 2;
+function closeBook() {
+    // Return all books to the desk
+    const containers = document.querySelectorAll('.book-container');
+    containers.forEach(c => {
+        c.classList.remove('is-reading', 'dimmed');
+    });
 
-            if (isLeftSide) {
-                advancePage(bookletId);
+    const controls = document.getElementById('reading-controls');
+    if (controls) {
+        controls.classList.remove('is-visible');
+    }
+
+    // Best-effort attempt to reset to cover
+    try {
+        if (visorBook && typeof visorBook.jumpToPage === 'function') visorBook.jumpToPage(0);
+        if (expeditionBook && typeof expeditionBook.jumpToPage === 'function') expeditionBook.jumpToPage(0);
+    } catch (e) {}
+}
+
+function initProspectusInteraction() {}  // no-op shim — Scholar's Desk Overlay
+
+// 7. YouTube Music Recently Played Integration
+function initRecentlyPlayed() {
+    const statusDot = document.getElementById('music-status-dot');
+    const statusText = document.getElementById('music-status-text');
+    const titleEl = document.getElementById('music-title');
+    const artistEl = document.getElementById('music-artist');
+    const albumEl = document.getElementById('music-album');
+    const linkEl = document.getElementById('music-link');
+    const vinylEl = document.getElementById('music-vinyl');
+    const coverEl = document.getElementById('music-cover');
+    const defaultIcon = document.getElementById('music-default-icon');
+    const tonearmEl = document.getElementById('music-tonearm');
+
+    if (!titleEl) return;
+
+    async function updateMusicData() {
+        try {
+            const response = await fetch('/api/recently-played');
+            if (!response.ok) throw new Error('Network response not ok');
+            const data = await response.json();
+
+            if (data.status === 'playing') {
+                // Update status header for active play
+                statusDot.className = 'w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.7)]';
+                statusText.innerText = 'NOW PLAYING';
+                statusText.className = 'metadata text-[10px] tracking-[0.2em] uppercase text-emerald-500 font-bold';
+                
+                titleEl.innerText = data.title;
+                artistEl.innerText = data.artist;
+                albumEl.innerText = data.album;
+
+                // Update link to track if videoId is available
+                if (data.videoId) {
+                    linkEl.href = `https://music.youtube.com/watch?v=${data.videoId}`;
+                    linkEl.classList.remove('opacity-0', 'pointer-events-none');
+                } else {
+                    linkEl.classList.add('opacity-0', 'pointer-events-none');
+                }
+
+                // Update Cover Art
+                if (data.thumbnailUrl) {
+                    coverEl.style.backgroundImage = `url('${data.thumbnailUrl}')`;
+                    if (defaultIcon) defaultIcon.classList.add('hidden');
+                } else {
+                    coverEl.style.backgroundImage = 'none';
+                    if (defaultIcon) defaultIcon.classList.remove('hidden');
+                }
+
+                // Spin vinyl and place the tonearm/stylus
+                vinylEl.style.animation = 'spin 12s linear infinite';
+                tonearmEl.style.transform = 'rotate(0deg)';
+            } else if (data.status === 'error') {
+                throw new Error(data.message || 'Unknown backend error');
             } else {
-                regressPage(bookletId);
+                // Track is loaded but not active (recently played state)
+                statusDot.className = 'w-2 h-2 rounded-full bg-zinc-600';
+                statusText.innerText = 'RECENTLY PLAYING';
+                statusText.className = 'metadata text-[10px] tracking-[0.2em] uppercase text-zinc-500 font-bold';
+                
+                if (data.title) {
+                    titleEl.innerText = data.title;
+                    artistEl.innerText = data.artist;
+                    albumEl.innerText = data.album;
+                    
+                    if (data.videoId) {
+                        linkEl.href = `https://music.youtube.com/watch?v=${data.videoId}`;
+                        linkEl.classList.remove('opacity-0', 'pointer-events-none');
+                    } else {
+                        linkEl.classList.add('opacity-0', 'pointer-events-none');
+                    }
+                    
+                    if (data.thumbnailUrl) {
+                        coverEl.style.backgroundImage = `url('${data.thumbnailUrl}')`;
+                        if (defaultIcon) defaultIcon.classList.add('hidden');
+                    } else {
+                        coverEl.style.backgroundImage = 'none';
+                        if (defaultIcon) defaultIcon.classList.remove('hidden');
+                    }
+                }
+                
+                // Slow down/stop vinyl and park the tonearm/stylus
+                vinylEl.style.animation = 'none';
+                tonearmEl.style.transform = 'rotate(-25deg)';
             }
-        });
-    });
-}
-
-function advancePage(booklet) {
-    let state = window.prospectusState[booklet];
-    if (state.current < state.total) {
-        updateBookletPage(booklet, state.current, state.current + 1);
-        state.current++;
-    }
-}
-
-function regressPage(booklet) {
-    let state = window.prospectusState[booklet];
-    if (state.current > 1) {
-        updateBookletPage(booklet, state.current, state.current - 1);
-        state.current--;
-    }
-}
-
-function updateBookletPage(booklet, oldPage, newPage) {
-    const bookletEl = document.querySelector(`[data-booklet="${booklet}"]`) || 
-                      (booklet === 'vietnam' ? document.querySelector('.passport-booklet:nth-child(1)') : document.querySelector('.passport-booklet:nth-child(2)'));
-    
-    if (!bookletEl) return;
-
-    const oldPageEl = bookletEl.querySelector(`[id$="-page-${oldPage}"]`);
-    const newPageEl = bookletEl.querySelector(`[id$="-page-${newPage}"]`);
-
-    if (oldPageEl) {
-        oldPageEl.classList.replace('flex', 'hidden');
-        oldPageEl.classList.remove('active');
-    }
-    if (newPageEl) {
-        newPageEl.classList.replace('hidden', 'flex');
-        newPageEl.classList.add('active');
-    }
-}
-
-function collapseAllProspectusItems() {
-    const items = document.querySelectorAll('.passport-booklet, [data-booklet="visor"]');
-    items.forEach(item => {
-        item.classList.remove('is-open', 'enlarged', 'scale-125', 'z-50');
-        // Reset to first page
-        const bookletId = item.getAttribute('data-booklet') || (item.innerText.toLowerCase().includes('vietnam') ? 'vietnam' : 'cambodia');
-        if (window.prospectusState[bookletId].current !== 1) {
-            updateBookletPage(bookletId, window.prospectusState[bookletId].current, 1);
-            window.prospectusState[bookletId].current = 1;
+        } catch (err) {
+            console.error('Error fetching recently played track:', err);
+            const isSetup = err.message && (err.message.includes('empty') || err.message.includes('browser.json') || err.message.includes('oauth.json') || err.message.includes('authenticate') || err.message.includes('headers') || err.message.includes('Auth'));
+            
+            statusDot.className = isSetup 
+                ? 'w-2 h-2 rounded-full bg-amber-500 animate-pulse shadow-[0_0_8px_rgba(245,158,11,0.7)]' 
+                : 'w-2 h-2 rounded-full bg-red-600 animate-pulse';
+            statusText.innerText = isSetup ? 'SETUP REQUIRED' : 'OFFLINE';
+            statusText.className = isSetup 
+                ? 'metadata text-[10px] tracking-[0.2em] uppercase text-amber-500 font-bold' 
+                : 'metadata text-[10px] tracking-[0.2em] uppercase text-red-500 font-bold';
+                
+            titleEl.innerText = isSetup ? 'Session Setup Needed' : 'Offline';
+            artistEl.innerText = isSetup ? 'Configure browser.json' : 'Service disconnected';
+            albumEl.innerText = 'SYSTEM STANDBY';
+            linkEl.classList.add('opacity-0', 'pointer-events-none');
+            
+            vinylEl.style.animation = 'none';
+            tonearmEl.style.transform = 'rotate(-25deg)';
         }
-    });
-}
+    }
+
+    // Add keyframes stylesheet dynamically for slow vinyl spinning
+    const style = document.createElement('style');
+    style.innerHTML = `
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    `;
+    document.head.appendChild(style);
+
+    updateMusicData();
+    // Poll every 15 seconds to keep it fresh
+    setInterval(updateMusicData, 15000);
+}
