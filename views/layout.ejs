@@ -16,9 +16,9 @@
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     
     <!-- KaTeX Script -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" integrity="sha384-GvrNrr1sR06s4wTjQkHkOqRAn5O11n4v1w1hA5gQ/VONJ0iH6zV4Z/oUv7g0Xlq+" crossorigin="anonymous">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" integrity="sha384-cpW21h6RZv/phavutF+GqIGc/F2DxliE4s2xV01/cW3h5mJ2/T0a/a47XwE1Gz" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117b98586k1E+O2x02Q1EIFhBpeqKz/fB6CWeBSt6A//wzB" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
     <script>document.addEventListener("DOMContentLoaded", function() { renderMathInElement(document.body, { delimiters: [{left: "$$", right: "$$", display: true}, {left: "$", right: "$", display: false}, {left: "\\(", right: "\\)", display: false}, {left: "\\[", right: "\\]", display: true}] }); });</script>
 
     <!-- Tailwind Play CDN -->
@@ -40,6 +40,7 @@
     <link rel="stylesheet" type="text/css" href="/css/components.css">
     <link rel="stylesheet" type="text/css" href="/css/instruments.css">
     <link rel="stylesheet" type="text/css" href="/css/prospectus.css">
+    <link rel="stylesheet" type="text/css" href="/css/flipbook.min.css">
 </head>
 <body class="p-4 md:p-8 lg:p-12 relative flex flex-col items-center justify-center min-h-screen overflow-x-hidden">
     <!-- Subtle background glow -->
@@ -120,8 +121,7 @@
     </main>
 
     <!-- Client-side logic & Dependencies -->
-    <link rel="stylesheet" href="/css/flipbook.min.css">
-    <script src="/js/flipbook.umd.min.js"></script>
+    <script defer src="/js/flipbook.umd.min.js"></script>
     <script defer src="/js/main.js"></script>
 </body>
 </html>
