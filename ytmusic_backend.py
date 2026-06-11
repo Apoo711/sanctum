@@ -91,7 +91,7 @@ def cache_worker():
                 else:
                     logger.info(f"Cache updated: {new_cache.get('message')}")
         except Exception as e:
-            logger.error(f"Background worker error: {e}")
+            logger.error("Background worker error!", exc_info=True)
             error_message = str(e)
             with cache_lock:
                 if cache.get("status") not in ("playing", "idle"):
