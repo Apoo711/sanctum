@@ -239,7 +239,7 @@ async fn get_poems(
     Json(payload): Json<PasswordRequest>,
 ) -> Result<Json<Vec<Poem>>, StatusCode> {
     let expected_password = std::env::var("POEM_PASSWORD")
-        .unwrap_or_else(|_| "YourSecurePasswordHere".to_string());
+        .unwrap_or_else(|_| "SuperSecurePassword".to_string());
 
     if payload.password == expected_password {
         let poems_paths = ["poems.json", "ytmusic-backend/poems.json", "../poems.json"];
