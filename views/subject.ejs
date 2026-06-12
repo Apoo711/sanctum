@@ -61,7 +61,7 @@
 
                         <!-- Access Action Button -->
                         <button 
-                            onclick="accessResource('<%= res.title %>', '<%= res.format %>', '<%= res.size %>')"
+                            onclick="accessResource('<%= res.title %>', '<%= res.format %>', '<%= res.size %>', '<%= res.downloadUrl %>')"
                             class="mt-4 md:mt-0 self-start md:self-center font-mono text-[10px] tracking-widest text-[#020202] hover:text-[#F4F1EA] bg-sanctum-accent hover:bg-transparent border border-sanctum-accent px-4 py-2.5 rounded transition-all duration-300 hover:shadow-[0_0_15px_rgba(181,147,91,0.2)] focus:outline-none whitespace-nowrap z-10"
                         >
                             ACCESS MANUSCRIPT
@@ -90,7 +90,7 @@
 
 <script>
     let vaultTimer = null;
-    function accessResource(title, format, size) {
+    function accessResource(title, format, size, downloadUrl) {
         const vault = document.getElementById('decanting-vault');
         const logsContainer = document.getElementById('vault-logs');
         if (!vault || !logsContainer) return;
@@ -129,9 +129,7 @@
                 vaultTimer = setTimeout(printNextLog, delay);
             } else {
                 // Trigger the redirect download to GitHub Releases
-                const subjectSlug = '<%= subject.slug %>';
-                const encodedTitle = encodeURIComponent(title);
-                window.location.href = `/resources/download/${subjectSlug}/${encodedTitle}`;
+                window.location.href = downloadUrl;
 
                 // Auto dismiss vault overlay after 4 seconds
                 vaultTimer = setTimeout(() => {
