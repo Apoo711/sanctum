@@ -64,6 +64,12 @@ async function build() {
             description: 'Personal portfolio, laboratory, and digital sanctum.'
         }, path.join(DIST_DIR, 'index.html'));
 
+        // Render 404 Page
+        await renderView('404', {
+            title: '404 - Gateway Offline',
+            description: 'The requested path has fractured from the coordinates. Return to index.'
+        }, path.join(DIST_DIR, '404.html'));
+
         // 3. Render Poems Page
         await renderView('poems', {
             title: 'The Codex | Sanctum',
