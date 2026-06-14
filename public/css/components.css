@@ -66,38 +66,73 @@
                  0 0 30px rgba(181, 147, 91, 0.3);
 }
 
-/* Stealth Sidebar */
-.nav-sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100vh;
-    width: 4rem;
-    background: #1A0F0F;
-    border-right: 0.5px solid rgba(181, 147, 91, 0.2);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2.5rem 0;
-    z-index: 100;
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
+/* Stealth Sidebar & Responsive Bottom Navigation Bar */
+@media (min-width: 768px) {
+    .nav-sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100vh;
+        width: 4rem;
+        background: #1A0F0F;
+        border-right: 0.5px solid rgba(181, 147, 91, 0.2);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2.5rem 0;
+        z-index: 100;
+        transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+    }
+
+    .nav-sidebar:hover {
+        width: 15rem;
+    }
+
+    .nav-label {
+        opacity: 0;
+        white-space: nowrap;
+        transition: opacity 0.3s ease;
+        font-size: 0.75rem;
+        letter-spacing: 0.2em;
+    }
+
+    .nav-sidebar:hover .nav-label {
+        opacity: 1;
+    }
 }
 
-.nav-sidebar:hover {
-    width: 15rem;
-}
+@media (max-width: 767px) {
+    .nav-sidebar {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        top: auto;
+        height: 3.75rem;
+        width: 100%;
+        background: rgba(26, 15, 15, 0.95);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-right: none;
+        border-top: 0.5px solid rgba(181, 147, 91, 0.25);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0 1rem;
+        z-index: 1000;
+        overflow: visible;
+        transition: none;
+    }
 
-.nav-label {
-    opacity: 0;
-    white-space: nowrap;
-    transition: opacity 0.3s ease;
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
-}
+    .nav-sidebar a[aria-label="Return to Home"] {
+        margin-right: 1.25rem !important;
+        flex-shrink: 0;
+    }
 
-.nav-sidebar:hover .nav-label {
-    opacity: 1;
+    .nav-sidebar span {
+        display: none !important;
+    }
 }
 
 /* Chess Toggles */
@@ -114,4 +149,18 @@
     background: #B5935B;
     color: #020202;
     border-color: #B5935B;
+}
+
+/* Scriptorium Music Player Song Title Marquee Animation */
+.animate-marquee {
+    animation: marquee-loop-scroll 10s linear infinite;
+}
+
+@keyframes marquee-loop-scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
 }

@@ -16,8 +16,23 @@ app.set('layout', './layout');
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Static Files
-app.use(express.static(path.join(__dirname, 'public')));
+// Disable caching in development for hot-reloads and emulation stability
+if (process.env.NODE_ENV !== 'production') {
+    app.use((req, res, next) => {
+        res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        next();
+    });
+    app.use(express.static(path.join(__dirname, 'public'), {
+        etag: false,
+        maxAge: 0,
+        setHeaders: (res, path) => {
+            res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+        }
+    }));
+} else {
+    app.use(express.static(path.join(__dirname, 'public')));
+}
+
 
 const LOGS_DIR = path.join(__dirname, 'content', 'logs');
 

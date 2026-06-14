@@ -1,4 +1,4 @@
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-[280px]">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 auto-rows-[280px]">
     
     <!-- TILE: THE ORRERY (2x2) -->
     <div class="bento-tile col-span-1 md:col-span-2 row-span-2">
@@ -69,29 +69,29 @@
         </div>
         <div class="h-48 rounded-lg bg-[#020202] border border-sanctum-accent/15 shadow-inner flex overflow-hidden relative group/music">
             <!-- Left Side: Spinning Vinyl / Audio Wave Visualizer -->
-            <div class="w-48 h-full bg-[#020202] flex items-center justify-center relative overflow-hidden border-r border-sanctum-accent/10">
+            <div class="w-32 md:w-48 h-full bg-[#020202] flex items-center justify-center relative overflow-hidden border-r border-sanctum-accent/10">
                 <!-- Vinyl Disc Placeholder -->
-                <div id="music-vinyl-container" class="relative w-32 h-32 flex items-center justify-center">
+                <div id="music-vinyl-container" class="relative w-24 h-24 md:w-32 md:h-32 flex items-center justify-center">
                     <!-- Spinning Vinyl Record -->
-                    <div id="music-vinyl" class="w-28 h-28 rounded-full bg-gradient-to-tr from-[#121212] via-[#282828] to-[#121212] shadow-2xl flex items-center justify-center border border-white/5 relative transition-all duration-[1500ms]">
+                    <div id="music-vinyl" class="w-20 h-20 md:w-28 md:h-28 rounded-full bg-gradient-to-tr from-[#121212] via-[#282828] to-[#121212] shadow-2xl flex items-center justify-center border border-white/5 relative transition-all duration-[1500ms]">
                         <!-- Vinyl Grooves -->
-                        <div class="absolute inset-2 rounded-full border border-black/20"></div>
-                        <div class="absolute inset-4 rounded-full border border-black/35"></div>
-                        <div class="absolute inset-6 rounded-full border border-black/50"></div>
-                        <div class="absolute inset-8 rounded-full border border-black/60"></div>
+                        <div class="absolute inset-1 md:inset-2 rounded-full border border-black/20"></div>
+                        <div class="absolute inset-2.5 md:inset-4 rounded-full border border-black/35"></div>
+                        <div class="absolute inset-4 md:inset-6 rounded-full border border-black/50"></div>
+                        <div class="absolute inset-5.5 md:inset-8 rounded-full border border-black/60"></div>
                         
                         <!-- Vinyl Album Art Center -->
-                        <div id="music-cover" class="w-12 h-12 rounded-full bg-cover bg-center border border-black/50 overflow-hidden z-10 flex items-center justify-center bg-zinc-800 transition-all duration-[1000ms]">
+                        <div id="music-cover" class="w-8 h-8 md:w-12 md:h-12 rounded-full bg-cover bg-center border border-black/50 overflow-hidden z-10 flex items-center justify-center bg-zinc-800 transition-all duration-[1000ms]">
                             <!-- Default music symbol -->
-                            <svg id="music-default-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B5935B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-music"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                            <svg id="music-default-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B5935B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-music"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
                         </div>
                         
                         <!-- Center Spindle Hole (absolute to prevent pushing the cover off-center) -->
-                        <div class="w-2.5 h-2.5 rounded-full bg-[#020202] border border-white/10 z-20 shadow-inner absolute"></div>
+                        <div class="w-1.5 h-1.5 md:w-2.5 md:h-2.5 rounded-full bg-[#020202] border border-white/10 z-20 shadow-inner absolute"></div>
                     </div>
                     
                     <!-- Stylus/Tonearm (Swings over when playing) -->
-                    <div id="music-tonearm" class="absolute top-2 right-2 w-10 h-16 origin-[top_right] rotate-[-25deg] transition-transform duration-[1000ms] ease-out pointer-events-none">
+                    <div id="music-tonearm" class="absolute top-1 right-1 w-8 h-12 md:top-2 md:right-2 md:w-10 md:h-16 origin-[top_right] rotate-[-25deg] transition-transform duration-[1000ms] ease-out pointer-events-none">
                         <svg viewBox="0 0 40 80" class="w-full h-full" fill="none" stroke="#B5935B" stroke-width="2">
                             <!-- Pivot Base -->
                             <circle cx="30" cy="15" r="8" fill="#121212" stroke="#B5935B" stroke-width="1"/>
@@ -111,9 +111,10 @@
                         <span id="music-status-dot" class="w-2 h-2 rounded-full bg-zinc-600 animate-pulse"></span>
                         <span id="music-status-text" class="metadata text-[10px] tracking-[0.2em] uppercase text-zinc-500 font-bold">DISCONNECTED</span>
                     </div>
-                    
-                    <div class="mt-2">
-                        <h3 id="music-title" class="text-xl font-serif text-[#F4F1EA] tracking-wide line-clamp-1">Offline</h3>
+                    <div class="mt-2 w-full overflow-hidden">
+                        <div class="w-full overflow-hidden">
+                            <h3 id="music-title" class="text-xl font-serif text-[#F4F1EA] tracking-wide whitespace-nowrap inline-block">Offline</h3>
+                        </div>
                         <p id="music-artist" class="text-sm text-sanctum-accent/80 font-mono mt-1 tracking-wider line-clamp-1">No service running</p>
                     </div>
                 </div>

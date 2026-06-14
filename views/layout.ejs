@@ -7,8 +7,7 @@
     <title><%= locals.title || 'Aryan Gupta | Sanctum' %></title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><filter id='rough'><feTurbulence type='fractalNoise' baseFrequency='0.05' numOctaves='2' result='noise'/><feDisplacementMap in='SourceGraphic' in2='noise' scale='3'/></filter><rect width='100' height='100' fill='none'/><g filter='url(%23rough)' transform='rotate(-5 50 50)'><circle cx='50' cy='50' r='42' fill='none' stroke='%23B5935B' stroke-width='4' stroke-dasharray='1,2'/><circle cx='50' cy='50' r='36' fill='none' stroke='%23B5935B' stroke-width='1'/><text x='50' y='62' font-family='serif' font-size='32' font-weight='bold' fill='%23B5935B' text-anchor='middle' style='letter-spacing:2px'>AG</text></g></svg>">
 
-    <!-- View Transitions API -->
-    <meta name="view-transition" content="same-origin">
+
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -36,17 +35,17 @@
             } 
         }
     </script>
-    <link rel="stylesheet" type="text/css" href="/css/theme.css">
-    <link rel="stylesheet" type="text/css" href="/css/components.css">
-    <link rel="stylesheet" type="text/css" href="/css/instruments.css">
-    <link rel="stylesheet" type="text/css" href="/css/prospectus.css">
-    <link rel="stylesheet" type="text/css" href="/css/flipbook.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/theme.css?v=1.0.2">
+    <link rel="stylesheet" type="text/css" href="/css/components.css?v=1.0.2">
+    <link rel="stylesheet" type="text/css" href="/css/instruments.css?v=1.0.2">
+    <link rel="stylesheet" type="text/css" href="/css/prospectus.css?v=1.0.2">
+    <link rel="stylesheet" type="text/css" href="/css/flipbook.min.css?v=1.0.2">
     
     <!-- GoatCounter Analytics -->
     <script data-goatcounter="https://aryan-gupta.goatcounter.com/count"
             async src="//gc.zgo.at/count.js"></script>
 </head>
-<body class="p-4 md:p-8 lg:p-12 relative flex flex-col items-center justify-center min-h-screen overflow-x-hidden">
+<body class="p-4 md:p-8 lg:p-12 relative flex flex-col items-center justify-start md:justify-center min-h-screen overflow-x-hidden">
     <!-- Subtle background glow -->
     <div class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] md:w-[800px] md:h-[800px] bg-sanctum-accent/5 rounded-full blur-[100px] md:blur-[150px] pointer-events-none -z-10"></div>
     
@@ -58,30 +57,30 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B5935B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
         </a>
 
-        <div class="flex-1 flex flex-col items-start w-full mt-8 gap-10 pl-[22px] group-hover:pl-5 md:group-hover:pl-7 transition-all duration-300">
-            <a href="/blog" class="flex items-center gap-6 w-full text-[#B5935B]/60 hover:text-[#B5935B] hover:drop-shadow-[0_0_8px_rgba(181,147,91,0.8)] font-serif tracking-widest text-xs uppercase" aria-label="Archives" style="white-space: nowrap;">
+        <div class="flex-1 flex flex-row md:flex-col items-center md:items-start w-full mt-0 md:mt-8 gap-0 md:gap-10 pl-0 md:pl-[22px] md:group-hover:pl-7 transition-all duration-300 justify-around md:justify-start">
+            <a href="/blog" class="flex items-center justify-center md:justify-start gap-0 md:gap-6 w-auto md:w-full text-[#B5935B]/60 hover:text-[#B5935B] hover:drop-shadow-[0_0_8px_rgba(181,147,91,0.8)] font-serif tracking-widest text-xs uppercase" aria-label="Archives" style="white-space: nowrap;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open min-w-5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                 <span class="opacity-0 group-hover:opacity-100 text-[#B5935B]" style="white-space: nowrap; transition: opacity 0.3s ease-in-out;">The Chronicles</span>
             </a>
             
-            <a href="/resources" class="flex items-center gap-6 w-full text-[#B5935B]/60 hover:text-[#B5935B] hover:drop-shadow-[0_0_8px_rgba(181,147,91,0.8)] font-serif tracking-widest text-xs uppercase" aria-label="Laboratory" style="white-space: nowrap;">
+            <a href="/resources" class="flex items-center justify-center md:justify-start gap-0 md:gap-6 w-auto md:w-full text-[#B5935B]/60 hover:text-[#B5935B] hover:drop-shadow-[0_0_8px_rgba(181,147,91,0.8)] font-serif tracking-widest text-xs uppercase" aria-label="Laboratory" style="white-space: nowrap;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-flask-conical min-w-5"><path d="M10 2v7.527a2 2 0 0 0 .586 1.414l5.828 5.828A2 2 0 0 1 15 19.59V22h-6v-2.41a2 2 0 0 1 .586-1.414l5.828-5.828A2 2 0 0 0 16 9.527V2h-6z"/><path d="M8.5 2h7"/><path d="M10.5 14h3"/></svg>
                 <span class="opacity-0 group-hover:opacity-100 text-[#B5935B]" style="white-space: nowrap; transition: opacity 0.3s ease-in-out;">The Scriptorium</span>
             </a>
             
-            <a href="/poems" class="flex items-center gap-6 w-full text-[#B5935B]/60 hover:text-[#B5935B] hover:drop-shadow-[0_0_8px_rgba(181,147,91,0.8)] font-serif tracking-widest text-xs uppercase" aria-label="The Codex" style="white-space: nowrap;">
+            <a href="/poems" class="flex items-center justify-center md:justify-start gap-0 md:gap-6 w-auto md:w-full text-[#B5935B]/60 hover:text-[#B5935B] hover:drop-shadow-[0_0_8px_rgba(181,147,91,0.8)] font-serif tracking-widest text-xs uppercase" aria-label="The Codex" style="white-space: nowrap;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-feather min-w-5"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
                 <span class="opacity-0 group-hover:opacity-100 text-[#B5935B]" style="white-space: nowrap; transition: opacity 0.3s ease-in-out;">The Codex</span>
             </a>
             
-            <button id="prospectus-btn" class="flex items-center gap-6 w-full text-[#B5935B]/60 hover:text-[#B5935B] hover:drop-shadow-[0_0_8px_rgba(181,147,91,0.8)] font-serif tracking-widest text-xs uppercase outline-none" aria-label="Prospectus" style="white-space: nowrap;">
+            <button id="prospectus-btn" class="flex items-center justify-center md:justify-start gap-0 md:gap-6 w-auto md:w-full text-[#B5935B]/60 hover:text-[#B5935B] hover:drop-shadow-[0_0_8px_rgba(181,147,91,0.8)] font-serif tracking-widest text-xs uppercase outline-none" aria-label="Prospectus" style="white-space: nowrap;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-stamp min-w-5"><path d="M5 22h14"/><path d="M19.27 13.73A2.5 2.5 0 0 0 17.5 13h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1.5c0-.66-.26-1.3-.73-1.77Z"/><path d="M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-3-3c-1.66 0-3 1.34-3 3 0 2 1 2 1 3.5V13"/></svg>
                 <span class="opacity-0 group-hover:opacity-100 text-[#B5935B]" style="white-space: nowrap; transition: opacity 0.3s ease-in-out;">Prospectus</span>
             </button>
         </div>
         
         <!-- Bottom ornamental scroll -->
-        <div class="mb-4">
+        <div class="hidden md:block mb-4">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(181, 147, 91, 0.4)" stroke-width="1" class="group-hover:stroke-[#B5935B] transition-colors"><path d="M12 2v20 M7 7l5-5 5 5 M7 17l5 5 5-5"/></svg>
         </div>
     </nav>
@@ -125,12 +124,12 @@
 
     </div><!-- /prospectus-modal -->
 
-    <main class="w-full max-w-6xl relative z-10 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] ml-16" id="main-content">
+    <main class="w-full max-w-6xl relative z-10 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] ml-0 md:ml-16 pb-20 md:pb-0" id="main-content">
         <%- body %>
     </main>
 
     <!-- Client-side logic & Dependencies -->
-    <script defer src="/js/flipbook.umd.min.js"></script>
-    <script defer src="/js/main.js"></script>
+    <script defer src="/js/flipbook.umd.min.js?v=1.0.2"></script>
+    <script defer src="/js/main.js?v=1.0.2"></script>
 </body>
 </html>

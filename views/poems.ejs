@@ -295,6 +295,98 @@
     #poems-flipbook .c-flipbook__page.face-cover-dark::before {
         display: none;
     }
+
+    /* ── RESPONSIVE MOBILE ADJUSTMENTS FOR CODEX BOOK VIEW ── */
+    @media (max-width: 768px) {
+        .poems-book-wrapper {
+            height: 65vw !important;
+            max-height: 380px !important;
+        }
+
+        #poems-book-container {
+            min-height: auto !important;
+            padding-bottom: 2rem !important;
+        }
+
+        /* Scale down page padding for mobile */
+        #poems-flipbook .c-flipbook__page div[style*="padding:2.25rem"] {
+            padding: 0.75rem !important;
+        }
+
+        #poems-flipbook .c-flipbook__page div[style*="padding: 1.5rem;"] {
+            padding: 0.5rem !important;
+        }
+
+        #poems-flipbook .c-flipbook__page div[style*="padding: 2.25rem;"] {
+            padding: 0.75rem !important;
+        }
+
+        /* Adjust front cover design */
+        #poems-flipbook .c-flipbook__page h2.font-script {
+            font-size: 1.25rem !important;
+        }
+
+        #poems-flipbook .c-flipbook__page p[style*="font-size: 0.75rem"] {
+            font-size: 0.55rem !important;
+            line-height: 1.3 !important;
+            max-width: 140px !important;
+        }
+
+        #poems-flipbook .c-flipbook__page div[style*="font-size: 2rem"] {
+            font-size: 1.2rem !important;
+            margin-bottom: 0.2rem !important;
+        }
+
+        #poems-flipbook .c-flipbook__page div[style*="margin: 0.75rem 0;"] {
+            margin: 0.35rem 0 !important;
+        }
+
+        #poems-flipbook .c-flipbook__page div[style*="bottom: 1.5rem"] {
+            bottom: 0.5rem !important;
+            font-size: 0.45rem !important;
+        }
+
+        /* Adjust inside front cover text */
+        #poems-flipbook .c-flipbook__page p[style*="font-size: 0.8rem"] {
+            font-size: 0.6rem !important;
+            line-height: 1.5 !important;
+            max-width: 140px !important;
+        }
+
+        #poems-flipbook .c-flipbook__page div[style*="margin-top: 1.5rem;"] {
+            margin-top: 0.5rem !important;
+        }
+
+        /* Adjust dynamic poems text */
+        #poems-flipbook .c-flipbook__page div[style*="font-size:0.45rem"] {
+            font-size: 0.45rem !important;
+        }
+
+        #poems-flipbook .c-flipbook__page div[style*="margin-bottom:1.25rem"] {
+            margin-bottom: 0.4rem !important;
+        }
+
+        #poems-flipbook .poem-title-script {
+            font-size: 1rem !important;
+            margin-bottom: 0.4rem !important;
+        }
+
+        #poems-flipbook .poem-body {
+            font-size: 0.58rem !important;
+            line-height: 1.3 !important;
+        }
+
+        #poems-flipbook .poem-body br {
+            content: "";
+            display: block;
+            margin-bottom: 1.5px;
+        }
+
+        #poems-flipbook .c-flipbook__page div[style*="bottom:0.75rem"] {
+            font-size: 0.45rem !important;
+            bottom: 0.3rem !important;
+        }
+    }
 </style>
 
 <script>

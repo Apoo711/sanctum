@@ -158,9 +158,13 @@ function initOrrery() {
         ctx.translate(w/2, h/2);
         ctx.scale(1, 0.7); // 3D Perspective
 
+        // Calculate responsive orbit radii based on canvas size
+        const maxRadius = Math.min(w, h) * 0.35;
+        const radii = [maxRadius * 0.4, maxRadius * 0.7, maxRadius];
+
         // Draw Orbits with glow
         ctx.strokeStyle = '#B5935B';
-        [70, 120, 180].forEach((r, i) => {
+        radii.forEach((r, i) => {
             ctx.shadowBlur = 15;
             ctx.shadowColor = 'rgba(181, 147, 91, 0.2)';
             ctx.globalAlpha = 0.15;
@@ -358,6 +362,29 @@ function initRecentlyPlayed() {
 
     if (!titleEl) return;
 
+    function checkTitleMarquee() {
+        // We need to wait for layout/render to calculate width correctly
+        setTimeout(() => {
+            titleEl.classList.remove('animate-marquee');
+            titleEl.style.transform = 'none';
+            
+            // Retrieve original text if we've already duplicated it
+            const originalText = titleEl.dataset.originalText || titleEl.innerText;
+            titleEl.dataset.originalText = originalText;
+            titleEl.innerText = originalText;
+
+            const parentWidth = titleEl.parentElement.clientWidth;
+            const textWidth = titleEl.scrollWidth;
+
+            if (textWidth > parentWidth && parentWidth > 0) {
+                // Duplicate text with spacing to create a seamless looping circle marquee
+                const spacer = " \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 "; // 10 non-breaking spaces
+                titleEl.innerText = originalText + spacer + originalText;
+                titleEl.classList.add('animate-marquee');
+            }
+        }, 200);
+    }
+
     async function updateMusicData() {
         try {
             const response = await fetch('/api/recently-played');
@@ -373,6 +400,7 @@ function initRecentlyPlayed() {
                 titleEl.innerText = data.title;
                 artistEl.innerText = data.artist;
                 albumEl.innerText = data.album;
+                checkTitleMarquee();
 
                 // Update link to track if videoId is available
                 if (data.videoId) {
@@ -406,6 +434,7 @@ function initRecentlyPlayed() {
                     titleEl.innerText = data.title;
                     artistEl.innerText = data.artist;
                     albumEl.innerText = data.album;
+                    checkTitleMarquee();
                     
                     if (data.videoId) {
                         linkEl.href = `https://music.youtube.com/watch?v=${data.videoId}`;
@@ -442,6 +471,7 @@ function initRecentlyPlayed() {
             titleEl.innerText = isSetup ? 'Session Setup Needed' : 'Offline';
             artistEl.innerText = isSetup ? 'Configure browser.json' : 'Service disconnected';
             albumEl.innerText = 'SYSTEM STANDBY';
+            checkTitleMarquee();
             linkEl.classList.add('opacity-0', 'pointer-events-none');
             
             vinylEl.style.animation = 'none';
