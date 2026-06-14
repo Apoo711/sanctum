@@ -116,7 +116,6 @@ async function build() {
         // Render individual blog posts
         for (const post of posts) {
             const filePath = path.join(LOGS_DIR, `${post.slug}.md`);
-            const raw = await fs.writeFile ? null : ''; // dummy check
             const fileContent = await fs.readFile(filePath, 'utf8');
             const { data: meta, content } = matter(fileContent);
             const html = marked.parse(content);

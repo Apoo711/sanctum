@@ -4,18 +4,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initVceCountdown();
     initChessToggles();
     initOrrery();
-    initSidebar();
     initKatexLaboratory(); // Ensure KaTeX is explicitly called
     initProspectusDrawer(); // Restore Prospectus functionality
-    initProspectusInteraction(); // Comprehensive interaction for passports/dossier
     initRecentlyPlayed(); // Initialize Spotify/YTMusic Recently Played
 });
 
-// 1. Sidebar Stealth Logic
-function initSidebar() {
-    const sidebar = document.getElementById('sidebar');
-    if (!sidebar) return;
-}
+
 
 // 2. Tactics Toggle Logic
 async function initChessToggles() {
@@ -345,7 +339,6 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
-function initProspectusInteraction() {}  // no-op shim — Scholar's Desk Overlay
 
 // 7. YouTube Music Recently Played Integration
 function initRecentlyPlayed() {

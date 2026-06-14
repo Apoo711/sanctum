@@ -2,7 +2,6 @@ const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
 const fs = require('fs').promises;
-const matter = require('gray-matter');
 const app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 3000;
@@ -34,42 +33,12 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 
-const LOGS_DIR = path.join(__dirname, 'content', 'logs');
-
 // Routes
 app.get('/', (req, res) => {
     res.render('index', {
         title: 'Aryan Gupta | Sanctum',
         description: 'Personal portfolio, laboratory, and digital sanctum.'
     });
-});
-
-// Blog index — reads all .md files, parses frontmatter, sorts by date
-app.get('/blog', async (req, res) => {
-    try {
-        const files = await fs.readdir(LOGS_DIR);
-        const mdFiles = files.filter(f => f.endsWith('.md'));
-
-        const posts = await Promise.all(
-            mdFiles.map(async (filename) => {
-                const raw = await fs.readFile(path.join(LOGS_DIR, filename), 'utf8');
-                const { data } = matter(raw);
-                const slug = filename.replace(/\.md$/, '');
-                return { slug, ...data };
-            })
-        );
-
-        posts.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-        res.render('blog', {
-            title: 'The Chronicles | Sanctum',
-            description: 'Expedition logs, conceptual dispatches, and structural observations from the Sanctum.',
-            posts
-        });
-    } catch (err) {
-        console.error('[Blog Index Error]', err);
-        res.status(500).send('Internal Server Error');
-    }
 });
 
 // Scriptorium Subjects Data
