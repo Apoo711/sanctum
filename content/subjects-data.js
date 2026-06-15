@@ -168,7 +168,7 @@ module.exports = {
         name: 'English',
         slug: 'english',
         subtitle: 'VCE English Units 3 & 4',
-        glyph: '✍',
+        glyph: '🖋',
         description: 'The study of literature, rhetoric, and argument analysis. Focuses on structured critical writing, textual analysis, and persuasive language.',
         resources: [
             {
