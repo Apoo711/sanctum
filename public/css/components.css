@@ -151,7 +151,7 @@
     border-color: #B5935B;
 }
 
-/* Scriptorium Music Player Song Title Marquee Animation */
+/* Phonograph Music Player Song Title Marquee Animation */
 .animate-marquee {
     animation: marquee-loop-scroll 10s linear infinite;
 }

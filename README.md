@@ -61,7 +61,7 @@ npm start
 The application will launch on `http://localhost:3000`.
 
 ### 3. YouTube Music Proxy (Optional)
-The Scriptorium music widget attempts to proxy recently played tracks from a local python backend running on port `5000`. If you wish to configure this, adjust the `oauth.json` credentials as required by the backend service.
+The Phonograph music widget attempts to proxy recently played tracks from a local python backend running on port `5000`. If you wish to configure this, adjust the `oauth.json` credentials as required by the backend service.
 
 ---
 
