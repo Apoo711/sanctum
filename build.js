@@ -3,6 +3,7 @@ const path = require('path');
 const ejs = require('ejs');
 const matter = require('gray-matter');
 const { marked } = require('marked');
+const { generateSitemapXml } = require('./utils/sitemap');
 
 const DIST_DIR = path.join(__dirname, 'dist');
 const VIEWS_DIR = path.join(__dirname, 'views');
@@ -131,6 +132,12 @@ async function build() {
         // 7. Copy static assets (css, js, images)
         await copyDir(PUBLIC_DIR, DIST_DIR);
         console.log('[BUILD] Static assets copied successfully.');
+
+        // 8. Generate Sitemap
+        console.log('[BUILD] Generating sitemap...');
+        const sitemapXml = await generateSitemapXml();
+        await fs.writeFile(path.join(DIST_DIR, 'sitemap.xml'), sitemapXml, 'utf8');
+        console.log('[BUILD] Sitemap generated successfully.');
 
         console.log('[BUILD] Compilation finished successfully. Output in /dist folder.');
     } catch (e) {
