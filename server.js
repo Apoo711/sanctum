@@ -3,6 +3,7 @@ const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
 const fs = require('fs').promises;
 const app = express();
+app.set('trust proxy', true);
 app.use(express.json());
 const PORT = process.env.PORT || 3000;
 
@@ -100,8 +101,24 @@ app.get('/poems', (req, res) => {
     });
 });
 
+// Map to track failed password attempts by IP
+const failedAttempts = new Map();
+
 // Proxy endpoint to fetch poems from Rust backend
 app.post('/api/poems', async (req, res) => {
+    const ip = req.ip;
+    const now = Date.now();
+
+    // Check if this IP is blocked
+    const record = failedAttempts.get(ip);
+    if (record && record.blockedUntil && record.blockedUntil > now) {
+        const remainingMinutes = Math.ceil((record.blockedUntil - now) / 60000);
+        return res.status(429).json({
+            status: 'error',
+            message: `Too many incorrect attempts. Locked out for ${remainingMinutes} more minutes.`
+        });
+    }
+
     try {
         const response = await fetch('http://127.0.0.1:8000/api/poems', {
             method: 'POST',
@@ -112,6 +129,15 @@ app.post('/api/poems', async (req, res) => {
         });
         
         if (response.status === 401) {
+            // Track failed attempts
+            let rec = failedAttempts.get(ip) || { count: 0, blockedUntil: 0 };
+            rec.count += 1;
+            if (rec.count >= 5) {
+                rec.blockedUntil = now + 15 * 60 * 1000; // Block for 15 minutes
+                rec.count = 0;
+            }
+            failedAttempts.set(ip, rec);
+
             return res.status(401).json({
                 status: 'error',
                 message: 'Invalid passkey cipher.'
@@ -124,6 +150,9 @@ app.post('/api/poems', async (req, res) => {
                 message: 'Backend server returned an error.'
             });
         }
+
+        // Reset failures on success
+        failedAttempts.delete(ip);
 
         const data = await response.json();
         res.status(response.status).json(data);
