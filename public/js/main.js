@@ -55,8 +55,8 @@ async function initChessToggles() {
     });
 
     if(stats) {
-        const rapid = stats.chess_rapid?.last?.rating || '713';
-        ratingEl.innerHTML = `${rapid} <span class="text-xs opacity-50 font-sans tracking-widest">ELO</span>`;
+        const bullet = stats.chess_bullet?.last?.rating || '713';
+        ratingEl.innerHTML = `${bullet} <span class="text-xs opacity-50 font-sans tracking-widest">ELO</span>`;
     }
 }
 
