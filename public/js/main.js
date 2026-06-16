@@ -44,7 +44,7 @@ async function initChessToggles() {
             
             const mode = btn.dataset.mode;
             const key = `chess_${mode.toLowerCase()}`;
-            const score = stats ? (stats[key]?.last?.rating || 'N/A') : '713';
+            const score = stats ? (stats[key]?.last?.rating || 'N/A') : '1027';
             
             // Update Icon
             if (iconContainer) iconContainer.innerHTML = icons[mode];
@@ -55,7 +55,7 @@ async function initChessToggles() {
     });
 
     if(stats) {
-        const bullet = stats.chess_bullet?.last?.rating || '713';
+        const bullet = stats.chess_bullet?.last?.rating || '1027';
         ratingEl.innerHTML = `${bullet} <span class="text-xs opacity-50 font-sans tracking-widest">ELO</span>`;
     }
 }
