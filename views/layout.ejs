@@ -35,11 +35,11 @@
             } 
         }
     </script>
-    <link rel="stylesheet" type="text/css" href="/css/theme.css?v=1.0.5">
-    <link rel="stylesheet" type="text/css" href="/css/components.css?v=1.0.5">
-    <link rel="stylesheet" type="text/css" href="/css/instruments.css?v=1.0.5">
-    <link rel="stylesheet" type="text/css" href="/css/prospectus.css?v=1.0.5">
-    <link rel="stylesheet" type="text/css" href="/css/flipbook.min.css?v=1.0.5">
+    <link rel="stylesheet" type="text/css" href="/css/theme.css?v=1.1.1">
+    <link rel="stylesheet" type="text/css" href="/css/components.css?v=1.1.1">
+    <link rel="stylesheet" type="text/css" href="/css/instruments.css?v=1.1.1">
+    <link rel="stylesheet" type="text/css" href="/css/prospectus.css?v=1.1.1">
+    <link rel="stylesheet" type="text/css" href="/css/flipbook.min.css?v=1.1.1">
     
     <!-- GoatCounter Analytics -->
     <script data-goatcounter="https://aryan-gupta.goatcounter.com/count"
@@ -58,6 +58,11 @@
         </a>
 
         <div class="flex-1 flex flex-row md:flex-col items-center md:items-start w-full mt-0 md:mt-8 gap-0 md:gap-10 pl-0 md:pl-[22px] md:group-hover:pl-7 transition-all duration-300 justify-around md:justify-start">
+            <button id="prospectus-btn" class="flex items-center justify-center md:justify-start gap-0 md:gap-6 w-auto md:w-full text-[#B5935B]/60 hover:text-[#B5935B] hover:drop-shadow-[0_0_8px_rgba(181,147,91,0.8)] font-serif tracking-widest text-xs uppercase outline-none" aria-label="Prospectus" style="white-space: nowrap;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-stamp min-w-5"><path d="M5 22h14"/><path d="M19.27 13.73A2.5 2.5 0 0 0 17.5 13h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1.5c0-.66-.26-1.3-.73-1.77Z"/><path d="M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-3-3c-1.66 0-3 1.34-3 3 0 2 1 2 1 3.5V13"/></svg>
+                <span class="opacity-0 group-hover:opacity-100 text-[#B5935B]" style="white-space: nowrap; transition: opacity 0.3s ease-in-out;">Prospectus</span>
+            </button>
+            
             <a href="/blog" class="flex items-center justify-center md:justify-start gap-0 md:gap-6 w-auto md:w-full text-[#B5935B]/60 hover:text-[#B5935B] hover:drop-shadow-[0_0_8px_rgba(181,147,91,0.8)] font-serif tracking-widest text-xs uppercase" aria-label="Archives" style="white-space: nowrap;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-book-open min-w-5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
                 <span class="opacity-0 group-hover:opacity-100 text-[#B5935B]" style="white-space: nowrap; transition: opacity 0.3s ease-in-out;">The Chronicles</span>
@@ -68,15 +73,15 @@
                 <span class="opacity-0 group-hover:opacity-100 text-[#B5935B]" style="white-space: nowrap; transition: opacity 0.3s ease-in-out;">The Scriptorium</span>
             </a>
             
+            <a href="/pomodoro" class="flex items-center justify-center md:justify-start gap-0 md:gap-6 w-auto md:w-full text-[#B5935B]/60 hover:text-[#B5935B] hover:drop-shadow-[0_0_8px_rgba(181,147,91,0.8)] font-serif tracking-widest text-xs uppercase" aria-label="The Sandglass" style="white-space: nowrap;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-hourglass min-w-5"><path d="M5 2h14"/><path d="M5 22h14"/><path d="M19 2v4c0 3.8-3.1 7-7 7s-7-3.2-7-7V2"/><path d="M5 22v-4c0-3.8 3.1-7 7-7s7 3.2 7 7v4"/></svg>
+                <span class="opacity-0 group-hover:opacity-100 text-[#B5935B]" style="white-space: nowrap; transition: opacity 0.3s ease-in-out;">The Sandglass</span>
+            </a>
+            
             <a href="/poems" class="flex items-center justify-center md:justify-start gap-0 md:gap-6 w-auto md:w-full text-[#B5935B]/60 hover:text-[#B5935B] hover:drop-shadow-[0_0_8px_rgba(181,147,91,0.8)] font-serif tracking-widest text-xs uppercase" aria-label="The Codex" style="white-space: nowrap;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-feather min-w-5"><path d="M20.24 12.24a6 6 0 0 0-8.49-8.49L5 10.5V19h8.5z"/><line x1="16" y1="8" x2="2" y2="22"/><line x1="17.5" y1="15" x2="9" y2="15"/></svg>
                 <span class="opacity-0 group-hover:opacity-100 text-[#B5935B]" style="white-space: nowrap; transition: opacity 0.3s ease-in-out;">The Codex</span>
             </a>
-            
-            <button id="prospectus-btn" class="flex items-center justify-center md:justify-start gap-0 md:gap-6 w-auto md:w-full text-[#B5935B]/60 hover:text-[#B5935B] hover:drop-shadow-[0_0_8px_rgba(181,147,91,0.8)] font-serif tracking-widest text-xs uppercase outline-none" aria-label="Prospectus" style="white-space: nowrap;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-stamp min-w-5"><path d="M5 22h14"/><path d="M19.27 13.73A2.5 2.5 0 0 0 17.5 13h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1.5c0-.66-.26-1.3-.73-1.77Z"/><path d="M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-3-3c-1.66 0-3 1.34-3 3 0 2 1 2 1 3.5V13"/></svg>
-                <span class="opacity-0 group-hover:opacity-100 text-[#B5935B]" style="white-space: nowrap; transition: opacity 0.3s ease-in-out;">Prospectus</span>
-            </button>
         </div>
         
         <!-- Bottom ornamental scroll -->
@@ -129,7 +134,7 @@
     </main>
 
     <!-- Client-side logic & Dependencies -->
-    <script defer src="/js/flipbook.umd.min.js?v=1.0.5"></script>
-    <script defer src="/js/main.js?v=1.0.5"></script>
+    <script defer src="/js/flipbook.umd.min.js?v=1.1.1"></script>
+    <script defer src="/js/main.js?v=1.1.1"></script>
 </body>
 </html>

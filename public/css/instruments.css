@@ -1,4 +1,149 @@
-@layer components {
-    /* Custom specific component styles for Orrery/Chronometer goes here */
-    /* Handled heavily via JS canvas and native Tailwind utility classes currently */
+/* --- THE SANDGLASS (POMODORO) STYLES --- */
+
+/* Preset Selectors */
+.preset-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.4rem 1rem;
+    border: 0.5px solid rgba(181, 147, 91, 0.25);
+    border-radius: 999px;
+    color: rgba(181, 147, 91, 0.6);
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.preset-btn:hover {
+    border-color: rgba(181, 147, 91, 0.8);
+    color: #F4F1EA;
+    box-shadow: 0 0 10px rgba(181, 147, 91, 0.1);
+}
+
+.preset-btn.active {
+    background: #B5935B;
+    color: #020202;
+    border-color: #B5935B;
+    box-shadow: 0 0 15px rgba(181, 147, 91, 0.25);
+}
+
+/* Control Buttons */
+.control-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    padding: 0.6rem 1.25rem;
+    border: 0.5px solid rgba(181, 147, 91, 0.4);
+    border-radius: 0.5rem;
+    color: #B5935B;
+    background: rgba(26, 15, 15, 0.25);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.control-btn:hover {
+    border-color: rgba(181, 147, 91, 0.9);
+    color: #F4F1EA;
+    box-shadow: 0 0 15px rgba(181, 147, 91, 0.15);
+}
+
+.primary-btn {
+    background: #B5935B;
+    color: #020202;
+    border-color: #B5935B;
+}
+
+.primary-btn:hover {
+    background: #c7a770;
+    border-color: #c7a770;
+    color: #020202;
+    box-shadow: 0 0 20px rgba(181, 147, 91, 0.35);
+}
+
+/* --- STEALTH FOCUS MODE STYLES --- */
+
+/* Sidebar exit transition */
+body.focus-mode-active #sidebar {
+    transform: translateX(-100%);
+    opacity: 0;
+    pointer-events: none;
+}
+@media (max-width: 767px) {
+    body.focus-mode-active #sidebar {
+        transform: translateY(100%);
+    }
+}
+
+/* Main workspace centering */
+body.focus-mode-active #main-content {
+    margin-left: 0 !important;
+}
+
+/* Global dimming */
+body.focus-mode-active {
+    background: #000000 !important;
+    transition: background 1.5s ease-in-out;
+}
+
+/* Dim out decorative elements in background */
+body.focus-mode-active .fixed.top-1/2 {
+    opacity: 0.02;
+    transition: opacity 1.5s ease-in-out;
+}
+
+/* Dim layout structure elements */
+body.focus-mode-active #pomodoro-header,
+body.focus-mode-active #pomodoro-controls {
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+/* Centered focus timer styling */
+body.focus-mode-active #pomodoro-container {
+    background: transparent !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    min-height: 85vh;
+}
+
+body.focus-mode-active #timer-status {
+    opacity: 0.4;
+    font-size: 0.75rem;
+    letter-spacing: 0.4em;
+    transform: translateY(-10px);
+}
+
+body.focus-mode-active #hourglass-wrapper {
+    transform: scale(1.18);
+}
+
+body.focus-mode-active #digital-display {
+    color: rgba(181, 147, 91, 0.22); /* A warm, dark brass color - much more visible on black than 3% white, but still stealthy */
+}
+
+body.focus-mode-active #digital-display:hover {
+    color: rgba(181, 147, 91, 0.6); /* Highlights to golden read on hover */
+}
+
+/* Exit button show */
+#exit-focus-btn {
+    border-color: rgba(181, 147, 91, 0.3);
+}
+
+body.focus-mode-active #exit-focus-btn {
+    opacity: 0.6;
+    pointer-events: auto;
+}
+
+body.focus-mode-active #exit-focus-btn:hover {
+    opacity: 1;
+    border-color: #B5935B;
+    box-shadow: 0 0 15px rgba(181, 147, 91, 0.2);
 }

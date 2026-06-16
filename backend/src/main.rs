@@ -56,7 +56,7 @@ pub struct Poem {
 
 // Helper to load environment variables from .env
 fn load_env_file() {
-    let env_paths = [".env", "ytmusic-backend/.env", "../.env"];
+    let env_paths = [".env", "backend/.env", "../.env"];
     for path in env_paths {
         if let Ok(content) = std::fs::read_to_string(path) {
             println!("Loading environment variables from: {}", path);
@@ -133,7 +133,7 @@ async fn fetch_real_song() -> Result<SongState, Box<dyn std::error::Error + Send
     let client = Client::new()?;
 
     println!("Attempting authentication using browser.json...");
-    let browser_paths = ["browser.json", "../browser.json", "ytmusic-backend/browser.json"];
+    let browser_paths = ["browser.json", "../browser.json", "backend/browser.json"];
     let mut browser_file = None;
     for path in browser_paths {
         if let Ok(f) = File::open(path) {
@@ -242,7 +242,7 @@ async fn get_poems(
         .unwrap_or_else(|_| "SuperSecurePassword".to_string());
 
     if payload.password == expected_password {
-        let poems_paths = ["poems.json", "ytmusic-backend/poems.json", "../poems.json"];
+        let poems_paths = ["poems.json", "backend/poems.json", "../poems.json"];
         let mut poems_file = None;
         for path in poems_paths {
             if let Ok(f) = File::open(path) {

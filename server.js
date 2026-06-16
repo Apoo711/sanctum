@@ -34,11 +34,66 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 
+// Quotes Data & Caching Engine
+const QUOTES_DATA = require('./content/quotes');
+const quoteStatePath = path.join(__dirname, 'content', 'quote-state.json');
+
+async function getDailyQuote() {
+    let state = { lastUpdatedDate: "", currentIndex: -1 };
+    try {
+        const data = await fs.readFile(quoteStatePath, 'utf8');
+        state = JSON.parse(data);
+    } catch (err) {
+        // Fallback to defaults if file missing
+    }
+
+    const today = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD in local timezone
+
+    if (state.lastUpdatedDate !== today) {
+        state.currentIndex = (state.currentIndex + 1) % QUOTES_DATA.length;
+        state.lastUpdatedDate = today;
+        try {
+            await fs.writeFile(quoteStatePath, JSON.stringify(state, null, 2), 'utf8');
+        } catch (err) {
+            console.error('[Quote State Write Error]', err.message);
+        }
+    }
+
+    return QUOTES_DATA[state.currentIndex];
+}
+
 // Routes
-app.get('/', (req, res) => {
-    res.render('index', {
-        title: 'Aryan Gupta | Sanctum',
-        description: 'Personal portfolio, laboratory, and digital sanctum.'
+app.get('/', async (req, res) => {
+    try {
+        const quote = await getDailyQuote();
+        res.render('index', {
+            title: 'Aryan Gupta | Sanctum',
+            description: 'Personal portfolio, laboratory, and digital sanctum.',
+            quote
+        });
+    } catch (err) {
+        console.error('[Error loading daily quote]', err);
+        res.render('index', {
+            title: 'Aryan Gupta | Sanctum',
+            description: 'Personal portfolio, laboratory, and digital sanctum.',
+            quote: { text: "You have power over your mind - not outside events. Realize this, and you will find strength.", author: "Marcus Aurelius" }
+        });
+    }
+});
+
+app.get('/api/quote', async (req, res) => {
+    try {
+        const quote = await getDailyQuote();
+        res.json(quote);
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to retrieve daily quote' });
+    }
+});
+
+app.get('/pomodoro', (req, res) => {
+    res.render('pomodoro', {
+        title: 'The Sandglass | Sanctum',
+        description: 'An interactive mechanical focus chronometer.'
     });
 });
 

@@ -1,0 +1,77 @@
+<div class="bento-tile min-h-[70vh] flex flex-col justify-between relative overflow-hidden group" id="pomodoro-container">
+    <!-- Subtle grid texture background -->
+    <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTEgMWgyMHYyMEgxVjF6IiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjEyLCAxNzUsIDU1LCAwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9zdmc+')] opacity-50 z-0 pointer-events-none"></div>
+
+    <!-- Header -->
+    <div class="bento-header z-10 transition-opacity duration-500" id="pomodoro-header">
+        <h2><span class="status-dot"></span>THE SANDGLASS</h2>
+        <span class="metadata">FOCUS_CHRONOMETER</span>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="flex-1 flex flex-col items-center justify-center py-6 z-10 relative">
+        
+        <!-- Large visual feedback indicator (Focus / Break status) -->
+        <div id="timer-status" class="metadata text-xs tracking-[0.25em] text-sanctum-accent/60 mb-4 transition-all duration-500 uppercase">STANDBY // READY</div>
+
+        <!-- The Hourglass Canvas Wrapper -->
+        <div class="relative w-[300px] h-[340px] flex items-center justify-center transition-transform duration-1000 ease-[cubic-bezier(0.68,-0.6,0.27,1.6)]" id="hourglass-wrapper">
+            <canvas id="sandglass-canvas" width="300" height="340" class="w-full h-full cursor-pointer filter drop-shadow-[0_0_15px_rgba(181,147,91,0.1)] hover:drop-shadow-[0_0_20px_rgba(181,147,91,0.25)] transition-all duration-300"></canvas>
+            
+            <!-- Floating overlay digital timer (very subtle, visible on hover or low opacity in focus) -->
+            <div id="digital-display" class="absolute inset-0 flex items-center justify-center font-mono text-3xl font-bold tracking-widest text-[#F4F1EA]/10 hover:text-sanctum-accent/80 transition-all duration-300 pointer-events-none select-none">
+                25:00
+            </div>
+        </div>
+
+        <!-- Session Progress Bar (Subtle line below canvas) -->
+        <div class="w-48 h-[1px] bg-sanctum-accent/10 mt-6 relative overflow-hidden rounded-full" id="progress-bar-container">
+            <div id="progress-bar" class="absolute top-0 left-0 h-full w-0 bg-sanctum-accent transition-all duration-300"></div>
+        </div>
+
+    </div>
+
+    <!-- Footer Controls -->
+    <div class="z-10 flex flex-col gap-6 items-center transition-all duration-500" id="pomodoro-controls">
+        
+        <!-- Preset selectors -->
+        <div class="flex flex-wrap justify-center gap-3">
+            <button class="preset-btn active" data-duration="1500">25m Focus</button>
+            <button class="preset-btn" data-duration="3000">50m Focus</button>
+            <button class="preset-btn" data-duration="300">5m Break</button>
+            <button class="preset-btn" data-duration="900">15m Break</button>
+        </div>
+
+        <!-- Action controls -->
+        <div class="flex items-center gap-6">
+            <!-- Reset / Rotate Button -->
+            <button id="reset-btn" class="control-btn group/icon" aria-label="Reset & Flip Sandglass">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover/icon:rotate-180 transition-transform duration-500"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+                <span>FLIP CHRONOS</span>
+            </button>
+
+            <!-- Main Start/Pause Button -->
+            <button id="start-btn" class="control-btn primary-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="start-icon"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+                <span id="start-text">BEGIN FOCUS</span>
+            </button>
+        </div>
+
+        <!-- Stealth Focus Mode Switch -->
+        <div class="flex items-center gap-3 text-xs mb-2">
+            <span class="metadata opacity-50">Stealth Focus Mode</span>
+            <button id="focus-toggle" class="w-9 h-5 rounded-full bg-[#1A0F0F] border border-sanctum-accent/30 p-0.5 flex items-center transition-colors duration-300 relative cursor-pointer" aria-label="Toggle Stealth Focus Mode">
+                <span class="w-3.5 h-3.5 rounded-full bg-sanctum-accent/50 transition-all duration-300 transform translate-x-0" id="focus-toggle-dot"></span>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Exit Focus Mode floating button (only visible when Focus Mode is active) -->
+    <button id="exit-focus-btn" class="fixed top-6 right-6 z-[1000] control-btn opacity-0 pointer-events-none transition-all duration-500 text-xs py-1.5 px-3 uppercase tracking-widest font-mono">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        <span>Exit Focus</span>
+    </button>
+</div>
+
+<script defer src="/js/pomodoro.js?v=1.1.1"></script>

@@ -1,7 +1,6 @@
 /** --- THE INSTRUMENT CONTROLLER --- **/
 
 document.addEventListener('DOMContentLoaded', () => {
-    initVceCountdown();
     initChessToggles();
     initOrrery();
     initKatexLaboratory(); // Ensure KaTeX is explicitly called
@@ -68,43 +67,7 @@ async function fetchChessStats(username) {
     } catch(e) { return null; }
 }
 
-// 3. VCE Epoch Tracker with expanded content
-function initVceCountdown() {
-    const el = document.getElementById('vce-countdown');
-    if (!el) return;
-    const target = new Date('2026-10-26T09:00:00').getTime();
 
-    function update() {
-        const now = new Date().getTime();
-        const dist = target - now;
-        
-        const d = Math.floor(dist / (1000 * 60 * 60 * 24));
-        const h = Math.floor((dist % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const m = Math.floor((dist % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((dist % (1000 * 60)) / 1000);
-
-        const pad = (n) => String(n).padStart(2, '0');
-        
-        // Enlarged scale and increased gap for numbers
-        el.innerHTML = `
-            <div class="flex flex-col items-center gap-2">
-                <span class="vce-number vce-number-glow font-bold text-[2.25rem]">${pad(d)}</span>
-            </div>
-            <div class="flex flex-col items-center gap-2">
-                <span class="vce-number vce-number-glow font-bold text-[2.25rem]">${pad(h)}</span>
-            </div>
-            <div class="flex flex-col items-center gap-2">
-                <span class="vce-number vce-number-glow font-bold text-[2.25rem]">${pad(m)}</span>
-            </div>
-            <div class="flex flex-col items-center gap-2">
-                <span class="vce-number vce-number-glow font-bold text-[2.25rem]">${pad(s)}</span>
-            </div>
-        `;
-    }
-
-    update();
-    setInterval(update, 1000);
-}
 
 // 4. The Orrery Canvas (Enhanced Spacey Aesthetic)
 function initOrrery() {

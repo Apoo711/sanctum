@@ -6,7 +6,7 @@ use ytmapi_rs::{
 };
 
 fn load_env_file() {
-    let env_paths = [".env", "ytmusic-backend/.env", "../.env"];
+    let env_paths = [".env", "backend/.env", "../.env"];
     for path in env_paths {
         if let Ok(content) = std::fs::read_to_string(path) {
             println!("Loading environment variables from: {}", path);
