@@ -60,10 +60,27 @@ async function build() {
         await fs.mkdir(DIST_DIR, { recursive: true });
 
         // 2. Render Index
+        let dailyQuote = { text: "You have power over your mind - not outside events. Realize this, and you will find strength.", author: "Marcus Aurelius" };
+        try {
+            const quotes = require('./content/quotes');
+            if (quotes && quotes.length > 0) {
+                dailyQuote = quotes[0];
+            }
+        } catch (e) {
+            console.warn('[BUILD] Could not load quotes list, using default.');
+        }
+
         await renderView('index', {
             title: 'Aryan Gupta | Sanctum',
-            description: 'Personal portfolio, laboratory, and digital sanctum.'
+            description: 'Personal portfolio, laboratory, and digital sanctum.',
+            quote: dailyQuote
         }, path.join(DIST_DIR, 'index.html'));
+
+        // Render Sandglass (Pomodoro) Page
+        await renderView('pomodoro', {
+            title: 'The Sandglass | Sanctum',
+            description: 'Focus chronometer and study companion.'
+        }, path.join(DIST_DIR, 'pomodoro', 'index.html'));
 
         // Render 404 Page
         await renderView('404', {

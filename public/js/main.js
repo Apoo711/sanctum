@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initKatexLaboratory(); // Ensure KaTeX is explicitly called
     initProspectusDrawer(); // Restore Prospectus functionality
     initRecentlyPlayed(); // Initialize Spotify/YTMusic Recently Played
+    initDailyLedger(); // Fetch and load active quote dynamically from Rust API
 });
 
 
@@ -448,4 +449,23 @@ function initRecentlyPlayed() {
     updateMusicData();
     // Poll every 15 seconds to keep it fresh
     setInterval(updateMusicData, 15000);
-}
+}
+
+// 8. Daily Ledger Quote Integration
+async function initDailyLedger() {
+    const textEl = document.getElementById('ledger-quote-text');
+    const authorEl = document.getElementById('ledger-quote-author');
+    if (!textEl || !authorEl) return;
+
+    try {
+        const response = await fetch('/api/quote');
+        if (response.ok) {
+            const data = await response.json();
+            textEl.innerText = `"${data.text}"`;
+            authorEl.innerHTML = `&mdash; ${data.author}`;
+        }
+    } catch (e) {
+        console.error('Failed to load daily quote from API:', e);
+    }
+}
+

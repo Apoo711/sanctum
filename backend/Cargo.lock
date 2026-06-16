@@ -136,6 +136,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "backend"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "chrono",
+ "reqwest 0.12.28",
+ "serde",
+ "serde_json",
+ "tokio",
+ "tower-http 0.5.2",
+ "ytmapi-rs",
+]
+
+[[package]]
 name = "base64"
 version = "0.22.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2589,19 +2603,6 @@ dependencies = [
  "serde_json",
  "sha1",
  "tokio",
-]
-
-[[package]]
-name = "ytmusic-backend"
-version = "0.1.0"
-dependencies = [
- "axum",
- "reqwest 0.12.28",
- "serde",
- "serde_json",
- "tokio",
- "tower-http 0.5.2",
- "ytmapi-rs",
 ]
 
 [[package]]

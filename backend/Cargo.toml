@@ -22,3 +22,6 @@ reqwest = { version = "0.12.5", features = ["json"] }
 
 # YouTube Music API client in Rust
 ytmapi-rs = "0.3.2"
+
+# Date and time handling
+chrono = "0.4.38"

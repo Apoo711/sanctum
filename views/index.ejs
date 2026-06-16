@@ -26,11 +26,11 @@
             <span class="metadata">DAILY_MAXIM</span>
         </div>
         <div class="flex-1 flex flex-col justify-center p-4">
-            <p class="font-serif italic text-[15px] md:text-base text-center text-[#F4F1EA]/85 leading-relaxed my-auto">
+            <p id="ledger-quote-text" class="font-serif italic text-[15px] md:text-base text-center text-[#F4F1EA]/85 leading-relaxed my-auto">
                 "<%= quote.text %>"
             </p>
             <div class="text-right mt-4 pt-2 border-t border-sanctum-accent/10">
-                <span class="metadata font-bold text-sanctum-accent/80">&mdash; <%= quote.author %></span>
+                <span id="ledger-quote-author" class="metadata font-bold text-sanctum-accent/80">&mdash; <%= quote.author %></span>
             </div>
         </div>
     </div>

@@ -54,6 +54,21 @@ pub struct Poem {
     pub date: String,
 }
 
+// 5. Quote Struct
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct Quote {
+    pub text: String,
+    pub author: String,
+}
+
+// 6. QuoteState Struct
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct QuoteState {
+    pub current_index: usize,
+    pub last_update_date: String,
+}
+
+
 // Helper to load environment variables from .env
 fn load_env_file() {
     let env_paths = [".env", "backend/.env", "../.env"];
@@ -277,6 +292,85 @@ async fn get_poems(
     }
 }
 
+// 3. GET /api/quote
+async fn get_daily_quote() -> Result<Json<Quote>, StatusCode> {
+    use chrono::Local;
+
+    // 1. Load quotes list
+    let quotes_paths = ["quotes.json", "backend/quotes.json", "../quotes.json"];
+    let mut quotes_file = None;
+    for path in quotes_paths {
+        if let Ok(f) = File::open(path) {
+            quotes_file = Some(f);
+            break;
+        }
+    }
+    let mut file = match quotes_file {
+        Some(f) => f,
+        None => {
+            eprintln!("quotes.json not found in any of the expected paths.");
+            return Err(StatusCode::INTERNAL_SERVER_ERROR);
+        }
+    };
+    let mut contents = String::new();
+    if file.read_to_string(&mut contents).is_err() {
+        eprintln!("Failed to read quotes.json content.");
+        return Err(StatusCode::INTERNAL_SERVER_ERROR);
+    }
+    let quotes: Vec<Quote> = match serde_json::from_str(&contents) {
+        Ok(q) => q,
+        Err(e) => {
+            eprintln!("Failed to parse quotes.json: {}", e);
+            return Err(StatusCode::INTERNAL_SERVER_ERROR);
+        }
+    };
+    if quotes.is_empty() {
+        eprintln!("quotes.json is empty.");
+        return Err(StatusCode::INTERNAL_SERVER_ERROR);
+    }
+
+    // 2. Load/Update Quote State
+    let state_paths = ["quote-state.json", "backend/quote-state.json", "../quote-state.json"];
+    let mut state_file_path = "quote-state.json";
+    let mut current_state = QuoteState {
+        current_index: 0,
+        last_update_date: "".to_string(),
+    };
+    
+    for path in state_paths {
+        if let Ok(mut f) = File::open(path) {
+            let mut s_contents = String::new();
+            if f.read_to_string(&mut s_contents).is_ok() {
+                if let Ok(parsed_state) = serde_json::from_str::<QuoteState>(&s_contents) {
+                    current_state = parsed_state;
+                    state_file_path = path;
+                    break;
+                }
+            }
+        }
+    }
+
+    // Get today's date string: "YYYY-MM-DD"
+    let today = Local::now().format("%Y-%m-%d").to_string();
+
+    if current_state.last_update_date != today {
+        // Increment index and update date
+        if !current_state.last_update_date.is_empty() {
+            current_state.current_index = (current_state.current_index + 1) % quotes.len();
+        }
+        current_state.last_update_date = today;
+        
+        // Write back to state file
+        if let Ok(serialized) = serde_json::to_string_pretty(&current_state) {
+            let _ = std::fs::write(state_file_path, serialized);
+        }
+    }
+
+    let selected_quote = quotes.get(current_state.current_index).unwrap_or(&quotes[0]);
+    Ok(Json(selected_quote.clone()))
+}
+
+
 #[tokio::main]
 async fn main() {
     // 0. Load env file
@@ -312,6 +406,7 @@ async fn main() {
     let app = Router::new()
         .route("/api/recently-played", get(get_recently_played))
         .route("/api/poems", post(get_poems))
+        .route("/api/quote", get(get_daily_quote))
         .layer(cors)
         .with_state(shared_state);
 
