@@ -154,6 +154,7 @@
 /* Phonograph Music Player Song Title Marquee Animation */
 .animate-marquee {
     animation: marquee-loop-scroll 10s linear infinite;
+    will-change: transform;
 }
 
 @keyframes marquee-loop-scroll {

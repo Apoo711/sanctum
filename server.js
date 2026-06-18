@@ -133,7 +133,6 @@ app.get('/resources/download/:subject/:title', (req, res) => {
 });
 
 
-// Proxy endpoint to get YouTube Music Recently Played
 app.get('/api/recently-played', async (req, res) => {
     try {
         const response = await fetch('http://127.0.0.1:8000/api/recently-played');

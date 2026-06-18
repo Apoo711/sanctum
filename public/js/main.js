@@ -319,24 +319,26 @@ function initRecentlyPlayed() {
 
     if (!titleEl) return;
 
+    // Use a clean state variable in the closure to track the un-duplicated track title
+    let currentTitle = titleEl.innerText;
+
     function checkTitleMarquee() {
         // We need to wait for layout/render to calculate width correctly
         setTimeout(() => {
             titleEl.classList.remove('animate-marquee');
             titleEl.style.transform = 'none';
             
-            // Retrieve original text if we've already duplicated it
-            const originalText = titleEl.dataset.originalText || titleEl.innerText;
-            titleEl.dataset.originalText = originalText;
-            titleEl.innerText = originalText;
+            // Set titleEl to the clean original title to measure correctly
+            titleEl.innerText = currentTitle;
 
             const parentWidth = titleEl.parentElement.clientWidth;
             const textWidth = titleEl.scrollWidth;
 
             if (textWidth > parentWidth && parentWidth > 0) {
                 // Duplicate text with spacing to create a seamless looping circle marquee
-                const spacer = " \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0 "; // 10 non-breaking spaces
-                titleEl.innerText = originalText + spacer + originalText;
+                // Use strictly non-breaking spaces (\u00A0) to prevent collapsing space artifacts causing stutter
+                const spacer = "\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0"; // 12 non-breaking spaces
+                titleEl.innerText = currentTitle + spacer + currentTitle + spacer;
                 titleEl.classList.add('animate-marquee');
             }
         }, 200);
@@ -354,7 +356,8 @@ function initRecentlyPlayed() {
                 statusText.innerText = 'NOW PLAYING';
                 statusText.className = 'metadata text-[10px] tracking-[0.2em] uppercase text-emerald-500 font-bold';
                 
-                titleEl.innerText = data.title;
+                currentTitle = data.title;
+                titleEl.innerText = currentTitle;
                 artistEl.innerText = data.artist;
                 albumEl.innerText = data.album;
                 checkTitleMarquee();
@@ -388,7 +391,8 @@ function initRecentlyPlayed() {
                 statusText.className = 'metadata text-[10px] tracking-[0.2em] uppercase text-zinc-500 font-bold';
                 
                 if (data.title) {
-                    titleEl.innerText = data.title;
+                    currentTitle = data.title;
+                    titleEl.innerText = currentTitle;
                     artistEl.innerText = data.artist;
                     albumEl.innerText = data.album;
                     checkTitleMarquee();
@@ -425,7 +429,9 @@ function initRecentlyPlayed() {
                 ? 'metadata text-[10px] tracking-[0.2em] uppercase text-amber-500 font-bold' 
                 : 'metadata text-[10px] tracking-[0.2em] uppercase text-red-500 font-bold';
                 
-            titleEl.innerText = isSetup ? 'Session Setup Needed' : 'Offline';
+            const fallbackText = isSetup ? 'Session Setup Needed' : 'Offline';
+            currentTitle = fallbackText;
+            titleEl.innerText = currentTitle;
             artistEl.innerText = isSetup ? 'Configure browser.json' : 'Service disconnected';
             albumEl.innerText = 'SYSTEM STANDBY';
             checkTitleMarquee();
