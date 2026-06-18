@@ -1,6 +1,6 @@
 ---
 title: "Algorithmic Compression: Reclaiming the Archive"
-date: "2026-03-20"
+date: "2025-05-25"
 description: "A clinical look at Compact-GUI and the native Windows CompactOS feature, documenting the empirical disk space recovered from heavy software installations."
 tags: ["infrastructure", "optimization", "compression", "windows"]
 ---

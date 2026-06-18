@@ -1,6 +1,6 @@
 ---
 title: "The Synthetic Scholar: NotebookLM as a Cognitive Engine"
-date: "2026-03-21"
+date: "2025-06-22"
 description: "Analyzing Google's NotebookLM—a source-grounded AI model utilized as a high-fidelity indexing and synthesis tool for VCE academics."
 tags: ["academia", "vce", "artificial-intelligence", "synthesis"]
 ---

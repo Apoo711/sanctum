@@ -1,6 +1,6 @@
 ---
 title: "Visualizing Thought: Architecting the 3D Graph"
-date: "2026-03-19"
+date: "2025-06-24"
 description: "A dissection of the Obsidian 3D Graph plugin—transitioning from 2D maps to a spatial UI, resolving CSS color architecture, and engineering a live physics engine."
 tags: ["obsidian", "architecture", "visualization", "plugins"]
 ---
