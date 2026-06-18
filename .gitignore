@@ -3,6 +3,8 @@ venv/
 __pycache__
 dist/
 
-*.json
+browser.json
+poems.json
+content/quote-state.json
 .env
 target/
