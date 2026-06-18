@@ -5,6 +5,6 @@ dist/
 
 browser.json
 poems.json
-content/quote-state.json
+quote-state.json
 .env
 target/
