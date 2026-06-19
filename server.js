@@ -38,28 +38,31 @@ if (process.env.NODE_ENV !== 'production') {
 const QUOTES_DATA = require('./content/quotes');
 const quoteStatePath = path.join(__dirname, 'content', 'quote-state.json');
 
-async function getDailyQuote() {
-    let state = { lastUpdatedDate: "", currentIndex: -1 };
-    try {
-        const data = await fs.readFile(quoteStatePath, 'utf8');
-        state = JSON.parse(data);
-    } catch (err) {
-        // Fallback to defaults if file missing
-    }
+let cachedQuoteState = null;
 
+async function getDailyQuote() {
     const today = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD in local timezone
 
-    if (state.lastUpdatedDate !== today) {
-        state.currentIndex = (state.currentIndex + 1) % QUOTES_DATA.length;
-        state.lastUpdatedDate = today;
+    if (!cachedQuoteState || cachedQuoteState.lastUpdatedDate !== today) {
         try {
-            await fs.writeFile(quoteStatePath, JSON.stringify(state, null, 2), 'utf8');
+            const data = await fs.readFile(quoteStatePath, 'utf8');
+            cachedQuoteState = JSON.parse(data);
+        } catch (err) {
+            cachedQuoteState = cachedQuoteState || { lastUpdatedDate: "", currentIndex: -1 };
+        }
+    }
+
+    if (cachedQuoteState.lastUpdatedDate !== today) {
+        cachedQuoteState.currentIndex = (cachedQuoteState.currentIndex + 1) % QUOTES_DATA.length;
+        cachedQuoteState.lastUpdatedDate = today;
+        try {
+            await fs.writeFile(quoteStatePath, JSON.stringify(cachedQuoteState, null, 2), 'utf8');
         } catch (err) {
             console.error('[Quote State Write Error]', err.message);
         }
     }
 
-    return QUOTES_DATA[state.currentIndex];
+    return QUOTES_DATA[cachedQuoteState.currentIndex];
 }
 
 // Routes
