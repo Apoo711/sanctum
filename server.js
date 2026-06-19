@@ -125,7 +125,8 @@ app.get('/resources/download/:subject/:title', (req, res) => {
     if (!subjectData) {
         return res.status(404).render('404', { title: '404 - Gateway Offline' });
     }
-    const resource = subjectData.resources.find(r => r.title.toLowerCase() === title.toLowerCase());
+    const lowercasedTitle = title.toLowerCase();
+    const resource = subjectData.resources.find(r => r.title.toLowerCase() === lowercasedTitle);
     if (!resource || !resource.downloadUrl) {
         return res.status(404).render('404', { title: '404 - Gateway Offline' });
     }

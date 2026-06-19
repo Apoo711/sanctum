@@ -17,7 +17,7 @@ const SUBJECTS_DATA = require('./content/subjects-data');
 async function copyDir(src, dest) {
     await fs.mkdir(dest, { recursive: true });
     const entries = await fs.readdir(src, { withFileTypes: true });
-    for (const entry of entries) {
+    await Promise.all(entries.map(async (entry) => {
         const srcPath = path.join(src, entry.name);
         const destPath = path.join(dest, entry.name);
         if (entry.isDirectory()) {
@@ -25,7 +25,7 @@ async function copyDir(src, dest) {
         } else {
             await fs.copyFile(srcPath, destPath);
         }
-    }
+    }));
 }
 
 // Helper to render an EJS view with the default layout
@@ -132,7 +132,7 @@ async function build() {
         }, path.join(DIST_DIR, 'blog', 'index.html'));
 
         // Render individual blog posts
-        for (const post of posts) {
+        await Promise.all(posts.map(async (post) => {
             const filePath = path.join(LOGS_DIR, `${post.slug}.md`);
             const fileContent = await fs.readFile(filePath, 'utf8');
             const { data: meta, content } = matter(fileContent);
@@ -144,7 +144,7 @@ async function build() {
                 meta,
                 content: html
             }, path.join(DIST_DIR, 'blog', post.slug, 'index.html'));
-        }
+        }));
 
         // 7. Copy static assets (css, js, images)
         await copyDir(PUBLIC_DIR, DIST_DIR);
