@@ -28,7 +28,6 @@ function initSandglass() {
     // Elements
     const startBtn = document.getElementById('start-btn');
     const startText = document.getElementById('start-text');
-    const startIcon = document.getElementById('start-icon');
     const resetBtn = document.getElementById('reset-btn');
     const timerStatus = document.getElementById('timer-status');
     const digitalDisplay = document.getElementById('digital-display');
@@ -37,7 +36,6 @@ function initSandglass() {
     const focusToggle = document.getElementById('focus-toggle');
     const focusToggleDot = document.getElementById('focus-toggle-dot');
     const exitFocusBtn = document.getElementById('exit-focus-btn');
-    const hourglassWrapper = document.getElementById('hourglass-wrapper');
 
     // Particle system variables
     let fallingParticles = [];

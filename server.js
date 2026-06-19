@@ -40,18 +40,19 @@ const quoteStatePath = path.join(__dirname, 'content', 'quote-state.json');
 
 let cachedQuoteState = null;
 
-async function getDailyQuote() {
-    const today = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD in local timezone
-
+async function fetchQuoteState(today) {
     if (!cachedQuoteState || cachedQuoteState.lastUpdatedDate !== today) {
         try {
             const data = await fs.readFile(quoteStatePath, 'utf8');
             cachedQuoteState = JSON.parse(data);
         } catch (err) {
+            console.error('[Quote State Read Error]', err.message);
             cachedQuoteState = cachedQuoteState || { lastUpdatedDate: "", currentIndex: -1 };
         }
     }
+}
 
+async function updateQuoteState(today) {
     if (cachedQuoteState.lastUpdatedDate !== today) {
         cachedQuoteState.currentIndex = (cachedQuoteState.currentIndex + 1) % QUOTES_DATA.length;
         cachedQuoteState.lastUpdatedDate = today;
@@ -61,7 +62,12 @@ async function getDailyQuote() {
             console.error('[Quote State Write Error]', err.message);
         }
     }
+}
 
+async function getDailyQuote() {
+    const today = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD in local timezone
+    await fetchQuoteState(today);
+    await updateQuoteState(today);
     return QUOTES_DATA[cachedQuoteState.currentIndex];
 }
 
