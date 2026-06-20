@@ -70,11 +70,69 @@ pub struct QuoteState {
 
 
 // Helper to load environment variables from .env
+// Helper to dynamically locate a file checking CWD, its parent/child folders,
+// and walking up the executable path directory tree.
+fn find_file(filename: &str) -> Option<std::path::PathBuf> {
+    // 1. Check relative to CWD
+    let cwd_paths = [
+        std::path::PathBuf::from(filename),
+        std::path::PathBuf::from("backend").join(filename),
+        std::path::PathBuf::from("..").join(filename),
+    ];
+    for path in &cwd_paths {
+        if path.exists() {
+            return Some(path.clone());
+        }
+    }
+
+    // 2. Check relative to executable directory and its parents
+    if let Ok(exe_path) = std::env::current_exe() {
+        let mut dir = exe_path.parent();
+        while let Some(parent) = dir {
+            let path = parent.join(filename);
+            if path.exists() {
+                return Some(path);
+            }
+            let backend_path = parent.join("backend").join(filename);
+            if backend_path.exists() {
+                return Some(backend_path);
+            }
+            dir = parent.parent();
+        }
+    }
+
+    None
+}
+
+// Helper to load environment variables from all found .env files
 fn load_env_file() {
-    let env_paths = [".env", "backend/.env", "../.env"];
-    for path in env_paths {
-        if let Ok(content) = std::fs::read_to_string(path) {
-            println!("Loading environment variables from: {}", path);
+    let mut loaded_any = false;
+    let mut env_paths = vec![
+        std::path::PathBuf::from(".env"),
+        std::path::PathBuf::from("backend/.env"),
+        std::path::PathBuf::from("../.env"),
+    ];
+
+    if let Ok(exe_path) = std::env::current_exe() {
+        let mut dir = exe_path.parent();
+        while let Some(parent) = dir {
+            env_paths.push(parent.join(".env"));
+            env_paths.push(parent.join("backend/.env"));
+            dir = parent.parent();
+        }
+    }
+
+    // De-duplicate paths while preserving order
+    let mut unique_paths = Vec::new();
+    for p in env_paths {
+        if !unique_paths.contains(&p) {
+            unique_paths.push(p);
+        }
+    }
+
+    for path in unique_paths {
+        if let Ok(content) = std::fs::read_to_string(&path) {
+            println!("Loading environment variables from: {:?}", path);
             for line in content.lines() {
                 let line = line.trim();
                 if line.is_empty() || line.starts_with('#') {
@@ -86,8 +144,12 @@ fn load_env_file() {
                     std::env::set_var(key, val);
                 }
             }
-            break;
+            loaded_any = true;
         }
+    }
+
+    if !loaded_any {
+        println!("Warning: No .env file could be loaded.");
     }
 }
 
@@ -148,16 +210,9 @@ async fn fetch_real_song() -> Result<SongState, Box<dyn std::error::Error + Send
     let client = Client::new()?;
 
     println!("Attempting authentication using browser.json...");
-    let browser_paths = ["browser.json", "../browser.json", "backend/browser.json"];
-    let mut browser_file = None;
-    for path in browser_paths {
-        if let Ok(f) = File::open(path) {
-            browser_file = Some(f);
-            break;
-        }
-    }
-    
-    let mut file = browser_file.ok_or("browser.json authentication session file not found")?;
+    let resolved_browser_path = find_file("browser.json")
+        .ok_or("browser.json authentication session file not found")?;
+    let mut file = File::open(resolved_browser_path)?;
     let mut contents = String::new();
     file.read_to_string(&mut contents)?;
     
@@ -257,17 +312,14 @@ async fn get_poems(
         .unwrap_or_else(|_| "SuperSecurePassword".to_string());
 
     if payload.password == expected_password {
-        let poems_paths = ["poems.json", "backend/poems.json", "../poems.json"];
-        let mut poems_file = None;
-        for path in poems_paths {
-            if let Ok(f) = File::open(path) {
-                poems_file = Some(f);
-                break;
-            }
-        }
-
-        let mut file = match poems_file {
-            Some(f) => f,
+        let mut file = match find_file("poems.json") {
+            Some(path) => match File::open(path) {
+                Ok(f) => f,
+                Err(e) => {
+                    eprintln!("Failed to open poems.json: {}", e);
+                    return Err(StatusCode::INTERNAL_SERVER_ERROR);
+                }
+            },
             None => {
                 eprintln!("poems.json not found in any of the expected paths.");
                 return Err(StatusCode::INTERNAL_SERVER_ERROR);
@@ -297,16 +349,14 @@ async fn get_daily_quote() -> Result<Json<Quote>, StatusCode> {
     use chrono::Local;
 
     // 1. Load quotes list
-    let quotes_paths = ["quotes.json", "backend/quotes.json", "../quotes.json"];
-    let mut quotes_file = None;
-    for path in quotes_paths {
-        if let Ok(f) = File::open(path) {
-            quotes_file = Some(f);
-            break;
-        }
-    }
-    let mut file = match quotes_file {
-        Some(f) => f,
+    let mut file = match find_file("quotes.json") {
+        Some(path) => match File::open(path) {
+            Ok(f) => f,
+            Err(e) => {
+                eprintln!("Failed to open quotes.json: {}", e);
+                return Err(StatusCode::INTERNAL_SERVER_ERROR);
+            }
+        },
         None => {
             eprintln!("quotes.json not found in any of the expected paths.");
             return Err(StatusCode::INTERNAL_SERVER_ERROR);
@@ -330,22 +380,19 @@ async fn get_daily_quote() -> Result<Json<Quote>, StatusCode> {
     }
 
     // 2. Load/Update Quote State
-    let state_paths = ["quote-state.json", "backend/quote-state.json", "../quote-state.json"];
-    let mut state_file_path = "quote-state.json";
+    let resolved_state_path = find_file("quote-state.json")
+        .unwrap_or_else(|| std::path::PathBuf::from("quote-state.json"));
+    
     let mut current_state = QuoteState {
         current_index: 0,
         last_update_date: "".to_string(),
     };
     
-    for path in state_paths {
-        if let Ok(mut f) = File::open(path) {
-            let mut s_contents = String::new();
-            if f.read_to_string(&mut s_contents).is_ok() {
-                if let Ok(parsed_state) = serde_json::from_str::<QuoteState>(&s_contents) {
-                    current_state = parsed_state;
-                    state_file_path = path;
-                    break;
-                }
+    if let Ok(mut f) = File::open(&resolved_state_path) {
+        let mut s_contents = String::new();
+        if f.read_to_string(&mut s_contents).is_ok() {
+            if let Ok(parsed_state) = serde_json::from_str::<QuoteState>(&s_contents) {
+                current_state = parsed_state;
             }
         }
     }
@@ -362,7 +409,7 @@ async fn get_daily_quote() -> Result<Json<Quote>, StatusCode> {
         
         // Write back to state file
         if let Ok(serialized) = serde_json::to_string_pretty(&current_state) {
-            let _ = std::fs::write(state_file_path, serialized);
+            let _ = std::fs::write(&resolved_state_path, serialized);
         }
     }
 

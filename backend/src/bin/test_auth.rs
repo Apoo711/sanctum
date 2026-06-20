@@ -5,11 +5,68 @@ use ytmapi_rs::{
     Client, YtMusicBuilder, auth::BrowserToken, auth::OAuthToken, query::GetHistoryQuery,
 };
 
+// Helper to dynamically locate a file checking CWD, its parent/child folders,
+// and walking up the executable path directory tree.
+fn find_file(filename: &str) -> Option<std::path::PathBuf> {
+    // 1. Check relative to CWD
+    let cwd_paths = [
+        std::path::PathBuf::from(filename),
+        std::path::PathBuf::from("backend").join(filename),
+        std::path::PathBuf::from("..").join(filename),
+    ];
+    for path in &cwd_paths {
+        if path.exists() {
+            return Some(path.clone());
+        }
+    }
+
+    // 2. Check relative to executable directory and its parents
+    if let Ok(exe_path) = std::env::current_exe() {
+        let mut dir = exe_path.parent();
+        while let Some(parent) = dir {
+            let path = parent.join(filename);
+            if path.exists() {
+                return Some(path);
+            }
+            let backend_path = parent.join("backend").join(filename);
+            if backend_path.exists() {
+                return Some(backend_path);
+            }
+            dir = parent.parent();
+        }
+    }
+
+    None
+}
+
 fn load_env_file() {
-    let env_paths = [".env", "backend/.env", "../.env"];
-    for path in env_paths {
-        if let Ok(content) = std::fs::read_to_string(path) {
-            println!("Loading environment variables from: {}", path);
+    let mut loaded_any = false;
+    let mut env_paths = vec![
+        std::path::PathBuf::from(".env"),
+        std::path::PathBuf::from("backend/.env"),
+        std::path::PathBuf::from("../.env"),
+    ];
+
+    if let Ok(exe_path) = std::env::current_exe() {
+        let mut dir = exe_path.parent();
+        while let Some(parent) = dir {
+            env_paths.push(parent.join(".env"));
+            env_paths.push(parent.join("backend/.env"));
+            dir = parent.parent();
+        }
+    }
+
+    // De-duplicate paths while preserving order
+    let mut unique_paths = Vec::new();
+    for p in env_paths {
+        if !unique_paths.contains(&p) {
+            unique_paths.push(p);
+        }
+    }
+
+    for path in unique_paths {
+        if let Ok(content) = std::fs::read_to_string(&path) {
+            println!("Loading environment variables from: {:?}", path);
             for line in content.lines() {
                 let line = line.trim();
                 if line.is_empty() || line.starts_with('#') {
@@ -21,8 +78,12 @@ fn load_env_file() {
                     std::env::set_var(key, val);
                 }
             }
-            break;
+            loaded_any = true;
         }
+    }
+
+    if !loaded_any {
+        println!("Warning: No .env file could be loaded.");
     }
 }
 
@@ -34,15 +95,11 @@ async fn main() {
 
     // 1. Try OAuth
     println!("\n--- 1. Testing OAuth ---");
-    let oauth_paths = ["oauth.json", "../oauth.json"];
-    let mut oauth_file = None;
-    for path in oauth_paths {
-        if let Ok(f) = File::open(path) {
-            println!("Found oauth file at: {}", path);
-            oauth_file = Some(f);
-            break;
-        }
-    }
+    let oauth_file = find_file("oauth.json")
+        .and_then(|path| {
+            println!("Found oauth file at: {:?}", path);
+            File::open(path).ok()
+        });
 
     if let Some(mut file) = oauth_file {
         let mut contents = String::new();
@@ -116,15 +173,11 @@ async fn main() {
 
     // 2. Try Browser
     println!("\n--- 2. Testing Browser Token ---");
-    let browser_paths = ["browser.json", "../browser.json"];
-    let mut browser_file = None;
-    for path in browser_paths {
-        if let Ok(f) = File::open(path) {
-            println!("Found browser file at: {}", path);
-            browser_file = Some(f);
-            break;
-        }
-    }
+    let browser_file = find_file("browser.json")
+        .and_then(|path| {
+            println!("Found browser file at: {:?}", path);
+            File::open(path).ok()
+        });
 
     if let Some(mut file) = browser_file {
         let mut contents = String::new();
