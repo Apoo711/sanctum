@@ -11,9 +11,6 @@ This application is built as an EJS-powered **Node.js & Express** app featuring 
 ### 🕰️ The Orrery
 A live, canvas-rendered mechanical clockwork. Operating on a 3D-perspective physics engine, it translates the current hour, minute, and second into rotating celestial orbits. You can click and drag on the canvas to inspect the mechanism from different angles.
 
-### ⏳ VCE Ephemeris
-A countdown tracking the exact time remaining until the VCE examination epoch. It utilizes custom glowing typography and runs in permanent view on the dashboard to help structure study sessions.
-
 ### ♟️ Tactics Tile
 A live ELO score widget connected directly to Chess.com. It fetches real-time statistics and displays hand-drawn vector icons representing Bullet, Blitz, or Rapid ratings depending on which mode is toggled.
 
