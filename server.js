@@ -169,8 +169,59 @@ app.get('/poems', (req, res) => {
     });
 });
 
-// Map to track failed password attempts by IP
-const failedAttempts = new Map();
+// A Map wrapper that implements eviction (size limit) and TTL cleanup to prevent memory exhaustion
+class FailedAttemptsTracker {
+    constructor(maxSize = 1000, ttlMs = 30 * 60 * 1000) {
+        this.map = new Map();
+        this.maxSize = maxSize;
+        this.ttlMs = ttlMs;
+    }
+
+    get(ip) {
+        this.pruneExpired();
+        return this.map.get(ip);
+    }
+
+    set(ip, record) {
+        this.pruneExpired();
+
+        // If the entry doesn't exist and we are at/over the capacity, evict the oldest
+        if (!this.map.has(ip) && this.map.size >= this.maxSize) {
+            let oldestIp = null;
+            let oldestTime = Infinity;
+            for (const [key, value] of this.map.entries()) {
+                if (value.lastAttempt < oldestTime) {
+                    oldestTime = value.lastAttempt;
+                    oldestIp = key;
+                }
+            }
+            if (oldestIp) {
+                this.map.delete(oldestIp);
+            }
+        }
+
+        record.lastAttempt = Date.now();
+        this.map.set(ip, record);
+    }
+
+    delete(ip) {
+        return this.map.delete(ip);
+    }
+
+    pruneExpired() {
+        const now = Date.now();
+        for (const [ip, record] of this.map.entries()) {
+            const isBlocked = record.blockedUntil && record.blockedUntil > now;
+            const isExpired = (now - record.lastAttempt) > this.ttlMs;
+            if (!isBlocked && isExpired) {
+                this.map.delete(ip);
+            }
+        }
+    }
+}
+
+// Tracker to manage failed password attempts by IP with a size limit and TTL eviction
+const failedAttempts = new FailedAttemptsTracker();
 
 // Proxy endpoint to fetch poems from Rust backend
 app.post('/api/poems', async (req, res) => {
@@ -245,4 +296,4 @@ if (require.main === module) {
     app.listen(PORT, () => console.log(`Nuclear engine engaged. Sanctum Server running on port ${PORT}`));
 }
 
-module.exports = { app, quotesHelper };
+module.exports = { app, quotesHelper, failedAttempts, FailedAttemptsTracker };

@@ -1,7 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert');
 const express = require('express');
-const { app, quotesHelper } = require('./server');
+const { app, quotesHelper, FailedAttemptsTracker } = require('./server');
 
 test('Server Route "/" Error Fallback', async (t) => {
     let server;
@@ -87,4 +87,63 @@ test('Route "/resources/download/:subject/:title"', async (t) => {
         assert.strictEqual(response.status, 404);
     });
 });
+
+test('FailedAttemptsTracker Unit Tests', async (t) => {
+    await t.test('should track failed attempts and handle basic retrieval', () => {
+        const tracker = new FailedAttemptsTracker(5, 60000);
+        tracker.set('1.1.1.1', { count: 1, blockedUntil: 0 });
+        const record = tracker.get('1.1.1.1');
+        assert.ok(record);
+        assert.strictEqual(record.count, 1);
+        assert.ok(record.lastAttempt);
+    });
+
+    await t.test('should prune expired non-blocked entries', async () => {
+        // Set TTL to 10ms
+        const tracker = new FailedAttemptsTracker(5, 10);
+        tracker.set('1.1.1.1', { count: 1, blockedUntil: 0 });
+        
+        // Wait 20ms
+        await new Promise(resolve => setTimeout(resolve, 20));
+        
+        // Query to trigger prune
+        const record = tracker.get('1.1.1.1');
+        assert.strictEqual(record, undefined);
+    });
+
+    await t.test('should NOT prune blocked entries even if older than TTL', async () => {
+        // Set TTL to 10ms
+        const tracker = new FailedAttemptsTracker(5, 10);
+        const now = Date.now();
+        tracker.set('1.1.1.1', { count: 0, blockedUntil: now + 1000 });
+        
+        // Wait 20ms (longer than TTL)
+        await new Promise(resolve => setTimeout(resolve, 20));
+        
+        // Query to check if it's still there
+        const record = tracker.get('1.1.1.1');
+        assert.ok(record);
+        assert.ok(record.blockedUntil > Date.now());
+    });
+
+    await t.test('should enforce size limit by evicting the oldest entry', () => {
+        // Set size limit to 2
+        const tracker = new FailedAttemptsTracker(2, 60000);
+        
+        tracker.set('1.1.1.1', { count: 1, blockedUntil: 0 });
+        tracker.set('2.2.2.2', { count: 2, blockedUntil: 0 });
+        
+        // Manually adjust timestamps in the internal map for test predictability
+        tracker.map.get('1.1.1.1').lastAttempt = Date.now() - 10000;
+        tracker.map.get('2.2.2.2').lastAttempt = Date.now() - 5000;
+        
+        // This third insert should trigger eviction of the oldest (1.1.1.1)
+        tracker.set('3.3.3.3', { count: 3, blockedUntil: 0 });
+
+        assert.strictEqual(tracker.get('1.1.1.1'), undefined);
+        assert.ok(tracker.get('2.2.2.2'));
+        assert.ok(tracker.get('3.3.3.3'));
+    });
+});
+
 

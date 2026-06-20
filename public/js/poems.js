@@ -673,6 +673,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (listItems.length === 0 || poemCards.length === 0) return;
 
+        let activeIndex = null;
+
         if (sidebarObserver) {
             sidebarObserver.disconnect();
         }
@@ -683,16 +685,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     const id = entry.target.id;
                     const index = id.split('-').pop();
 
-                    listItems.forEach(item => {
-                        item.classList.remove('border-sanctum-accent', 'pl-4');
-                        item.classList.add('border-transparent', 'pl-3');
-                        const link = item.querySelector('a');
-                        if (link) {
-                            link.classList.remove('text-sanctum-accent', 'font-bold');
-                            link.classList.add('text-[#F4F1EA]/50');
-                        }
-                    });
+                    if (activeIndex === index) return;
 
+                    // Deactivate previously active item
+                    if (activeIndex !== null) {
+                        const prevActiveItem = document.querySelector(`.sidebar-item-${activeIndex}`);
+                        if (prevActiveItem) {
+                            prevActiveItem.classList.remove('border-sanctum-accent', 'pl-4');
+                            prevActiveItem.classList.add('border-transparent', 'pl-3');
+                            const prevActiveLink = prevActiveItem.querySelector('a');
+                            if (prevActiveLink) {
+                                prevActiveLink.classList.remove('text-sanctum-accent', 'font-bold');
+                                prevActiveLink.classList.add('text-[#F4F1EA]/50');
+                            }
+                        }
+                    }
+
+                    // Activate newly active item
                     const activeItem = document.querySelector(`.sidebar-item-${index}`);
                     if (activeItem) {
                         activeItem.classList.remove('border-transparent', 'pl-3');
@@ -703,6 +712,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             activeLink.classList.add('text-sanctum-accent', 'font-bold');
                         }
                     }
+
+                    activeIndex = index;
                 }
             });
         }, {
