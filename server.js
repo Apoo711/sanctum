@@ -3,7 +3,11 @@ const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
 const fs = require('fs').promises;
 const app = express();
-app.set('trust proxy', true);
+// Configure trust proxy to mitigate IP spoofing by restricting trusted upstream proxies
+const trustedProxies = process.env.TRUSTED_PROXIES
+    ? process.env.TRUSTED_PROXIES.split(',').map(ip => ip.trim())
+    : ['loopback', 'linklocal', 'uniquelocal'];
+app.set('trust proxy', trustedProxies);
 app.use(express.json());
 const PORT = process.env.PORT || 3000;
 
