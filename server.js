@@ -71,10 +71,14 @@ async function getDailyQuote() {
     return QUOTES_DATA[cachedQuoteState.currentIndex];
 }
 
+const quotesHelper = {
+    getDailyQuote
+};
+
 // Routes
 app.get('/', async (req, res) => {
     try {
-        const quote = await getDailyQuote();
+        const quote = await quotesHelper.getDailyQuote();
         res.render('index', {
             title: 'Aryan Gupta | Sanctum',
             description: 'Personal portfolio, laboratory, and digital sanctum.',
@@ -92,7 +96,7 @@ app.get('/', async (req, res) => {
 
 app.get('/api/quote', async (req, res) => {
     try {
-        const quote = await getDailyQuote();
+        const quote = await quotesHelper.getDailyQuote();
         res.json(quote);
     } catch (err) {
         res.status(500).json({ error: 'Failed to retrieve daily quote' });
@@ -237,4 +241,8 @@ app.use((req, res) => {
     res.status(404).render('404', { title: '404 - Gateway Offline' });
 });
 
-app.listen(PORT, () => console.log(`Nuclear engine engaged. Sanctum Server running on port ${PORT}`));
+if (require.main === module) {
+    app.listen(PORT, () => console.log(`Nuclear engine engaged. Sanctum Server running on port ${PORT}`));
+}
+
+module.exports = { app, quotesHelper };

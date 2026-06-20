@@ -418,3 +418,49 @@ async fn main() {
     // 5. Start the Axum hyper server using Axum 0.7 serve syntax
     axum::serve(listener, app).await.unwrap();
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    struct TempRenameGuard {
+        renamed: Vec<(String, String)>,
+    }
+
+    impl TempRenameGuard {
+        fn new(paths: &[&str]) -> Self {
+            let mut renamed = Vec::new();
+            for path in paths {
+                if std::path::Path::new(path).exists() {
+                    let temp_path = format!("{}.bak", path);
+                    if std::fs::rename(path, &temp_path).is_ok() {
+                        renamed.push((path.to_string(), temp_path));
+                    }
+                }
+            }
+            Self { renamed }
+        }
+    }
+
+    impl Drop for TempRenameGuard {
+        fn drop(&mut self) {
+            for (original, temp) in &self.renamed {
+                let _ = std::fs::rename(temp, original);
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn test_get_daily_quote_missing_file() {
+        // Temporarily rename all possible paths of quotes.json
+        let _guard = TempRenameGuard::new(&["quotes.json", "backend/quotes.json", "../quotes.json"]);
+
+        // Request the handler
+        let result = get_daily_quote().await;
+
+        // Verify it returned Internal Server Error (500)
+        assert!(result.is_err());
+        assert_eq!(result.unwrap_err(), StatusCode::INTERNAL_SERVER_ERROR);
+    }
+}
+
