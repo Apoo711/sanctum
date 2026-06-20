@@ -164,6 +164,15 @@ function initSandglass() {
         ctx.closePath();
     }
 
+    // Mathematical boundary mapping for the hourglass shape (maximum error < 2px)
+    function getGlassWidth(y) {
+        const dY = Math.abs(y - cY);
+        if (dY > 120) return 0;
+        const u = 1 - dY / 120;
+        // 5th-degree polynomial regression modeling the glass boundary width from the neck (u=1, W=6) to the base/top (u=0, W=60)
+        return 60 + 4.2679 * u - 40.0954 * u * u - 42.7533 * u * u * u - 25.6015 * u * u * u * u + 50.1822 * u * u * u * u * u;
+    }
+
     // Get current pile height at X coordinate for physics collision
     function getPileYAtX(x, progress) {
         // Pile grows upwards from bottomLimitY (290)
@@ -668,11 +677,14 @@ function initSandglass() {
             ctx.closePath();
             ctx.fill();
 
+            const dipY = Math.min(neckY - 2, sandTopY + depressionDip);
             ctx.fillStyle = 'rgba(2, 2, 2, 0.15)';
             for (let i = 0; i < 200 * remainingRatio; i++) {
                 const sx = cX + (Math.random() - 0.5) * 110 * remainingRatio;
                 const sy = sandTopY + Math.random() * sandHeight;
-                if (ctx.isPointInPath(sx, sy)) {
+                const dx = Math.abs(sx - cX);
+                const surfaceY = dipY + (sandTopY - dipY) * Math.min(1, dx / 70);
+                if (sy >= surfaceY && dx <= getGlassWidth(sy)) {
                     ctx.fillRect(sx, sy, 1, 1);
                 }
             }
@@ -697,11 +709,15 @@ function initSandglass() {
             ctx.closePath();
             ctx.fill();
 
+            const H = bottomLimitY - pilePeakY;
             ctx.fillStyle = 'rgba(2, 2, 2, 0.15)';
             for (let i = 0; i < 200 * progress; i++) {
                 const sx = cX + (Math.random() - 0.5) * 110 * progress;
-                const sy = pilePeakY + Math.random() * (bottomLimitY - pilePeakY);
-                if (ctx.isPointInPath(sx, sy)) {
+                const sy = pilePeakY + Math.random() * H;
+                const dx = Math.abs(sx - cX);
+                const t = 1 - Math.min(1, dx / 60);
+                const pileY = pilePeakY + H * (1 - 1.5 * t + 0.5 * t * t);
+                if (sy >= pileY && dx <= getGlassWidth(sy)) {
                     ctx.fillRect(sx, sy, 1, 1);
                 }
             }
