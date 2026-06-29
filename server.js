@@ -148,6 +148,20 @@ app.get('/resources/download/:subject/:title', (req, res) => {
     if (!resource || !resource.downloadUrl) {
         return res.status(404).render('404', { title: '404 - Gateway Offline' });
     }
+
+    // Validate the redirect URL to prevent Open Redirect vulnerability
+    try {
+        const parsedUrl = new URL(resource.downloadUrl);
+        if (parsedUrl.protocol !== 'http:' && parsedUrl.protocol !== 'https:') {
+            return res.status(400).send('Bad Request: Invalid protocol');
+        }
+        if (parsedUrl.hostname !== 'github.com') {
+            return res.status(400).send('Bad Request: Disallowed download host');
+        }
+    } catch (e) {
+        return res.status(400).send('Bad Request: Invalid download URL');
+    }
+
     res.redirect(resource.downloadUrl);
 });
 

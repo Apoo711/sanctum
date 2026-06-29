@@ -65,6 +65,7 @@ test('Server Route "/" Error Fallback', async (t) => {
 test('Route "/resources/download/:subject/:title"', async (t) => {
     let server;
     let port;
+    const SUBJECTS_DATA = require('./content/subjects-data');
 
     t.before(() => {
         // Start the server on an ephemeral port
@@ -85,6 +86,34 @@ test('Route "/resources/download/:subject/:title"', async (t) => {
     await t.test('should return 404 when title is invalid for a valid subject', async () => {
         const response = await fetch(`http://127.0.0.1:${port}/resources/download/physics/invalid-title`);
         assert.strictEqual(response.status, 404);
+    });
+
+    await t.test('should redirect when subject and title are valid', async () => {
+        const response = await fetch(`http://127.0.0.1:${port}/resources/download/physics/a3%20exam%20cheatsheet`, {
+            redirect: 'manual'
+        });
+        assert.strictEqual(response.status, 302);
+        assert.strictEqual(response.headers.get('location'), 'https://github.com/Apoo711/sanctum-resources/releases/download/v0.0.1/A3-CHEATSHEET.pdf');
+    });
+
+    await t.test('should return 400 when downloadUrl has disallowed host', async () => {
+        // Temporarily inject dynamic resource to SUBJECTS_DATA
+        SUBJECTS_DATA['physics'].resources.push({
+            title: 'MALICIOUS EXAM CHEATSHEET',
+            downloadUrl: 'https://evil.com/payload.pdf'
+        });
+
+        try {
+            const response = await fetch(`http://127.0.0.1:${port}/resources/download/physics/malicious%20exam%20cheatsheet`, {
+                redirect: 'manual'
+            });
+            assert.strictEqual(response.status, 400);
+            const text = await response.text();
+            assert.match(text, /Disallowed download host/);
+        } finally {
+            // Clean up
+            SUBJECTS_DATA['physics'].resources.pop();
+        }
     });
 });
 
