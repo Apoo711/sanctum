@@ -146,4 +146,27 @@ test('FailedAttemptsTracker Unit Tests', async (t) => {
     });
 });
 
+test('Route "/prospectus"', async (t) => {
+    let server;
+    let port;
+
+    t.before(() => {
+        server = app.listen(0);
+        port = server.address().port;
+    });
+
+    t.after(() => {
+        server.close();
+    });
+
+    await t.test('should render prospectus view with 200 status', async () => {
+        const response = await fetch(`http://127.0.0.1:${port}/prospectus`);
+        assert.strictEqual(response.status, 200);
+        const html = await response.text();
+        assert.match(html, /The Scholar's Desk/);
+        assert.match(html, /Aryan Gupta/);
+    });
+});
+
+
 

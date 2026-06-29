@@ -173,6 +173,13 @@ app.get('/poems', (req, res) => {
     });
 });
 
+app.get('/prospectus', (req, res) => {
+    res.render('prospectus', {
+        title: 'The Prospectus | Sanctum',
+        description: "The Scholar's Desk. Explore technical dossiers, research portfolios, and digital manuscripts."
+    });
+});
+
 // A Map wrapper that implements eviction (size limit) and TTL cleanup to prevent memory exhaustion
 class FailedAttemptsTracker {
     constructor(maxSize = 1000, ttlMs = 30 * 60 * 1000) {

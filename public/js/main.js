@@ -222,18 +222,21 @@ function initProspectusDrawer() {
         });
     }
 
-    if (trigger && modal) {
-        trigger.addEventListener('click', e => {
-            e.preventDefault();
-            modal.classList.toggle('is-visible');
-            if (!modal.classList.contains('is-visible')) closeBook();
-        });
-    }
-    if (closeBtn && modal) {
-        closeBtn.addEventListener('click', () => {
-            modal.classList.remove('is-visible');
-            closeBook();
-        });
+    const isStandalone = modal && modal.classList.contains('prospectus-standalone');
+    if (!isStandalone) {
+        if (trigger && modal) {
+            trigger.addEventListener('click', e => {
+                e.preventDefault();
+                modal.classList.toggle('is-visible');
+                if (!modal.classList.contains('is-visible')) closeBook();
+            });
+        }
+        if (closeBtn && modal) {
+            closeBtn.addEventListener('click', () => {
+                modal.classList.remove('is-visible');
+                closeBook();
+            });
+        }
     }
 }
 
@@ -289,10 +292,10 @@ function closeBook() {
 
 function closeProspectusModal() {
     const modal = document.getElementById('prospectus-modal');
-    if (modal) {
+    if (modal && !modal.classList.contains('prospectus-standalone')) {
         modal.classList.remove('is-visible');
-        closeBook();
     }
+    closeBook();
 }
 window.closeProspectusModal = closeProspectusModal;
 
