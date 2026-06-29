@@ -144,6 +144,49 @@ test('FailedAttemptsTracker Unit Tests', async (t) => {
         assert.ok(tracker.get('2.2.2.2'));
         assert.ok(tracker.get('3.3.3.3'));
     });
+
+    await t.test('should update DLL node position to tail on set', () => {
+        const tracker = new FailedAttemptsTracker(3, 60000);
+        tracker.set('1.1.1.1', { count: 1 });
+        tracker.set('2.2.2.2', { count: 2 });
+        tracker.set('3.3.3.3', { count: 3 });
+
+        // Update '1.1.1.1'
+        tracker.set('1.1.1.1', { count: 1.5 });
+
+        // '1.1.1.1' should now be at the tail (newest), and '2.2.2.2' should be the head (oldest)
+        assert.strictEqual(tracker.head.key, '2.2.2.2');
+        assert.strictEqual(tracker.tail.key, '1.1.1.1');
+
+        // Let's add a 4th item, which should evict '2.2.2.2' (the new oldest)
+        tracker.set('4.4.4.4', { count: 4 });
+        assert.strictEqual(tracker.get('2.2.2.2'), undefined);
+        assert.ok(tracker.get('1.1.1.1'));
+    });
+
+    await t.test('should correctly manage DLL on delete', () => {
+        const tracker = new FailedAttemptsTracker(3, 60000);
+        tracker.set('1.1.1.1', { count: 1 });
+        tracker.set('2.2.2.2', { count: 2 });
+        tracker.set('3.3.3.3', { count: 3 });
+
+        // Delete the middle element
+        tracker.delete('2.2.2.2');
+        assert.strictEqual(tracker.head.key, '1.1.1.1');
+        assert.strictEqual(tracker.head.next.key, '3.3.3.3');
+        assert.strictEqual(tracker.tail.key, '3.3.3.3');
+        assert.strictEqual(tracker.tail.prev.key, '1.1.1.1');
+
+        // Delete head
+        tracker.delete('1.1.1.1');
+        assert.strictEqual(tracker.head.key, '3.3.3.3');
+        assert.strictEqual(tracker.tail.key, '3.3.3.3');
+
+        // Delete tail/last element
+        tracker.delete('3.3.3.3');
+        assert.strictEqual(tracker.head, null);
+        assert.strictEqual(tracker.tail, null);
+    });
 });
 
 test('Route "/prospectus"', async (t) => {

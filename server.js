@@ -182,12 +182,55 @@ app.get('/prospectus', (req, res) => {
     });
 });
 
+class Node {
+    constructor(key, value) {
+        this.key = key; // IP address
+        this.value = value; // Record: { count, blockedUntil, lastAttempt }
+        this.prev = null;
+        this.next = null;
+    }
+}
+
 // A Map wrapper that implements eviction (size limit) and TTL cleanup to prevent memory exhaustion
 class FailedAttemptsTracker {
     constructor(maxSize = 1000, ttlMs = 30 * 60 * 1000) {
-        this.map = new Map();
+        this.map = new Map(); // ip -> record (for backwards compatibility/tests)
+        this.nodeMap = new Map(); // ip -> Node
         this.maxSize = maxSize;
         this.ttlMs = ttlMs;
+        this.head = null; // Node (oldest/LRU)
+        this.tail = null; // Node (newest/MRU)
+    }
+
+    _remove(node) {
+        if (node.prev) {
+            node.prev.next = node.next;
+        } else {
+            this.head = node.next;
+        }
+        if (node.next) {
+            node.next.prev = node.prev;
+        } else {
+            this.tail = node.prev;
+        }
+        node.prev = null;
+        node.next = null;
+    }
+
+    _appendToTail(node) {
+        if (!this.head) {
+            this.head = node;
+            this.tail = node;
+        } else {
+            this.tail.next = node;
+            node.prev = this.tail;
+            this.tail = node;
+        }
+    }
+
+    _moveToTail(node) {
+        this._remove(node);
+        this._appendToTail(node);
     }
 
     get(ip) {
@@ -200,34 +243,52 @@ class FailedAttemptsTracker {
 
         // If the entry doesn't exist and we are at/over the capacity, evict the oldest
         if (!this.map.has(ip) && this.map.size >= this.maxSize) {
-            let oldestIp = null;
-            let oldestTime = Infinity;
-            for (const [key, value] of this.map.entries()) {
-                if (value.lastAttempt < oldestTime) {
-                    oldestTime = value.lastAttempt;
-                    oldestIp = key;
-                }
-            }
-            if (oldestIp) {
-                this.map.delete(oldestIp);
+            if (this.head) {
+                this.delete(this.head.key);
             }
         }
 
         record.lastAttempt = Date.now();
         this.map.set(ip, record);
+
+        let node = this.nodeMap.get(ip);
+        if (node) {
+            node.value = record;
+            this._moveToTail(node);
+        } else {
+            node = new Node(ip, record);
+            this.nodeMap.set(ip, node);
+            this._appendToTail(node);
+        }
     }
 
     delete(ip) {
+        const node = this.nodeMap.get(ip);
+        if (node) {
+            this._remove(node);
+            this.nodeMap.delete(ip);
+        }
         return this.map.delete(ip);
     }
 
     pruneExpired() {
         const now = Date.now();
-        for (const [ip, record] of this.map.entries()) {
+        let current = this.head;
+        while (current) {
+            const record = current.value;
             const isBlocked = record.blockedUntil && record.blockedUntil > now;
             const isExpired = (now - record.lastAttempt) > this.ttlMs;
-            if (!isBlocked && isExpired) {
-                this.map.delete(ip);
+
+            if (isExpired) {
+                const nextNode = current.next;
+                if (!isBlocked) {
+                    this.delete(current.key);
+                }
+                current = nextNode;
+            } else {
+                // Since the list is sorted by lastAttempt, if this node is not expired,
+                // no subsequent node can be expired either.
+                break;
             }
         }
     }

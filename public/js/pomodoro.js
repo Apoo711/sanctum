@@ -164,13 +164,28 @@ function initSandglass() {
         ctx.closePath();
     }
 
+    // Pre-calculate glass width lookup table for dY from 0 to 120 to avoid repeated polynomial evaluations
+    const glassWidthTable = new Float32Array(121);
+    for (let dY = 0; dY <= 120; dY++) {
+        const u = 1 - dY / 120;
+        glassWidthTable[dY] = 60 + 4.2679 * u - 40.0954 * u * u - 42.7533 * u * u * u - 25.6015 * u * u * u * u + 50.1822 * u * u * u * u * u;
+    }
+
     // Mathematical boundary mapping for the hourglass shape (maximum error < 2px)
     function getGlassWidth(y) {
         const dY = Math.abs(y - cY);
         if (dY > 120) return 0;
-        const u = 1 - dY / 120;
-        // 5th-degree polynomial regression modeling the glass boundary width from the neck (u=1, W=6) to the base/top (u=0, W=60)
-        return 60 + 4.2679 * u - 40.0954 * u * u - 42.7533 * u * u * u - 25.6015 * u * u * u * u + 50.1822 * u * u * u * u * u;
+        return glassWidthTable[(dY + 0.5) | 0]; // Fast rounding using bitwise OR
+    }
+
+    // Pre-generate a static noise pool for sand grains to eliminate Math.random() in draw loop
+    const numSandGrains = 200;
+    const sandNoisePool = [];
+    for (let i = 0; i < numSandGrains; i++) {
+        sandNoisePool.push({
+            rx: Math.random() - 0.5,
+            ry: Math.random()
+        });
     }
 
     // Get current pile height at X coordinate for physics collision
@@ -542,35 +557,65 @@ function initSandglass() {
     // 3D Vine Wrapping path helper (looser wrap, low frequency)
     function drawPillarVinePath(colX, phase, layer) {
         ctx.save();
+        
+        ctx.beginPath();
+        let drawing = false;
+        
         for (let y = topLimitY - 10; y <= bottomLimitY + 10; y += 2) {
-            const theta = y * 0.035 + phase; // Looser frequency (0.035 instead of 0.08)
+            const theta = y * 0.035 + phase;
             const z = Math.cos(theta);
-            const x = colX + Math.sin(theta) * 9; // Wider swing for organic look
+            const x = colX + Math.sin(theta) * 9;
             
             const isCorrectLayer = (layer === 'front') ? (z > 0) : (z <= 0);
             
             if (isCorrectLayer) {
-                // Main stem line
-                ctx.strokeStyle = z > 0 ? '#1b3314' : '#0d1c0a';
-                ctx.lineWidth = z > 0 ? 3.0 : 1.8;
-                ctx.beginPath();
-                ctx.moveTo(x, y);
                 const prevTheta = (y - 2) * 0.035 + phase;
                 const prevX = colX + Math.sin(prevTheta) * 9;
-                ctx.lineTo(prevX, y - 2);
-                ctx.stroke();
                 
-                // Highlight stem line
-                if (z > 0) {
-                    ctx.strokeStyle = '#4e7a3a';
-                    ctx.lineWidth = 1.0;
-                    ctx.beginPath();
-                    ctx.moveTo(x, y);
-                    ctx.lineTo(prevX, y - 2);
-                    ctx.stroke();
+                if (!drawing) {
+                    ctx.moveTo(prevX, y - 2);
+                    drawing = true;
                 }
+                ctx.lineTo(x, y);
+            } else {
+                drawing = false;
             }
         }
+        
+        if (layer === 'front') {
+            ctx.strokeStyle = '#1b3314';
+            ctx.lineWidth = 3.0;
+        } else {
+            ctx.strokeStyle = '#0d1c0a';
+            ctx.lineWidth = 1.8;
+        }
+        ctx.stroke();
+        
+        // Draw highlight if front layer
+        if (layer === 'front') {
+            ctx.beginPath();
+            let drawingHighlight = false;
+            for (let y = topLimitY - 10; y <= bottomLimitY + 10; y += 2) {
+                const theta = y * 0.035 + phase;
+                const z = Math.cos(theta);
+                const x = colX + Math.sin(theta) * 9;
+                if (z > 0) {
+                    const prevTheta = (y - 2) * 0.035 + phase;
+                    const prevX = colX + Math.sin(prevTheta) * 9;
+                    if (!drawingHighlight) {
+                        ctx.moveTo(prevX, y - 2);
+                        drawingHighlight = true;
+                    }
+                    ctx.lineTo(x, y);
+                } else {
+                    drawingHighlight = false;
+                }
+            }
+            ctx.strokeStyle = '#4e7a3a';
+            ctx.lineWidth = 1.0;
+            ctx.stroke();
+        }
+        
         ctx.restore();
     }
 
@@ -679,15 +724,19 @@ function initSandglass() {
 
             const dipY = Math.min(neckY - 2, sandTopY + depressionDip);
             ctx.fillStyle = 'rgba(2, 2, 2, 0.15)';
-            for (let i = 0; i < 200 * remainingRatio; i++) {
-                const sx = cX + (Math.random() - 0.5) * 110 * remainingRatio;
-                const sy = sandTopY + Math.random() * sandHeight;
+            ctx.beginPath();
+            const grainsCountTop = (numSandGrains * remainingRatio) | 0;
+            for (let i = 0; i < grainsCountTop; i++) {
+                const noise = sandNoisePool[i];
+                const sx = cX + noise.rx * 110 * remainingRatio;
+                const sy = sandTopY + noise.ry * sandHeight;
                 const dx = Math.abs(sx - cX);
                 const surfaceY = dipY + (sandTopY - dipY) * Math.min(1, dx / 70);
                 if (sy >= surfaceY && dx <= getGlassWidth(sy)) {
-                    ctx.fillRect(sx, sy, 1, 1);
+                    ctx.rect(sx, sy, 1, 1);
                 }
             }
+            ctx.fill();
             ctx.restore();
         }
 
@@ -711,16 +760,20 @@ function initSandglass() {
 
             const H = bottomLimitY - pilePeakY;
             ctx.fillStyle = 'rgba(2, 2, 2, 0.15)';
-            for (let i = 0; i < 200 * progress; i++) {
-                const sx = cX + (Math.random() - 0.5) * 110 * progress;
-                const sy = pilePeakY + Math.random() * H;
+            ctx.beginPath();
+            const grainsCountBottom = (numSandGrains * progress) | 0;
+            for (let i = 0; i < grainsCountBottom; i++) {
+                const noise = sandNoisePool[i];
+                const sx = cX + noise.rx * 110 * progress;
+                const sy = pilePeakY + noise.ry * H;
                 const dx = Math.abs(sx - cX);
                 const t = 1 - Math.min(1, dx / 60);
                 const pileY = pilePeakY + H * (1 - 1.5 * t + 0.5 * t * t);
                 if (sy >= pileY && dx <= getGlassWidth(sy)) {
-                    ctx.fillRect(sx, sy, 1, 1);
+                    ctx.rect(sx, sy, 1, 1);
                 }
             }
+            ctx.fill();
             ctx.restore();
         }
 
@@ -901,7 +954,12 @@ function initSandglass() {
     let animFrameId = null;
     function animLoop() {
         draw();
-        animFrameId = requestAnimationFrame(animLoop);
+        // Only continue loop if running, flipping, or particles are active
+        if (isRunning || isFlipping || fallingParticles.length > 0 || splashParticles.length > 0) {
+            animFrameId = requestAnimationFrame(animLoop);
+        } else {
+            animFrameId = null;
+        }
     }
 
     // Format seconds to digital clock
@@ -999,6 +1057,10 @@ function initSandglass() {
         flipStart = performance.now();
         startAngle = renderAngle;
         targetAngle = renderAngle + Math.PI;
+
+        if (!animFrameId) {
+            animLoop();
+        }
     }
 
     // Toggle timer status
@@ -1076,6 +1138,7 @@ function initSandglass() {
         if (Notification.permission === 'default') {
             Notification.requestPermission();
         }
+        draw();
     }
 
     function exitFocusMode() {
@@ -1083,6 +1146,7 @@ function initSandglass() {
         focusToggleDot.style.transform = 'translateX(0)';
         focusToggleDot.style.backgroundColor = 'rgba(181, 147, 91, 0.5)';
         focusToggle.style.borderColor = 'rgba(181, 147, 91, 0.3)';
+        draw();
     }
 
     focusToggle.addEventListener('click', () => {
@@ -1108,6 +1172,4 @@ function initSandglass() {
     // Initialize display and draw once
     updateClockDisplay();
     draw();
-    // Render static canvas first frame, activate requestAnimationFrame loop only when ticking to save CPU cycles
-    animLoop();
 }
