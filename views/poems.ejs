@@ -37,11 +37,12 @@
 
             <form id="auth-form" class="space-y-6">
                 <div>
-                    <input type="password" id="passkey-input" placeholder="ENTER PASSKEY" required
+                    <label for="passkey-input" class="sr-only">Passkey</label>
+                    <input type="password" id="passkey-input" placeholder="ENTER PASSKEY" required aria-describedby="auth-error"
                         class="w-full bg-[#020202]/60 border border-sanctum-accent/30 hover:border-sanctum-accent/50 focus:border-sanctum-accent rounded-lg py-3 px-4 text-center tracking-[0.3em] text-sanctum-text focus:outline-none focus:ring-1 focus:ring-sanctum-accent/30 transition-all font-mono text-xs placeholder:text-sanctum-accent/30 uppercase">
                 </div>
                 
-                <div id="auth-error" class="text-rose-500/80 font-mono text-[10px] tracking-widest uppercase h-4 transition-all duration-300 opacity-0">
+                <div id="auth-error" role="alert" aria-live="polite" class="text-rose-500/80 font-mono text-[10px] tracking-widest uppercase h-4 transition-all duration-300 opacity-0">
                     Invalid cipher key
                 </div>
 

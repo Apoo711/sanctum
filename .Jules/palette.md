@@ -1,0 +1,3 @@
+## 2025-05-18 - Improve Form Accessibility in Poems Codex
+**Learning:** Adding semantic HTML `<label>` elements with `sr-only` keeps the visual design intact while addressing accessibility. Combining this with `aria-describedby` explicitly links the input to its error message. Furthermore, adding `role="alert"` and `aria-live="polite"` on dynamically shown error messages and toggling `aria-invalid` via JavaScript ensures screen readers are aware of real-time validation states without breaking visual components.
+**Action:** Always include a form label even if visually hidden. Tie input errors explicitly to inputs with `aria-describedby` and manage dynamic `aria-invalid` state in JavaScript for custom forms.

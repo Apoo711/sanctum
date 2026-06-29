@@ -152,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         authError.classList.add('opacity-0');
         authError.innerText = '';
+        passkeyInput.removeAttribute('aria-invalid');
 
         try {
             const response = await fetch('/api/poems', {
@@ -195,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 ? 'INVALID PASSKEY CIPHER // ACCESS DENIED' 
                 : 'TRANSMISSION ERROR // PORTAL OFFLINE';
             authError.classList.remove('opacity-0');
+            passkeyInput.setAttribute('aria-invalid', 'true');
             
             showScreen(lockScreen);
             if (sidebar) sidebar.classList.add('hidden');
