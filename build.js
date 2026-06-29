@@ -5,6 +5,14 @@ const matter = require('gray-matter');
 const { marked } = require('marked');
 const { generateSitemapXml } = require('./utils/sitemap');
 
+try {
+    if (typeof process.loadEnvFile === 'function') {
+        process.loadEnvFile();
+    }
+} catch (e) {
+    // Ignore if file doesn't exist
+}
+
 const DIST_DIR = path.join(__dirname, 'dist');
 const VIEWS_DIR = path.join(__dirname, 'views');
 const LOGS_DIR = path.join(__dirname, 'content', 'logs');

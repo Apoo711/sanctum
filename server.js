@@ -1,3 +1,11 @@
+try {
+    if (typeof process.loadEnvFile === 'function') {
+        process.loadEnvFile();
+    }
+} catch (e) {
+    // Ignore if file doesn't exist
+}
+
 const express = require('express');
 const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
