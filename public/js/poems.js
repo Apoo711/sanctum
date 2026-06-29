@@ -275,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Append to scroll-spy sidebar index
             if (sidebarList) {
                 const li = document.createElement('li');
-                li.className = `sidebar-item-${index} border-l border-transparent pl-3 transition-all duration-300`;
+                li.className = `sidebar-item-${index}`;
                 
                 const link = document.createElement('a');
                 link.href = `#poem-card-${index}`;
@@ -666,12 +666,72 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function updateSidebarState(activeIdx) {
+        const listItems = document.querySelectorAll('#poems-sidebar-list li');
+        if (listItems.length === 0) return;
+
+        const N = listItems.length;
+        const itemHeight = 28; // fixed height in CSS
+
+        // 1. Calculate translation offset to center the active item
+        let translateY = 0;
+        if (N > 5) {
+            const idealOffset = -(activeIdx - 2) * itemHeight;
+            const minOffset = -(N - 5) * itemHeight;
+            translateY = Math.max(minOffset, Math.min(0, idealOffset));
+        }
+        
+        const sidebarList = document.getElementById('poems-sidebar-list');
+        if (sidebarList) {
+            sidebarList.style.transform = `translateY(${translateY}px)`;
+        }
+
+        // 2. Update styles and opacity for all items
+        listItems.forEach((li, index) => {
+            const distance = Math.abs(index - activeIdx);
+            const link = li.querySelector('a');
+
+            if (index === activeIdx) {
+                // Active item styling
+                li.classList.add('border-sanctum-accent');
+                li.style.opacity = '1';
+                li.style.pointerEvents = 'auto';
+                if (link) {
+                    link.classList.remove('text-[#F4F1EA]/50');
+                    link.classList.add('text-sanctum-accent', 'font-bold');
+                }
+            } else {
+                // Inactive items
+                li.classList.remove('border-sanctum-accent');
+                
+                // Distance opacity gradient
+                let opacity = 0;
+                if (distance === 1) {
+                    opacity = 0.5;
+                } else if (distance === 2) {
+                    opacity = 0.2;
+                }
+                
+                li.style.opacity = opacity.toString();
+                
+                if (opacity > 0) {
+                    li.style.pointerEvents = 'auto';
+                } else {
+                    li.style.pointerEvents = 'none';
+                }
+
+                if (link) {
+                    link.classList.remove('text-sanctum-accent', 'font-bold');
+                    link.classList.add('text-[#F4F1EA]/50');
+                }
+            }
+        });
+    }
+
     // Scroll-spy index tracking logic
     function initScrollSpy() {
-        const listItems = document.querySelectorAll('#poems-sidebar-list li');
         const poemCards = document.querySelectorAll('.poem-card');
-        
-        if (listItems.length === 0 || poemCards.length === 0) return;
+        if (poemCards.length === 0) return;
 
         let activeIndex = null;
 
@@ -683,37 +743,12 @@ document.addEventListener('DOMContentLoaded', () => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     const id = entry.target.id;
-                    const index = id.split('-').pop();
+                    const index = parseInt(id.split('-').pop(), 10);
 
                     if (activeIndex === index) return;
-
-                    // Deactivate previously active item
-                    if (activeIndex !== null) {
-                        const prevActiveItem = document.querySelector(`.sidebar-item-${activeIndex}`);
-                        if (prevActiveItem) {
-                            prevActiveItem.classList.remove('border-sanctum-accent', 'pl-4');
-                            prevActiveItem.classList.add('border-transparent', 'pl-3');
-                            const prevActiveLink = prevActiveItem.querySelector('a');
-                            if (prevActiveLink) {
-                                prevActiveLink.classList.remove('text-sanctum-accent', 'font-bold');
-                                prevActiveLink.classList.add('text-[#F4F1EA]/50');
-                            }
-                        }
-                    }
-
-                    // Activate newly active item
-                    const activeItem = document.querySelector(`.sidebar-item-${index}`);
-                    if (activeItem) {
-                        activeItem.classList.remove('border-transparent', 'pl-3');
-                        activeItem.classList.add('border-sanctum-accent', 'pl-4');
-                        const activeLink = activeItem.querySelector('a');
-                        if (activeLink) {
-                            activeLink.classList.remove('text-[#F4F1EA]/50');
-                            activeLink.classList.add('text-sanctum-accent', 'font-bold');
-                        }
-                    }
-
                     activeIndex = index;
+                    
+                    updateSidebarState(activeIndex);
                 }
             });
         }, {
@@ -723,6 +758,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         poemCards.forEach(card => sidebarObserver.observe(card));
+
+        // Initial setup
+        updateSidebarState(0);
     }
 
     function showScreen(element) {

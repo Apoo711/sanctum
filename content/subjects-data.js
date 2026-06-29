@@ -10,25 +10,17 @@ module.exports = {
                 title: 'A3 EXAM CHEATSHEET',
                 description: 'A comprehensive dual-page formula and annotation sheet formatted for A3 printing, compiled for units 3 & 4.',
                 format: 'PDF',
-                size: '3.4 MB',
+                size: '780 KB',
                 date: 'June 2026',
-                downloadUrl: 'https://github.com/Apoo711/vce-resources/releases/download/v.0.0.3-physics/Physics.CheatSheet.EXAM.pdf'
+                downloadUrl: 'https://github.com/Apoo711/sanctum-resources/releases/download/v0.0.1/A3-CHEATSHEET.pdf'
             },
             {
                 title: 'Hopkins Questions',
                 description: 'An archive containing curated problems, challenge sheets, and detailed worked answers from the Hopkins physics repository.',
                 format: 'ZIP',
-                size: '18.5 MB',
-                date: 'May 2026',
-                downloadUrl: 'https://github.com/Apoo711/vce-resources/releases/download/v0.0.1-physics/questions-Hopkins.zip'
-            },
-            {
-                title: 'Thermodynamics & Kinetic Theory',
-                description: 'Detailed study notes covering thermal equilibrium, specific heat capacity, latent heat, the laws of thermodynamics, and kinetic gas behaviors.',
-                format: 'PDF',
-                size: '1.5 MB',
-                date: 'April 2026',
-                downloadUrl: 'https://github.com/Apoo711/vce-resources/releases/download/v0.0.1-physics/Physics_Thermodynamics_Kinetic_Theory.pdf'
+                size: '7.1 MB',
+                date: 'June 2026',
+                downloadUrl: 'https://github.com/Apoo711/sanctum-resources/releases/download/v0.0.1/Questions-Hopkins.zip'
             }
         ]
     },
@@ -68,7 +60,7 @@ module.exports = {
     'specialist-maths': {
         name: 'Specialist Maths',
         slug: 'specialist-maths',
-        subtitle: 'VCE Specialist Mathematics Units 3 & 4',
+        subtitle: 'VCE Specialist Mathematics',
         glyph: '∫',
         description: 'Advanced mathematical structures and methods, covering complex number theory, vector calculus, differential equations, and mechanics.',
         resources: [
@@ -76,25 +68,9 @@ module.exports = {
                 title: 'Bound Reference Unit 1&2',
                 description: 'A complete, indexed study reference booklet covering the Units 1 & 2 Specialist Mathematics curriculum.',
                 format: 'PDF',
-                size: '12.1 MB',
-                date: 'May 2026',
-                downloadUrl: 'https://github.com/Apoo711/vce-resources/releases/download/0.0.2-smaths/Bound-Reference.U12.pdf'
-            },
-            {
-                title: 'Complex Numbers & Polar Forms',
-                description: 'In-depth derivation of Euler\'s formula, De Moivre\'s theorem, roots of unity, and region plotting in the Argand plane.',
-                format: 'PDF',
-                size: '2.4 MB',
-                date: 'March 2026',
-                downloadUrl: 'https://github.com/Apoo711/vce-resources/releases/download/0.0.2-smaths/SpecMaths_Complex_Numbers_Polar_Forms.pdf'
-            },
-            {
-                title: 'Vector Calculus & Geometry',
-                description: 'Vector proofs, vector functions, parameterization of curves, velocity and acceleration vectors, and intersections of planes and lines.',
-                format: 'PDF',
-                size: '3.1 MB',
-                date: 'April 2026',
-                downloadUrl: 'https://github.com/Apoo711/vce-resources/releases/download/0.0.2-smaths/SpecMaths_Vector_Calculus_Geometry.pdf'
+                size: '1.3 MB',
+                date: 'June 2026',
+                downloadUrl: 'https://github.com/Apoo711/sanctum-resources/releases/download/v0.0.1/BR-SPEC-1_2.pdf'
             }
         ]
     },

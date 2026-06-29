@@ -34,25 +34,46 @@
     top: 50%;
     transform: translateY(-50%);
     z-index: 30;
-    border-left: 1px solid rgba(181, 147, 91, 0.15);
-    padding-left: 1.5rem;
-    max-height: 70vh;
-    overflow-y: auto;
     transition: all 0.3s ease;
 }
 
-#poems-sidebar::-webkit-scrollbar {
-    width: 3px;
+.poems-sidebar-viewport {
+    position: relative;
+    height: 140px; /* 5 items * 28px = 140px */
+    overflow: hidden;
+    border-left: 1px solid rgba(181, 147, 91, 0.15);
 }
-#poems-sidebar::-webkit-scrollbar-track {
-    background: transparent;
+
+#poems-sidebar-list {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
 }
-#poems-sidebar::-webkit-scrollbar-thumb {
-    background: rgba(181, 147, 91, 0.15);
-    border-radius: 99px;
+
+#poems-sidebar-list li {
+    height: 28px;
+    display: flex;
+    align-items: center;
+    margin-left: -1px;
+    border-left: 1px solid transparent;
+    padding-left: 1.25rem;
+    transition: all 0.4s ease;
+    box-sizing: border-box;
+    white-space: nowrap;
 }
-#poems-sidebar::-webkit-scrollbar-thumb:hover {
-    background: rgba(181, 147, 91, 0.35);
+
+#poems-sidebar-list li.border-sanctum-accent {
+    border-left: 2px solid #B5935B;
+    margin-left: -2px; /* overlay thicker border */
+    background: linear-gradient(90deg, rgba(181, 147, 91, 0.08) 0%, transparent 100%);
+}
+
+#poems-sidebar-list li.border-sanctum-accent a {
+    text-shadow: 0 0 8px rgba(181, 147, 91, 0.5);
 }
 
 /* Screen sizes where we have plenty of room for 1152px bento + sidebar */
@@ -73,7 +94,6 @@
         display: block;
         left: calc(50vw + 496px); /* 896/2 = 448 + 32 (offset) = 480 + 16 (gap) = 496 */
         width: 180px;
-        padding-left: 1.25rem;
     }
 }
 
@@ -85,14 +105,6 @@
 
 #poems-sidebar.hidden {
     display: none !important;
-}
-
-#poems-sidebar-list li {
-    border-left: 1px solid transparent;
-    transition: all 0.3s ease;
-}
-#poems-sidebar-list li.border-sanctum-accent {
-    border-color: #B5935B;
 }
 
 /* Book Mode styles */
