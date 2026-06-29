@@ -255,12 +255,8 @@ function initSandglass() {
         ctx.restore();
     }
 
-    // Detailed hand-drawn rose helper
-    function drawDetailedRose(rx, ry, scale = 1.0) {
-        ctx.save();
-        ctx.translate(rx, ry);
-        ctx.scale(scale * 1.3, scale * 1.3);
-
+    // Helper functions for drawing rose segments
+    function drawRoseSepals() {
         // Green sepals at the base
         ctx.fillStyle = '#1a3014';
         ctx.strokeStyle = '#0e1c0a';
@@ -280,7 +276,9 @@ function initSandglass() {
         ctx.quadraticCurveTo(1, 2, 0, 0);
         ctx.fill();
         ctx.stroke();
+    }
 
+    function drawRoseOuterPetals() {
         // Deep shadow undercoat
         ctx.fillStyle = '#26050a';
         ctx.beginPath();
@@ -315,7 +313,9 @@ function initSandglass() {
         ctx.arc(0, -4, 4.5, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
+    }
 
+    function drawRoseMiddlePetals() {
         // 2. Middle petal layer
         ctx.fillStyle = '#9e1b27';
         
@@ -336,7 +336,9 @@ function initSandglass() {
         ctx.arc(0, -2, 3.5, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
+    }
 
+    function drawRoseInnerCore() {
         // 3. Inner core
         ctx.fillStyle = '#c72e3a';
         ctx.beginPath();
@@ -352,7 +354,9 @@ function initSandglass() {
         ctx.arc(0, -0.5, 1.4, 0, Math.PI * 2);
         ctx.fill();
         ctx.stroke();
+    }
 
+    function drawRoseHighlights() {
         // 5. White-cream highlights on petal edges (fine hand-sketched lines)
         ctx.strokeStyle = '#f5f2eb';
         ctx.lineWidth = 0.5;
@@ -392,6 +396,19 @@ function initSandglass() {
         ctx.beginPath();
         ctx.arc(-0.5, -0.8, 0.6, 0, Math.PI * 2);
         ctx.fill();
+    }
+
+    // Detailed hand-drawn rose helper
+    function drawDetailedRose(rx, ry, scale = 1.0) {
+        ctx.save();
+        ctx.translate(rx, ry);
+        ctx.scale(scale * 1.3, scale * 1.3);
+
+        drawRoseSepals();
+        drawRoseOuterPetals();
+        drawRoseMiddlePetals();
+        drawRoseInnerCore();
+        drawRoseHighlights();
 
         ctx.restore();
     }
