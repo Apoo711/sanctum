@@ -82,6 +82,12 @@ async function build() {
             description: 'Focus chronometer and study companion.'
         }, path.join(DIST_DIR, 'pomodoro', 'index.html'));
 
+        // Render Prospectus Page
+        await renderView('prospectus', {
+            title: 'The Prospectus | Sanctum',
+            description: "The Scholar's Desk. Explore technical dossiers, research portfolios, and digital manuscripts."
+        }, path.join(DIST_DIR, 'prospectus', 'index.html'));
+
         // Render 404 Page
         await renderView('404', {
             title: '404 - Gateway Offline',
