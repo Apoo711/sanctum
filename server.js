@@ -23,6 +23,7 @@ app.use(expressLayouts);
 app.set('layout', './layout');
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.locals.version = process.env.ASSETS_VERSION || '1.1.5';
 
 if (process.env.NODE_ENV !== 'production') {
     app.use((req, res, next) => {

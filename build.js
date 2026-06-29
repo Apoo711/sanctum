@@ -45,6 +45,7 @@ async function renderView(viewName, data, outputPath) {
     const locals = {
         title: data.title || 'Aryan Gupta | Sanctum',
         description: data.description || 'Personal portfolio, laboratory, and digital sanctum.',
+        version: process.env.ASSETS_VERSION || '1.1.5',
         ...data
     };
 
