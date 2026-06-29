@@ -3,7 +3,6 @@ try {
         process.loadEnvFile();
     }
 } catch (e) {
-    // Ignore if file doesn't exist
 }
 
 const express = require('express');
@@ -11,7 +10,6 @@ const expressLayouts = require('express-ejs-layouts');
 const path = require('path');
 const fs = require('fs').promises;
 const app = express();
-// Configure trust proxy to mitigate IP spoofing by restricting trusted upstream proxies
 const trustedProxies = process.env.TRUSTED_PROXIES
     ? process.env.TRUSTED_PROXIES.split(',').map(ip => ip.trim())
     : ['loopback', 'linklocal', 'uniquelocal'];
@@ -19,16 +17,13 @@ app.set('trust proxy', trustedProxies);
 app.use(express.json());
 const PORT = process.env.PORT || 3000;
 
-// Route modules (handles /blog/:slug)
 const blogRouter = require('./routes/blog');
 
-// Set Templating Engine
 app.use(expressLayouts);
 app.set('layout', './layout');
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Disable caching in development for hot-reloads and emulation stability
 if (process.env.NODE_ENV !== 'production') {
     app.use((req, res, next) => {
         res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, private');
@@ -45,8 +40,6 @@ if (process.env.NODE_ENV !== 'production') {
     app.use(express.static(path.join(__dirname, 'public')));
 }
 
-
-// Quotes Data & Caching Engine
 const QUOTES_DATA = require('./content/quotes');
 const quoteStatePath = path.join(__dirname, 'content', 'quote-state.json');
 
