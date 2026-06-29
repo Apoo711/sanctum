@@ -187,7 +187,7 @@
     }
 
     /* Scale down page padding for mobile */
-    #poems-flipbook .c-flipbook__page div[style*="padding:2.25rem"] {
+    #poems-flipbook .c-flipbook__page div[style*="padding:1.75rem"] {
         padding: 0.75rem !important;
     }
 
@@ -195,7 +195,7 @@
         padding: 0.5rem !important;
     }
 
-    #poems-flipbook .c-flipbook__page div[style*="padding: 2.25rem;"] {
+    #poems-flipbook .c-flipbook__page div[style*="padding: 1.75rem;"] {
         padding: 0.75rem !important;
     }
 
@@ -240,7 +240,7 @@
         font-size: 0.45rem !important;
     }
 
-    #poems-flipbook .c-flipbook__page div[style*="margin-bottom:1.25rem"] {
+    #poems-flipbook .c-flipbook__page div[style*="margin-bottom:0.75rem"] {
         margin-bottom: 0.4rem !important;
     }
 

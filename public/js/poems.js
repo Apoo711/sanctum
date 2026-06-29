@@ -328,7 +328,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Auto-pagination logic for Book Mode
-    function paginatePoem(poem, maxLines = 18) {
+    function paginatePoem(poem, maxLines = 16) {
         const paragraphs = poem.content.trim().split(/\n\n+/);
         const pages = [];
         let currentPageLines = [];
@@ -389,7 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Generate all pages dynamically
         let allContentPages = [];
         poems.forEach((poem, index) => {
-            const paginated = paginatePoem(poem, 18);
+            const paginated = paginatePoem(poem, 16);
             paginated.forEach((page, pageIndex) => {
                 allContentPages.push({
                     ...page,
@@ -451,18 +451,18 @@ document.addEventListener('DOMContentLoaded', () => {
             
             pagesHtml.push(`
                 <div class="c-flipbook__page bg-[#F4F1EA] text-[#020202]">
-                    <div style="height:100%;display:flex;flex-direction:column;padding:2.25rem;position:relative;">
-                        <div style="display:flex;justify-content:between;align-items:center;margin-bottom:0.5rem;font-family:'JetBrains Mono',monospace;font-size:0.45rem;letter-spacing:0.12em;color:rgba(2,2,2,0.45);text-transform:uppercase;">
+                    <div style="height:100%;display:flex;flex-direction:column;padding:1.75rem;position:relative;">
+                        <div style="display:flex;justify-content:between;align-items:center;margin-bottom:0.4rem;font-family:'JetBrains Mono',monospace;font-size:0.45rem;letter-spacing:0.12em;color:rgba(2,2,2,0.45);text-transform:uppercase;">
                             <span>Entry #${page.entryIndex}</span>
                             <span style="margin-left:auto;">${escapeHTML(formattedDate)}</span>
                         </div>
-                        <div style="height:1px;background:linear-gradient(to right,rgba(181,147,91,0.4),transparent);margin-bottom:1.25rem;"></div>
+                        <div style="height:1px;background:linear-gradient(to right,rgba(181,147,91,0.4),transparent);margin-bottom:0.75rem;"></div>
                         
-                        <h4 class="poem-title-script text-xl md:text-2xl text-[#B5935B] mb-4" style="font-family:'Pinyon Script',cursive;letter-spacing:normal;">
+                        <h4 class="poem-title-script text-xl md:text-2xl text-[#B5935B] mb-3" style="font-family:'Pinyon Script',cursive;letter-spacing:normal;">
                             ${titleHtml}
                         </h4>
                         
-                        <div class="poem-body whitespace-pre-wrap font-serif text-[12px] md:text-[13px] text-[#020202]/85 leading-relaxed italic pl-4 border-l-[0.5px] border-[#B5935B]/40 py-1 mb-4 select-none" style="font-family:'EB Garamond',serif;">${page.content.trim()}</div>
+                        <div class="poem-body whitespace-pre-wrap font-serif text-[12px] md:text-[13px] text-[#020202]/85 leading-relaxed italic pl-4 border-l-[0.5px] border-[#B5935B]/40 py-1 mb-3 select-none" style="font-family:'EB Garamond',serif;">${page.content.trim()}</div>
                         
                         <div style="position:absolute;bottom:0.75rem;left:0;right:0;font-family:'JetBrains Mono',monospace;font-size:0.42rem;letter-spacing:0.2em;color:rgba(2,2,2,0.3);text-align:center;">PG. ${index + 1}</div>
                     </div>
