@@ -19,7 +19,7 @@
     </div>
 
     <!-- Main Content Area -->
-    <div class="relative z-10 flex-1 w-full p-6 md:p-12 lg:p-16 flex flex-col items-center justify-center">
+    <div class="relative z-10 flex-1 w-full px-2 py-6 md:p-12 lg:p-16 flex flex-col items-center justify-center">
         
         <!-- 1. The Lock/Decipher Screen -->
         <div id="lock-screen" class="w-full max-w-md bg-[#1A0F0F]/45 border border-sanctum-accent/20 rounded-2xl p-8 md:p-10 backdrop-blur-md text-center transition-all duration-700 ease-in-out opacity-0 hidden transform scale-95">
@@ -90,7 +90,7 @@
             </div>
 
             <!-- Scroll Mode Viewport -->
-            <div id="scroll-mode-container" class="w-full relative flex flex-col lg:flex-row gap-12 max-w-6xl mx-auto px-4">
+            <div id="scroll-mode-container" class="w-full relative flex flex-col lg:flex-row gap-12 max-w-6xl mx-auto px-1 md:px-4">
                 <!-- Staggered Columns (Left: Odd, Right: Even) -->
                 <div id="poems-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 flex-1">
                     <div id="poems-col-left" class="flex flex-col gap-8"></div>
@@ -99,7 +99,7 @@
             </div>
 
             <!-- Book Mode Viewport -->
-            <div id="poems-book-container" class="w-full max-w-4xl mx-auto px-4 hidden flex flex-col items-center justify-center py-6 min-h-[560px]">
+            <div id="poems-book-container" class="w-full max-w-4xl mx-auto px-1 md:px-4 hidden flex flex-col items-center justify-center py-6 min-h-[560px]">
                 <div class="poems-book-wrapper relative w-full flex justify-center items-center">
                     <div class="c-flipbook" id="poems-flipbook">
                         <!-- Populated dynamically -->
@@ -121,6 +121,25 @@
         </div>
     </div>
 </article>
+
+<!-- Landscape Rotation Overlay -->
+<div id="landscape-overlay" class="hidden">
+    <div class="flex flex-col items-center justify-center gap-6 max-w-xs mx-auto">
+        <div class="w-16 h-16 rounded-full border border-sanctum-accent/40 flex items-center justify-center text-sanctum-accent/80 bg-sanctum-accent/5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" class="rotating-phone-icon text-sanctum-accent"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        </div>
+        <div>
+            <div class="technical text-[9px] text-sanctum-accent/50 uppercase tracking-[0.25em] mb-2 font-mono">THE_CODEX</div>
+            <h2 class="font-serif text-xl tracking-widest uppercase text-sanctum-accent mb-2">Rotate Device</h2>
+            <p class="font-serif text-sanctum-text/70 text-xs italic leading-relaxed">
+                Please rotate your device to landscape orientation to open the manuscript book.
+            </p>
+        </div>
+        <button id="overlay-back-btn" class="mt-4 font-mono text-[9px] tracking-[0.2em] text-[#B5935B]/75 hover:text-[#B5935B] border border-[#B5935B]/30 hover:border-[#B5935B] bg-sanctum-dark/60 hover:bg-[#B5935B]/10 rounded-md px-4 py-2 transition-all duration-300 uppercase">
+            Return to Scroll View
+        </button>
+    </div>
+</div>
 
 <!-- Floating Scroll-Spy Sidebar (Index) -->
 <aside id="poems-sidebar" class="hidden">

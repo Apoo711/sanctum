@@ -175,10 +175,12 @@
 }
 
 /* ── RESPONSIVE MOBILE ADJUSTMENTS FOR CODEX BOOK VIEW ── */
-@media (max-width: 768px) {
+@media (max-width: 950px) or (max-height: 550px) {
     .poems-book-wrapper {
-        height: 65vw !important;
-        max-height: 380px !important;
+        width: 100% !important;
+        max-width: 480px !important;
+        height: 70vw !important;
+        max-height: 310px !important;
     }
 
     #poems-book-container {
@@ -188,7 +190,7 @@
 
     /* Scale down page padding for mobile */
     #poems-flipbook .c-flipbook__page div[style*="padding:1.75rem"] {
-        padding: 0.75rem !important;
+        padding: 0.5rem !important;
     }
 
     #poems-flipbook .c-flipbook__page div[style*="padding: 1.5rem;"] {
@@ -196,7 +198,7 @@
     }
 
     #poems-flipbook .c-flipbook__page div[style*="padding: 1.75rem;"] {
-        padding: 0.75rem !important;
+        padding: 0.5rem !important;
     }
 
     /* Adjust front cover design */
@@ -270,5 +272,36 @@
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+/* Landscape Rotation Overlay */
+#landscape-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: #0D0606;
+    background-image: radial-gradient(circle at center, #180D0D 0%, #030101 100%);
+    z-index: 9999;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #F4F1EA;
+    text-align: center;
+    padding: 2rem;
+    box-sizing: border-box;
+}
+
+@keyframes phoneRotate {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(-90deg); }
+}
+.rotating-phone-icon {
+    animation: phoneRotate 2.5s ease-in-out infinite;
+}
+
+@media (max-width: 768px) and (orientation: portrait) {
+    body.in-book-mode #landscape-overlay {
+        display: flex;
     }
 }

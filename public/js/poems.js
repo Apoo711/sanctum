@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollModeBtn.addEventListener('click', () => {
             if (currentMode === 'scroll') return;
             currentMode = 'scroll';
+            document.body.classList.remove('in-book-mode');
             updateModeSelector();
             
             // Hide book, show scroll and sidebar
@@ -55,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         bookModeBtn.addEventListener('click', () => {
             if (currentMode === 'book') return;
             currentMode = 'book';
+            document.body.classList.add('in-book-mode');
             updateModeSelector();
             
             // Hide scroll and sidebar, show book
@@ -110,6 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sessionStorage.removeItem('poems_passkey');
         localStorage.removeItem('poems_passkey');
         passkeyInput.value = '';
+        document.body.classList.remove('in-book-mode');
         
         // Clean up resources
         if (sidebarObserver) {
@@ -206,6 +209,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    const overlayBackBtn = document.getElementById('overlay-back-btn');
+    if (overlayBackBtn) {
+        overlayBackBtn.addEventListener('click', () => {
+            if (scrollModeBtn) scrollModeBtn.click();
+        });
+    }
+
     function renderCurrentView() {
         if (currentMode === 'scroll') {
             renderScrollMode(poemsData);
@@ -242,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
         poems.forEach((poem, index) => {
             const card = document.createElement('div');
             card.id = `poem-card-${index}`;
-            card.className = `poem-card relative border border-sanctum-accent/15 hover:border-sanctum-accent/40 rounded-xl p-8 transition-all duration-500 flex flex-col justify-between hover:shadow-xl hover:shadow-[#B5935B]/5 overflow-hidden opacity-0 transform translate-y-4 w-full break-inside-avoid`;
+            card.className = `poem-card relative border border-sanctum-accent/15 hover:border-sanctum-accent/40 rounded-xl p-5 md:p-8 transition-all duration-500 flex flex-col justify-between hover:shadow-xl hover:shadow-[#B5935B]/5 overflow-hidden opacity-0 transform translate-y-4 w-full break-inside-avoid`;
             card.style.animationDelay = `${index * 80}ms`;
             card.style.animation = 'fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards';
 
@@ -269,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         ${escapeHTML(poem.title)}
                     </h3>
                     
-                    <div class="poem-body whitespace-pre-wrap font-serif text-sm text-[#F4F1EA]/85 leading-loose italic pl-6 border-l-[0.5px] border-[#B5935B]/25 py-2 mb-4 select-none">${poem.content.trim()}</div>
+                    <div class="poem-body whitespace-pre-wrap font-serif text-sm text-[#F4F1EA]/85 leading-loose italic pl-4 md:pl-6 border-l-[0.5px] border-[#B5935B]/25 py-2 mb-4 select-none">${poem.content.trim()}</div>
                 </div>
                 
                 <div class="flex justify-end border-t border-sanctum-accent/5 pt-3">
