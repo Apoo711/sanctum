@@ -4,9 +4,9 @@
   "description": "Horological Dark Academia Architectural Overhaul",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js",
-    "build": "node build.js"
+    "start": "node --env-file=.env server.js",
+    "dev": "node --env-file=.env --watch server.js",
+    "build": "node --env-file=.env build.js"
   },
   "dependencies": {
     "ejs": "^6.0.1",

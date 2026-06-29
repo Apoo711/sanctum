@@ -85,7 +85,8 @@ async function build() {
         // Render Prospectus Page
         await renderView('prospectus', {
             title: 'The Prospectus | Sanctum',
-            description: "The Scholar's Desk. Explore technical dossiers, research portfolios, and digital manuscripts."
+            description: "The Scholar's Desk. Explore technical dossiers, research portfolios, and digital manuscripts.",
+            email: process.env.CONTACT_EMAIL || ''
         }, path.join(DIST_DIR, 'prospectus', 'index.html'));
 
         // Render 404 Page

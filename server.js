@@ -176,7 +176,8 @@ app.get('/poems', (req, res) => {
 app.get('/prospectus', (req, res) => {
     res.render('prospectus', {
         title: 'The Prospectus | Sanctum',
-        description: "The Scholar's Desk. Explore technical dossiers, research portfolios, and digital manuscripts."
+        description: "The Scholar's Desk. Explore technical dossiers, research portfolios, and digital manuscripts.",
+        email: process.env.CONTACT_EMAIL || ''
     });
 });
 
