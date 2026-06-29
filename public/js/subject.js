@@ -25,7 +25,7 @@ function accessResource(title, format, size, downloadUrl) {
         if (i < logMessages.length) {
             const line = document.createElement('div');
             line.className = `${logMessages[i].color} animate-[pulse_0.1s_ease-out]`;
-            line.innerHTML = logMessages[i].text;
+            line.textContent = logMessages[i].text;
             logsContainer.appendChild(line);
             
             // Audio or haptic cues could be simulated here, or standard console logging

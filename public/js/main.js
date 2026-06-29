@@ -471,7 +471,7 @@ async function initDailyLedger() {
         if (response.ok) {
             const data = await response.json();
             textEl.innerText = `"${data.text}"`;
-            authorEl.innerHTML = `&mdash; ${data.author}`;
+            authorEl.textContent = `— ${data.author}`;
         }
     } catch (e) {
         console.error('Failed to load daily quote from API:', e);

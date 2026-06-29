@@ -22,6 +22,14 @@ test('Blog Routes Integration Tests', async (t) => {
         assert.match(response.text, /404/i);
     });
 
+    await t.test('GET /blog/:slug with path traversal should return 404 status', async () => {
+        const response = await request(app)
+            .get('/blog/..%2F..%2Fserver.js')
+            .expect(404);
+
+        assert.match(response.text, /404/i);
+    });
+
     await t.test('Cache is bypassed when NODE_ENV is not production', async () => {
         process.env.NODE_ENV = 'development';
         blogRouter._cache.clear();

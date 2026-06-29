@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
+    function escapeHTML(str) {
+        if (!str) return '';
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
     const lockScreen = document.getElementById('lock-screen');
     const codexScreen = document.getElementById('codex-screen');
     const authForm = document.getElementById('auth-form');
@@ -248,16 +258,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="relative z-10">
                     <div class="flex items-center justify-between mb-4 border-b border-sanctum-accent/10 pb-3">
                         <span class="technical text-[9px] text-[#B5935B]/40 uppercase tracking-widest">Entry #${index + 1}</span>
-                        <time class="technical text-[9px] text-[#B5935B]/40 uppercase tracking-widest" datetime="${poem.date}">
-                            ${formattedDate}
+                        <time class="technical text-[9px] text-[#B5935B]/40 uppercase tracking-widest" datetime="${escapeHTML(poem.date)}">
+                            ${escapeHTML(formattedDate)}
                         </time>
                     </div>
                     
                     <h3 class="poem-title-script text-2xl md:text-3xl text-[#B5935B] mb-5">
-                        ${poem.title}
+                        ${escapeHTML(poem.title)}
                     </h3>
                     
-                    <div class="poem-body whitespace-pre-wrap font-serif text-sm text-[#F4F1EA]/85 leading-loose italic pl-6 border-l-[0.5px] border-[#B5935B]/25 py-2 mb-4 select-none">${poem.content.trim()}</div>
+                    <div class="poem-body whitespace-pre-wrap font-serif text-sm text-[#F4F1EA]/85 leading-loose italic pl-6 border-l-[0.5px] border-[#B5935B]/25 py-2 mb-4 select-none">${escapeHTML(poem.content.trim())}</div>
                 </div>
                 
                 <div class="flex justify-end border-t border-sanctum-accent/5 pt-3">
@@ -432,24 +442,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             } catch(e) {}
             
-            const titleText = page.isContinuation 
-                ? `${page.title} <span class="text-xs font-serif font-normal italic opacity-50">(Part ${page.part})</span>` 
-                : page.title;
+            const escapedTitle = escapeHTML(page.title);
+            const titleHtml = page.isContinuation 
+                ? `${escapedTitle} <span class="text-xs font-serif font-normal italic opacity-50">(Part ${page.part})</span>` 
+                : escapedTitle;
             
             pagesHtml.push(`
                 <div class="c-flipbook__page bg-[#F4F1EA] text-[#020202]">
                     <div style="height:100%;display:flex;flex-direction:column;padding:2.25rem;position:relative;">
                         <div style="display:flex;justify-content:between;align-items:center;margin-bottom:0.5rem;font-family:'JetBrains Mono',monospace;font-size:0.45rem;letter-spacing:0.12em;color:rgba(2,2,2,0.45);text-transform:uppercase;">
                             <span>Entry #${page.entryIndex}</span>
-                            <span style="margin-left:auto;">${formattedDate}</span>
+                            <span style="margin-left:auto;">${escapeHTML(formattedDate)}</span>
                         </div>
                         <div style="height:1px;background:linear-gradient(to right,rgba(181,147,91,0.4),transparent);margin-bottom:1.25rem;"></div>
                         
                         <h4 class="poem-title-script text-xl md:text-2xl text-[#B5935B] mb-4" style="font-family:'Pinyon Script',cursive;letter-spacing:normal;">
-                            ${titleText}
+                            ${titleHtml}
                         </h4>
                         
-                        <div class="poem-body whitespace-pre-wrap font-serif text-[12px] md:text-[13px] text-[#020202]/85 leading-relaxed italic pl-4 border-l-[0.5px] border-[#B5935B]/40 py-1 mb-4 select-none" style="font-family:'EB Garamond',serif;">${page.content.trim()}</div>
+                        <div class="poem-body whitespace-pre-wrap font-serif text-[12px] md:text-[13px] text-[#020202]/85 leading-relaxed italic pl-4 border-l-[0.5px] border-[#B5935B]/40 py-1 mb-4 select-none" style="font-family:'EB Garamond',serif;">${escapeHTML(page.content.trim())}</div>
                         
                         <div style="position:absolute;bottom:0.75rem;left:0;right:0;font-family:'JetBrains Mono',monospace;font-size:0.42rem;letter-spacing:0.2em;color:rgba(2,2,2,0.3);text-align:center;">PG. ${index + 1}</div>
                     </div>

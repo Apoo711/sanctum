@@ -67,10 +67,11 @@ router.get('/', async (req, res) => {
 router.get('/:slug', async (req, res) => {
     try {
         const { slug } = req.params;
+        const safeSlug = path.basename(slug);
         const isProd = process.env.NODE_ENV === 'production';
 
-        if (isProd && cache.individualPosts.has(slug)) {
-            const cached = cache.individualPosts.get(slug);
+        if (isProd && cache.individualPosts.has(safeSlug)) {
+            const cached = cache.individualPosts.get(safeSlug);
             return res.render('post', {
                 title: `${cached.meta.title} | The Chronicles`,
                 description: cached.meta.description || '',
@@ -79,13 +80,13 @@ router.get('/:slug', async (req, res) => {
             });
         }
 
-        const filePath = path.join(LOGS_DIR, `${slug}.md`);
+        const filePath = path.join(LOGS_DIR, `${safeSlug}.md`);
         const raw = await fs.readFile(filePath, 'utf8');
         const { data: meta, content } = matter(raw);
         const html = marked.parse(content);
 
         if (isProd) {
-            cache.individualPosts.set(slug, { meta, html });
+            cache.individualPosts.set(safeSlug, { meta, html });
         }
 
         res.render('post', {
