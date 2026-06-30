@@ -41,10 +41,10 @@ async function initChessToggles() {
         btn.addEventListener('click', () => {
             buttons.forEach(b => {
                 b.classList.remove('active');
-                b.setAttribute('aria-pressed', 'false');
+                b.setAttribute('aria-checked', 'false');
             });
             btn.classList.add('active');
-            btn.setAttribute('aria-pressed', 'true');
+            btn.setAttribute('aria-checked', 'true');
             
             const mode = btn.dataset.mode;
             const key = `chess_${mode.toLowerCase()}`;
