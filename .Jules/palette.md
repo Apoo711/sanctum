@@ -1,3 +1,10 @@
 ## 2025-05-18 - Improve Form Accessibility in Poems Codex
 **Learning:** Adding semantic HTML `<label>` elements with `sr-only` keeps the visual design intact while addressing accessibility. Combining this with `aria-describedby` explicitly links the input to its error message. Furthermore, adding `role="alert"` and `aria-live="polite"` on dynamically shown error messages and toggling `aria-invalid` via JavaScript ensures screen readers are aware of real-time validation states without breaking visual components.
 **Action:** Always include a form label even if visually hidden. Tie input errors explicitly to inputs with `aria-describedby` and manage dynamic `aria-invalid` state in JavaScript for custom forms.
+## 2025-07-01 - Enhance Toggle Buttons Accessibility
+**Learning:** Custom UI components that function as toggle button groups (like the Chess mode selectors) lack native semantic meaning. Using `role="group"` on the container with an appropriate `aria-label`, and adding dynamic `aria-pressed="true"/"false"` attributes to the buttons themselves, successfully provides screen readers with the context of a mutually exclusive toggle group.
+**Action:** When implementing custom segmented controls or mode toggles, wrap them in a `role="group"` and ensure JavaScript dynamically manages `aria-pressed` to reflect the active selection accurately.
+
+## 2025-07-02 - Address Radiogroup Review Comment
+**Learning:** For mutually exclusive choices, `radiogroup` and `radio` roles with `aria-checked` are semantically better than `aria-pressed`, matching expected ARIA patterns for screen readers.
+**Action:** When adding ARIA to toggle button groups, use `role="radiogroup"` for the container and `role="radio"` with `aria-checked` for the buttons.
