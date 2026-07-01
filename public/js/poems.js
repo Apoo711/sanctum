@@ -9,6 +9,53 @@ document.addEventListener('DOMContentLoaded', () => {
             .replace(/'/g, '&#39;');
     }
 
+    function sanitizeHTML(htmlString) {
+        if (!htmlString) return '';
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(htmlString, 'text/html');
+        const allowedTags = ['SPAN', 'EM', 'B', 'I', 'U', 'STRONG', 'BR'];
+        const allowedAttributes = {
+            'SPAN': ['class', 'style']
+        };
+
+        function cleanNode(node) {
+            if (node.nodeType === Node.TEXT_NODE) {
+                return node.cloneNode(true);
+            }
+            if (node.nodeType === Node.ELEMENT_NODE && allowedTags.includes(node.tagName)) {
+                const cleanEl = document.createElement(node.tagName.toLowerCase());
+                const allowedAttrs = allowedAttributes[node.tagName] || [];
+                for (let i = 0; i < node.attributes.length; i++) {
+                    const attr = node.attributes[i];
+                    if (allowedAttrs.includes(attr.name)) {
+                        if (attr.name === 'class') {
+                            const safeClasses = attr.value.split(/\s+/).filter(c => /^[a-zA-Z0-9_-]+$/.test(c));
+                            if (safeClasses.length > 0) {
+                                cleanEl.setAttribute('class', safeClasses.join(' '));
+                            }
+                        } else if (attr.name === 'style') {
+                            if (!attr.value.toLowerCase().includes('javascript:') && !attr.value.toLowerCase().includes('expression(')) {
+                                cleanEl.setAttribute('style', attr.value);
+                            }
+                        }
+                    }
+                }
+                for (let i = 0; i < node.childNodes.length; i++) {
+                    cleanEl.appendChild(cleanNode(node.childNodes[i]));
+                }
+                return cleanEl;
+            }
+            return document.createTextNode(node.textContent);
+        }
+
+        const container = document.createElement('div');
+        const childNodes = Array.from(doc.body.childNodes);
+        for (const child of childNodes) {
+            container.appendChild(cleanNode(child));
+        }
+        return container.innerHTML;
+    }
+
     const lockScreen = document.getElementById('lock-screen');
     const codexScreen = document.getElementById('codex-screen');
     const authForm = document.getElementById('auth-form');
@@ -279,7 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         ${escapeHTML(poem.title)}
                     </h3>
                     
-                    <div class="poem-body whitespace-pre-wrap font-serif text-sm text-[#F4F1EA]/85 leading-loose italic pl-4 md:pl-6 border-l-[0.5px] border-[#B5935B]/25 py-2 mb-4 select-none">${poem.content.trim()}</div>
+                    <div class="poem-body whitespace-pre-wrap font-serif text-sm text-[#F4F1EA]/85 leading-loose italic pl-4 md:pl-6 border-l-[0.5px] border-[#B5935B]/25 py-2 mb-4 select-none">${sanitizeHTML(poem.content.trim())}</div>
                 </div>
                 
                 <div class="flex justify-end border-t border-sanctum-accent/5 pt-3">
@@ -472,7 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             ${titleHtml}
                         </h4>
                         
-                        <div class="poem-body whitespace-pre-wrap font-serif text-[12px] md:text-[13px] text-[#020202]/85 leading-relaxed italic pl-4 border-l-[0.5px] border-[#B5935B]/40 py-1 mb-3 select-none" style="font-family:'EB Garamond',serif;">${page.content.trim()}</div>
+                        <div class="poem-body whitespace-pre-wrap font-serif text-[12px] md:text-[13px] text-[#020202]/85 leading-relaxed italic pl-4 border-l-[0.5px] border-[#B5935B]/40 py-1 mb-3 select-none" style="font-family:'EB Garamond',serif;">${sanitizeHTML(page.content.trim())}</div>
                         
                         <div style="position:absolute;bottom:0.75rem;left:0;right:0;font-family:'JetBrains Mono',monospace;font-size:0.42rem;letter-spacing:0.2em;color:rgba(2,2,2,0.3);text-align:center;">PG. ${index + 1}</div>
                     </div>
