@@ -620,6 +620,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Set up transition end handler to clean up classes
                 let transitionEndedCount = 0;
+                const animatingLength = animatingPages.filter(Boolean).length;
                 const onTransitionEnd = () => {
                     animatingPages.forEach(p => {
                         if (p) p.classList.remove(classNames.isAnimating);
@@ -636,7 +637,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             p.removeEventListener('transitionend', clear);
                             p.removeEventListener('webkitTransitionEnd', clear);
                             transitionEndedCount++;
-                            if (transitionEndedCount >= animatingPages.filter(Boolean).length) {
+                            if (transitionEndedCount >= animatingLength) {
                                 onTransitionEnd();
                             }
                         };

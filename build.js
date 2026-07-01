@@ -117,13 +117,14 @@ async function build() {
         }, path.join(DIST_DIR, 'resources', 'index.html'));
 
         // 5. Render individual Scriptorium subjects
-        for (const key in SUBJECTS_DATA) {
-            const subject = SUBJECTS_DATA[key];
-            await renderView('subject', {
-                title: `${subject.name} | The Scriptorium`,
-                subject
-            }, path.join(DIST_DIR, 'resources', subject.slug, 'index.html'));
-        }
+        await Promise.all(
+            Object.values(SUBJECTS_DATA).map(subject =>
+                renderView('subject', {
+                    title: `${subject.name} | The Scriptorium`,
+                    subject
+                }, path.join(DIST_DIR, 'resources', subject.slug, 'index.html'))
+            )
+        );
 
         // 6. Render Blog Chronicles & individual articles
         const files = await fs.readdir(LOGS_DIR);
@@ -132,9 +133,9 @@ async function build() {
         const posts = await Promise.all(
             mdFiles.map(async (filename) => {
                 const raw = await fs.readFile(path.join(LOGS_DIR, filename), 'utf8');
-                const { data } = matter(raw);
+                const { data, content } = matter(raw);
                 const slug = filename.replace(/\.md$/, '');
-                return { slug, ...data };
+                return { slug, rawContent: content, meta: data, ...data };
             })
         );
 
@@ -149,15 +150,12 @@ async function build() {
 
         // Render individual blog posts
         await Promise.all(posts.map(async (post) => {
-            const filePath = path.join(LOGS_DIR, `${post.slug}.md`);
-            const fileContent = await fs.readFile(filePath, 'utf8');
-            const { data: meta, content } = matter(fileContent);
-            const html = marked.parse(content);
+            const html = marked.parse(post.rawContent);
 
             await renderView('post', {
-                title: `${meta.title} | The Chronicles`,
-                description: meta.description || '',
-                meta,
+                title: `${post.meta.title} | The Chronicles`,
+                description: post.meta.description || '',
+                meta: post.meta,
                 content: html
             }, path.join(DIST_DIR, 'blog', post.slug, 'index.html'));
         }));
