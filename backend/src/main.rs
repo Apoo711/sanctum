@@ -308,8 +308,10 @@ async fn get_recently_played(
 async fn get_poems(
     Json(payload): Json<PasswordRequest>,
 ) -> Result<Json<Vec<Poem>>, StatusCode> {
-    let expected_password = std::env::var("POEM_PASSWORD")
-        .unwrap_or_else(|_| "SuperSecurePassword".to_string());
+    let expected_password = match std::env::var("POEM_PASSWORD") {
+        Ok(pass) => pass,
+        Err(_) => return Err(StatusCode::UNAUTHORIZED),
+    };
 
     if payload.password == expected_password {
         let mut file = match find_file("poems.json") {
@@ -508,6 +510,27 @@ mod tests {
         // Verify it returned Internal Server Error (500)
         assert!(result.is_err());
         assert_eq!(result.unwrap_err(), StatusCode::INTERNAL_SERVER_ERROR);
+    }
+
+    #[tokio::test]
+    async fn test_get_poems_no_env_var() {
+        std::env::remove_var("POEM_PASSWORD");
+        let payload = PasswordRequest {
+            password: "any_password".to_string(),
+        };
+        let result = get_poems(axum::Json(payload)).await;
+        assert_eq!(result.unwrap_err(), StatusCode::UNAUTHORIZED);
+    }
+
+    #[tokio::test]
+    async fn test_get_poems_wrong_password() {
+        std::env::set_var("POEM_PASSWORD", "correct_password");
+        let payload = PasswordRequest {
+            password: "wrong_password".to_string(),
+        };
+        let result = get_poems(axum::Json(payload)).await;
+        assert_eq!(result.unwrap_err(), StatusCode::UNAUTHORIZED);
+        std::env::remove_var("POEM_PASSWORD");
     }
 }
 
