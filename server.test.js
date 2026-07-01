@@ -1,7 +1,20 @@
 const test = require('node:test');
 const assert = require('node:assert');
 const express = require('express');
-const { app, quotesHelper, FailedAttemptsTracker } = require('./server');
+const { app, quotesHelper, FailedAttemptsTracker, Node } = require('./server');
+
+test('Node Unit Tests', async (t) => {
+    await t.test('should construct a Node with correct initial properties', () => {
+        const value = { count: 3, blockedUntil: 12345 };
+        const node = new Node('1.1.1.1', value);
+
+        assert.strictEqual(node.key, '1.1.1.1');
+        assert.strictEqual(node.value, value);
+        assert.strictEqual(node.prev, null);
+        assert.strictEqual(node.next, null);
+    });
+});
+
 
 test('Server Route "/" Error Fallback', async (t) => {
     let server;
@@ -240,5 +253,30 @@ test('Route "/prospectus"', async (t) => {
     });
 });
 
+test('Route "/api/quote" Error Fallback', async (t) => {
+    let server;
+    let port;
 
+    t.before(() => {
+        server = app.listen(0);
+        port = server.address().port;
+    });
 
+    t.after(() => {
+        server.close();
+    });
+
+    await t.test('should return 500 status and error JSON when getDailyQuote fails', async (context) => {
+        // Mock getDailyQuote to throw an error
+        context.mock.method(quotesHelper, 'getDailyQuote', async () => {
+            throw new Error('Simulated quote retrieval failure');
+        });
+
+        // Request the route
+        const response = await fetch(`http://127.0.0.1:${port}/api/quote`);
+        assert.strictEqual(response.status, 500);
+
+        const data = await response.json();
+        assert.deepStrictEqual(data, { error: 'Failed to retrieve daily quote' });
+    });
+});

@@ -385,4 +385,4 @@ if (require.main === module) {
     app.listen(PORT, () => console.log(`Nuclear engine engaged. Sanctum Server running on port ${PORT}`));
 }
 
-module.exports = { app, quotesHelper, failedAttempts, FailedAttemptsTracker };
+module.exports = { app, quotesHelper, failedAttempts, FailedAttemptsTracker, Node };

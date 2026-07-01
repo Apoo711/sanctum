@@ -107,4 +107,54 @@ test('Blog Routes Integration Tests', async (t) => {
         assert.match(response.text, /CACHE MUTATED SINGLE POST TITLE/);
         assert.match(response.text, /MUTATED HTML CONTENT FOR TESTING/);
     });
+
+    await t.test('GET /blog should return 500 status when fs.readdir fails', async (context) => {
+        const fs = require('fs').promises;
+        
+        // Suppress console.error output during the test
+        let consoleErrorCalled = false;
+        context.mock.method(console, 'error', () => {
+            consoleErrorCalled = true;
+        });
+
+        // Mock fs.readdir to throw an error
+        context.mock.method(fs, 'readdir', async () => {
+            throw new Error('Simulated readdir failure');
+        });
+
+        // Request /blog
+        const response = await request(app)
+            .get('/blog')
+            .expect(500);
+
+        assert.strictEqual(response.text, 'Internal Server Error');
+        assert.ok(consoleErrorCalled);
+    });
+
+    await t.test('GET /blog/:slug should return 500 status when fs.readFile throws a generic error', async (context) => {
+        const fs = require('fs').promises;
+        
+        // Suppress console.error output during the test
+        let consoleErrorCalled = false;
+        context.mock.method(console, 'error', () => {
+            consoleErrorCalled = true;
+        });
+
+        // Mock fs.readFile to throw a generic error (non-ENOENT)
+        context.mock.method(fs, 'readFile', async () => {
+            const err = new Error('Simulated generic file read error');
+            err.code = 'EACCES'; // A non-ENOENT code
+            throw err;
+        });
+
+        // Request a blog post slug
+        const response = await request(app)
+            .get('/blog/any-slug')
+            .expect(500);
+
+        assert.strictEqual(response.text, 'Internal Server Error');
+        assert.ok(consoleErrorCalled);
+    });
 });
+
+
