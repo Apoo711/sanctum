@@ -8,3 +8,6 @@
 ## 2025-07-02 - Address Radiogroup Review Comment
 **Learning:** For mutually exclusive choices, `radiogroup` and `radio` roles with `aria-checked` are semantically better than `aria-pressed`, matching expected ARIA patterns for screen readers.
 **Action:** When adding ARIA to toggle button groups, use `role="radiogroup"` for the container and `role="radio"` with `aria-checked` for the buttons.
+## 2025-07-28 - Refine Mode Toggle Transitions
+**Learning:** Instant state toggles in button groups can feel unpolished. Adding scale down on active press and smoother hover transitions with border color changes provides a more satisfying tactile micro-interaction without adding new dependencies.
+**Action:** Always include smooth scale and hover transitions when creating unstyled mode toggle buttons to provide tactile feedback mimicking physical controls.

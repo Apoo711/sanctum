@@ -142,13 +142,25 @@
     border: 0.5px solid rgba(181, 147, 91, 0.3);
     border-radius: 999px;
     color: rgba(181, 147, 91, 0.5);
-    transition: all 0.3s ease;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+}
+
+.mode-btn:hover:not(.active) {
+    background: rgba(181, 147, 91, 0.1);
+    color: rgba(181, 147, 91, 0.8);
+    border-color: rgba(181, 147, 91, 0.6);
+}
+
+.mode-btn:active {
+    transform: scale(0.95);
 }
 
 .mode-btn.active {
     background: #B5935B;
     color: #020202;
     border-color: #B5935B;
+    box-shadow: 0 0 12px rgba(181, 147, 91, 0.4);
 }
 
 /* Phonograph Music Player Song Title Marquee Animation */
