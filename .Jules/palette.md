@@ -11,3 +11,6 @@
 ## 2025-07-28 - Refine Mode Toggle Transitions
 **Learning:** Instant state toggles in button groups can feel unpolished. Adding scale down on active press and smoother hover transitions with border color changes provides a more satisfying tactile micro-interaction without adding new dependencies.
 **Action:** Always include smooth scale and hover transitions when creating unstyled mode toggle buttons to provide tactile feedback mimicking physical controls.
+## 2025-08-01 - Pair Hover Classes with Transitions & A11y Rings
+**Learning:** Raw hover classes without a paired transition create an abrupt, jarring visual experience that feels cheap. Furthermore, custom interactive elements often lack clear focus states for keyboard users.
+**Action:** Always add `transition-all` (or specific transitions) alongside a duration utility when introducing hover states to interactive elements. Furthermore, include `focus-visible:ring-2` and align it with the brand's accent color while removing the default browser outline (`focus-visible:outline-none`) to ensure a polished accessibility experience.

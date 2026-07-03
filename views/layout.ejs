@@ -53,12 +53,12 @@
     <nav id="sidebar" class="nav-sidebar group">
         
         <!-- Logo/Astrolabe anchor — clicking navigates home -->
-        <a href="/" aria-label="Return to Home" class="w-10 h-10 min-w-10 rounded-full border-[0.5px] border-sanctum-accent flex justify-center items-center relative group-hover:rotate-90 transition-transform duration-700">
+        <a href="/" aria-label="Return to Home" class="w-10 h-10 min-w-10 rounded-full border-[0.5px] border-sanctum-accent flex justify-center items-center relative group-hover:rotate-90 transition-transform duration-700 active:scale-95 focus-visible:ring-2 focus-visible:ring-[#B5935B] focus-visible:outline-none">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#B5935B" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-compass"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
         </a>
 
-        <div class="flex-1 flex flex-row md:flex-col items-center md:items-start w-full mt-0 md:mt-8 gap-0 md:gap-10 pl-0 md:pl-[22px] md:group-hover:pl-7 transition-all duration-300 justify-around md:justify-start">
-            <a href="/prospectus" id="prospectus-btn" class="flex items-center justify-center md:justify-start gap-0 md:gap-6 w-auto md:w-full text-[#B5935B]/60 hover:text-[#B5935B] hover:drop-shadow-[0_0_8px_rgba(181,147,91,0.8)] font-serif tracking-widest text-xs uppercase outline-none" aria-label="Prospectus" style="white-space: nowrap;">
+        <div class="flex-1 flex flex-row md:flex-col items-center md:items-start w-full mt-0 md:mt-8 gap-0 md:gap-10 pl-0 md:pl-[22px] md:group-hover:pl-7 transition-all duration-300 justify-around md:justify-start [&>a]:transition [&>a]:duration-300 [&>a]:active:scale-95 [&>a]:focus-visible:ring-2 [&>a]:focus-visible:ring-[#B5935B] [&>a]:focus-visible:outline-none [&>a]:rounded-md">
+            <a href="/prospectus" id="prospectus-btn" class="flex items-center justify-center md:justify-start gap-0 md:gap-6 w-auto md:w-full text-[#B5935B]/60 hover:text-[#B5935B] hover:drop-shadow-[0_0_8px_rgba(181,147,91,0.8)] font-serif tracking-widest text-xs uppercase" aria-label="Prospectus" style="white-space: nowrap;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-stamp min-w-5"><path d="M5 22h14"/><path d="M19.27 13.73A2.5 2.5 0 0 0 17.5 13h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-1.5c0-.66-.26-1.3-.73-1.77Z"/><path d="M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-3-3c-1.66 0-3 1.34-3 3 0 2 1 2 1 3.5V13"/></svg>
                 <span class="opacity-0 group-hover:opacity-100 text-[#B5935B]" style="white-space: nowrap; transition: opacity 0.3s ease-in-out;">Prospectus</span>
             </a>
