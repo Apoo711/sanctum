@@ -12,6 +12,8 @@ async function generateSitemapXml() {
 
     // 1. Static Pages (No trailing slashes as requested)
     urls.push({ loc: `${SITE_URL}`, lastmod: currentDate, changefreq: 'daily', priority: '1.0' });
+    urls.push({ loc: `${SITE_URL}/prospectus`, lastmod: currentDate, changefreq: 'weekly', priority: '0.8' });
+    urls.push({ loc: `${SITE_URL}/pomodoro`, lastmod: currentDate, changefreq: 'monthly', priority: '0.7' });
     urls.push({ loc: `${SITE_URL}/poems`, lastmod: currentDate, changefreq: 'weekly', priority: '0.8' });
     urls.push({ loc: `${SITE_URL}/resources`, lastmod: currentDate, changefreq: 'weekly', priority: '0.8' });
     urls.push({ loc: `${SITE_URL}/blog`, lastmod: currentDate, changefreq: 'daily', priority: '0.8' });
