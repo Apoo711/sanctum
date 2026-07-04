@@ -4,7 +4,7 @@
 
 I won't provide extensive support for running this, but here are some basic steps:
 
-Clone this repository to your local drive:
+Clone this repository to your local drive, then install the dependencies:
 ```bash
 npm install
 ```
