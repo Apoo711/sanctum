@@ -1,3 +1,20 @@
+#submit-btn {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#submit-btn:hover {
+    transform: scale(1.02);
+}
+
+#submit-btn:active {
+    transform: scale(0.98);
+}
+
+#submit-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #B5935B;
+}
+
 /* Styling for journal pages */
 .poem-card {
     background: radial-gradient(circle at top left, rgba(26, 15, 15, 0.3) 0%, rgba(2, 2, 2, 0.45) 100%);

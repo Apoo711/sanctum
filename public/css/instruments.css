@@ -20,6 +20,16 @@
     border-color: rgba(181, 147, 91, 0.8);
     color: #F4F1EA;
     box-shadow: 0 0 10px rgba(181, 147, 91, 0.1);
+    transform: scale(1.02);
+}
+
+.preset-btn:active {
+    transform: scale(0.98);
+}
+
+.preset-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #B5935B;
 }
 
 .preset-btn.active {
@@ -52,6 +62,16 @@
     border-color: rgba(181, 147, 91, 0.9);
     color: #F4F1EA;
     box-shadow: 0 0 15px rgba(181, 147, 91, 0.15);
+    transform: scale(1.02);
+}
+
+.control-btn:active {
+    transform: scale(0.98);
+}
+
+.control-btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #B5935B;
 }
 
 .primary-btn {

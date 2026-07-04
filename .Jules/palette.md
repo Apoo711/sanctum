@@ -14,3 +14,6 @@
 ## 2025-08-01 - Pair Hover Classes with Transitions & A11y Rings
 **Learning:** Raw hover classes without a paired transition create an abrupt, jarring visual experience that feels cheap. Furthermore, custom interactive elements often lack clear focus states for keyboard users.
 **Action:** Always add `transition-all` (or specific transitions) alongside a duration utility when introducing hover states to interactive elements. Furthermore, include `focus-visible:ring-2` and align it with the brand's accent color while removing the default browser outline (`focus-visible:outline-none`) to ensure a polished accessibility experience.
+## 2026-07-03 - Enhance Button Tactility and Accessibility
+**Learning:** Adding micro-interaction scaling classes (`hover:scale-[1.02] active:scale-[0.98]`) alongside smooth transitions dramatically improves the perceived quality of static buttons, making them feel like physical controls. Pairing these with explicit keyboard focus rings (`focus-visible:ring-2 focus-visible:ring-[#B5935B] focus-visible:outline-none`) ensures this polished experience remains accessible to all users without compromising the visual aesthetic.
+**Action:** Always include tactile active scaling and explicit focus rings when styling interactive components to bridge the gap between "functional" and "premium".
