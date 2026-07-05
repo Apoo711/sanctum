@@ -7,4 +7,4 @@ browser.json
 poems.json
 quote-state.json
 .env
-target/
+target/server.log
