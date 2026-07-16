@@ -67,6 +67,10 @@
 }
 
 /* Stealth Sidebar & Responsive Bottom Navigation Bar */
+.nav-sidebar a {
+    white-space: nowrap;
+}
+
 @media (min-width: 768px) {
     .nav-sidebar {
         position: fixed;
@@ -176,4 +180,13 @@
     100% {
         transform: translateX(-50%);
     }
+}
+
+/* 404 Pulse Rings Animations */
+.pulse-ring-slow {
+    animation-duration: 3s;
+}
+
+.pulse-ring-fast {
+    animation-duration: 2s;
 }

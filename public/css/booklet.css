@@ -1,0 +1,259 @@
+/* --- BOOKLET STYLES (Visor & Expeditions) --- */
+
+/* Cover and page containers */
+.booklet-cover-inner {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    gap: 0.75rem;
+}
+
+.booklet-cover-inner--expeditions {
+    gap: 0.5rem;
+}
+
+/* Cover badge */
+.booklet-diamond-badge {
+    width: 3.5rem;
+    height: 3.5rem;
+    border: 1px solid rgba(181, 147, 91, 0.4);
+    transform: rotate(45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.booklet-diamond-text {
+    font-family: 'JetBrains Mono', monospace;
+    color: #B5935B;
+    transform: rotate(-45deg);
+    font-size: 1rem;
+}
+
+/* Cover titles and subtitles */
+.booklet-cover-title {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: #B5935B;
+    text-align: center;
+    margin-top: 0.5rem;
+}
+
+.booklet-cover-title--expeditions {
+    font-size: 1.35rem;
+    margin-top: 0;
+}
+
+.booklet-cover-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.45rem;
+    letter-spacing: 0.25em;
+    color: rgba(181, 147, 91, 0.4);
+}
+
+.booklet-cover-subtitle--expeditions {
+    letter-spacing: 0.2em;
+    color: rgba(181, 147, 91, 0.38);
+}
+
+.booklet-cover-icon {
+    opacity: 0.75;
+    margin-bottom: 0.75rem;
+}
+
+.booklet-stamp-container {
+    margin-top: 1rem;
+}
+
+.booklet-click-hint {
+    margin-top: 1rem;
+}
+
+/* Inside Cover layouts */
+.booklet-inside-cover-wrapper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.booklet-inside-cover-text--front {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.45rem;
+    letter-spacing: 0.18em;
+    color: rgba(181, 147, 91, 0.28);
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 2.4;
+}
+
+.booklet-inside-cover-text--back {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.44rem;
+    letter-spacing: 0.18em;
+    color: rgba(181, 147, 91, 0.22);
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 2.4;
+}
+
+/* Standard Pages */
+.booklet-page-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 1.75rem;
+    position: relative;
+}
+
+.booklet-page-header {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #020202;
+    margin-bottom: 0.5rem;
+}
+
+.booklet-page-header--expeditions {
+    margin-bottom: 0.2rem;
+}
+
+.booklet-page-subtitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.44rem;
+    letter-spacing: 0.14em;
+    color: rgba(2, 2, 2, 0.32);
+    margin-bottom: 0.55rem;
+}
+
+.booklet-page-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(181, 147, 91, 0.4), transparent);
+    margin-bottom: 0.75rem;
+}
+
+.booklet-page-divider--expeditions {
+    margin-bottom: 0.7rem;
+}
+
+.booklet-page-body {
+    font-family: 'EB Garamond', serif;
+    font-size: 0.76rem;
+    line-height: 1.75;
+    color: #020202;
+    opacity: 0.85;
+    text-align: justify;
+}
+
+.booklet-page-body--mt {
+    margin-top: 0.5rem;
+}
+
+.booklet-page-body--mt-large {
+    margin-top: 0.75rem;
+}
+
+.booklet-page-num {
+    position: absolute;
+    bottom: 0.5rem;
+    left: 0;
+    right: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.42rem;
+    letter-spacing: 0.2em;
+    color: rgba(2, 2, 2, 0.28);
+    text-align: center;
+}
+
+/* Diagrams */
+.technical-diagram--mb {
+    margin-bottom: 0.75rem;
+}
+
+.booklet-diagram-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.46rem;
+    color: rgba(181, 147, 91, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    text-align: center;
+}
+
+.booklet-diagram-details {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.44rem;
+    color: rgba(2, 2, 2, 0.35);
+    text-align: center;
+    margin-top: 0.3rem;
+}
+
+.booklet-stamp-align {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.booklet-stamp-align--expeditions {
+    margin-top: 0.9rem;
+}
+
+/* Stamp Rotations */
+.stamp-rotate-n6 {
+    transform: rotate(-6deg);
+}
+
+.stamp-rotate-n4 {
+    transform: rotate(-4deg);
+}
+
+.stamp-rotate-n3 {
+    transform: rotate(-3deg);
+}
+
+.stamp-rotate-5 {
+    transform: rotate(5deg);
+}
+
+/* Outer Back Cover Badges */
+.booklet-back-badge-wrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.booklet-back-badge {
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid rgba(181, 147, 91, 0.15);
+    transform: rotate(45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.booklet-back-badge--circle {
+    border: 1px solid rgba(181, 147, 91, 0.18);
+    border-radius: 50%;
+    transform: none;
+}
+
+.booklet-back-badge-text {
+    color: rgba(181, 147, 91, 0.25);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    transform: rotate(-45deg);
+}
+
+.booklet-back-badge-text--no-rotate {
+    transform: none;
+}
