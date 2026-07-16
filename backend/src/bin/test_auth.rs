@@ -1,8 +1,13 @@
-use std::fs::File;
-use std::io::Read;
-use std::time::{SystemTime, UNIX_EPOCH};
+use std::{
+    fs::File,
+    io::Read,
+    time::{SystemTime, UNIX_EPOCH},
+};
+
 use ytmapi_rs::{
-    Client, YtMusicBuilder, auth::BrowserToken, auth::OAuthToken, query::GetHistoryQuery,
+    auth::{BrowserToken, OAuthToken},
+    query::GetHistoryQuery,
+    Client, YtMusicBuilder,
 };
 
 // Helper to dynamically locate a file checking CWD, its parent/child folders,
@@ -95,11 +100,10 @@ async fn main() {
 
     // 1. Try OAuth
     println!("\n--- 1. Testing OAuth ---");
-    let oauth_file = find_file("oauth.json")
-        .and_then(|path| {
-            println!("Found oauth file at: {:?}", path);
-            File::open(path).ok()
-        });
+    let oauth_file = find_file("oauth.json").and_then(|path| {
+        println!("Found oauth file at: {:?}", path);
+        File::open(path).ok()
+    });
 
     if let Some(mut file) = oauth_file {
         let mut contents = String::new();
@@ -108,8 +112,14 @@ async fn main() {
         } else {
             match serde_json::from_str::<serde_json::Value>(&contents) {
                 Ok(oauth_val) => {
-                    let expires_at = oauth_val.get("expires_at").and_then(|v| v.as_u64()).unwrap_or(0);
-                    let expires_in = oauth_val.get("expires_in").and_then(|v| v.as_u64()).unwrap_or(3599);
+                    let expires_at = oauth_val
+                        .get("expires_at")
+                        .and_then(|v| v.as_u64())
+                        .unwrap_or(0);
+                    let expires_in = oauth_val
+                        .get("expires_in")
+                        .and_then(|v| v.as_u64())
+                        .unwrap_or(3599);
 
                     let request_time_secs = if expires_at > expires_in {
                         expires_at - expires_in
@@ -140,20 +150,21 @@ async fn main() {
                             let yt = YtMusicBuilder::new_with_client(client.clone())
                                 .with_auth_token(token)
                                 .build();
-                            
+
                             match yt {
-                                Ok(yt_client) => {
-                                    match yt_client.query(GetHistoryQuery).await {
-                                        Ok(history) => {
-                                            println!("OAuth SUCCESS! History count: {}", history.len());
-                                        }
-                                        Err(e) => {
-                                            println!("OAuth query failed: {:?}", e);
-                                        }
+                                Ok(yt_client) => match yt_client.query(GetHistoryQuery).await {
+                                    Ok(history) => {
+                                        println!("OAuth SUCCESS! History count: {}", history.len());
                                     }
-                                }
+                                    Err(e) => {
+                                        println!("OAuth query failed: {:?}", e);
+                                    }
+                                },
                                 Err(e) => {
-                                    println!("Failed to build YtMusic client with OAuthToken: {}", e);
+                                    println!(
+                                        "Failed to build YtMusic client with OAuthToken: {}",
+                                        e
+                                    );
                                 }
                             }
                         }
@@ -173,11 +184,10 @@ async fn main() {
 
     // 2. Try Browser
     println!("\n--- 2. Testing Browser Token ---");
-    let browser_file = find_file("browser.json")
-        .and_then(|path| {
-            println!("Found browser file at: {:?}", path);
-            File::open(path).ok()
-        });
+    let browser_file = find_file("browser.json").and_then(|path| {
+        println!("Found browser file at: {:?}", path);
+        File::open(path).ok()
+    });
 
     if let Some(mut file) = browser_file {
         let mut contents = String::new();
@@ -187,26 +197,32 @@ async fn main() {
             match serde_json::from_str::<serde_json::Value>(&contents) {
                 Ok(config) => {
                     if let Some(cookie) = config.get("cookie").and_then(|c| c.as_str()) {
-                        println!("Found cookie in browser.json. Attempting BrowserToken::from_str...");
+                        println!(
+                            "Found cookie in browser.json. Attempting BrowserToken::from_str..."
+                        );
                         match BrowserToken::from_str(cookie, &client).await {
                             Ok(token) => {
                                 let yt = YtMusicBuilder::new_with_client(client.clone())
                                     .with_auth_token(token)
                                     .build();
-                                
+
                                 match yt {
-                                    Ok(yt_client) => {
-                                        match yt_client.query(GetHistoryQuery).await {
-                                            Ok(history) => {
-                                                println!("Browser Cookie SUCCESS! History count: {}", history.len());
-                                            }
-                                            Err(e) => {
-                                                println!("Browser query failed: {:?}", e);
-                                            }
+                                    Ok(yt_client) => match yt_client.query(GetHistoryQuery).await {
+                                        Ok(history) => {
+                                            println!(
+                                                "Browser Cookie SUCCESS! History count: {}",
+                                                history.len()
+                                            );
                                         }
-                                    }
+                                        Err(e) => {
+                                            println!("Browser query failed: {:?}", e);
+                                        }
+                                    },
                                     Err(e) => {
-                                        println!("Failed to build YtMusic client with BrowserToken: {}", e);
+                                        println!(
+                                            "Failed to build YtMusic client with BrowserToken: {}",
+                                            e
+                                        );
                                     }
                                 }
                             }

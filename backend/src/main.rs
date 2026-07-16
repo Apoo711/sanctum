@@ -1,7 +1,4 @@
-use std::fs::File;
-use std::io::Read;
-use std::sync::Arc;
-use tokio::sync::RwLock;
+use std::{fs::File, io::Read, sync::Arc};
 
 use axum::{
     extract::{Json, State},
@@ -11,14 +8,14 @@ use axum::{
     Router,
 };
 use serde::{Deserialize, Serialize};
+use tokio::sync::RwLock;
 use tower_http::cors::CorsLayer;
-
 use ytmapi_rs::{
+    auth::{AuthToken, BrowserToken, LoggedIn},
     common::YoutubeID,
     parse::HistoryItem,
-    Client, YtMusicBuilder,
-    auth::{BrowserToken, AuthToken, LoggedIn},
     query::GetHistoryQuery,
+    Client, YtMusicBuilder,
 };
 
 // 1. SongState Struct
@@ -67,7 +64,6 @@ pub struct QuoteState {
     pub current_index: usize,
     pub last_update_date: String,
 }
-
 
 // Helper to load environment variables from .env
 // Helper to dynamically locate a file checking CWD, its parent/child folders,
@@ -153,7 +149,6 @@ fn load_env_file() {
     }
 }
 
-
 // Helper to query history from YtMusic client
 async fn query_yt_history<A: AuthToken + LoggedIn>(
     yt: ytmapi_rs::YtMusic<A>,
@@ -176,7 +171,12 @@ async fn query_yt_history<A: AuthToken + LoggedIn>(
     match latest_item {
         HistoryItem::Song(x) => {
             let title = x.title.clone();
-            let artist = x.artists.iter().map(|a| a.name.clone()).collect::<Vec<String>>().join(", ");
+            let artist = x
+                .artists
+                .iter()
+                .map(|a| a.name.clone())
+                .collect::<Vec<String>>()
+                .join(", ");
             let album = x.album.name.clone();
             let thumbnail = x.thumbnails.last().map(|t| t.url.clone());
             let video_id = x.video_id.get_raw().to_string();
@@ -191,33 +191,33 @@ async fn query_yt_history<A: AuthToken + LoggedIn>(
                 message: None,
             })
         }
-        _ => {
-            Ok(SongState {
-                status: "idle".to_string(),
-                title: None,
-                artist: None,
-                album: None,
-                thumbnail: None,
-                video_id: None,
-                message: Some("Latest history item is not a song".to_string()),
-            })
-        }
+        _ => Ok(SongState {
+            status: "idle".to_string(),
+            title: None,
+            artist: None,
+            album: None,
+            thumbnail: None,
+            video_id: None,
+            message: Some("Latest history item is not a song".to_string()),
+        }),
     }
 }
 
-// Helper to fetch the latest song from YouTube Music using ytmapi-rs (supporting browser.json)
+// Helper to fetch the latest song from YouTube Music using ytmapi-rs
+// (supporting browser.json)
 async fn fetch_real_song() -> Result<SongState, Box<dyn std::error::Error + Send + Sync>> {
     let client = Client::new()?;
 
     println!("Attempting authentication using browser.json...");
-    let resolved_browser_path = find_file("browser.json")
-        .ok_or("browser.json authentication session file not found")?;
+    let resolved_browser_path =
+        find_file("browser.json").ok_or("browser.json authentication session file not found")?;
     let mut file = File::open(resolved_browser_path)?;
     let mut contents = String::new();
     file.read_to_string(&mut contents)?;
-    
+
     let config: serde_json::Value = serde_json::from_str(&contents)?;
-    let cookie = config.get("cookie")
+    let cookie = config
+        .get("cookie")
         .and_then(|c| c.as_str())
         .ok_or("cookie field missing or not a string in browser.json")?;
 
@@ -239,7 +239,7 @@ async fn update_song_cache(state: Arc<AppState>) {
         tokio::time::sleep(tokio::time::Duration::from_secs(45)).await;
 
         println!("Background worker: Querying YouTube Music history...");
-        
+
         // Try to fetch the real song first
         match fetch_real_song().await {
             Ok(real_song) => {
@@ -251,7 +251,10 @@ async fn update_song_cache(state: Arc<AppState>) {
                 );
             }
             Err(err) => {
-                eprintln!("Real fetch failed: {}. Falling back to mock rotation...", err);
+                eprintln!(
+                    "Real fetch failed: {}. Falling back to mock rotation...",
+                    err
+                );
 
                 let mock_song = if mock_counter % 2 == 0 {
                     SongState {
@@ -259,7 +262,10 @@ async fn update_song_cache(state: Arc<AppState>) {
                         title: Some("Weightless".to_string()),
                         artist: Some("Marconi Union".to_string()),
                         album: Some("Ambient 1".to_string()),
-                        thumbnail: Some("https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17".to_string()),
+                        thumbnail: Some(
+                            "https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17"
+                                .to_string(),
+                        ),
                         video_id: Some("UfcAVejsvU4".to_string()),
                         message: None,
                     }
@@ -269,7 +275,10 @@ async fn update_song_cache(state: Arc<AppState>) {
                         title: Some("Spiegel im Spiegel".to_string()),
                         artist: Some("Arvo Pärt".to_string()),
                         album: Some("Alina".to_string()),
-                        thumbnail: Some("https://images.unsplash.com/photo-1511379938547-c1f69419868d".to_string()),
+                        thumbnail: Some(
+                            "https://images.unsplash.com/photo-1511379938547-c1f69419868d"
+                                .to_string(),
+                        ),
                         video_id: Some("FZhOF13yWzE".to_string()),
                         message: None,
                     }
@@ -290,11 +299,9 @@ async fn update_song_cache(state: Arc<AppState>) {
 }
 
 // 1. GET /api/recently-played
-async fn get_recently_played(
-    State(state): State<Arc<AppState>>,
-) -> impl IntoResponse {
+async fn get_recently_played(State(state): State<Arc<AppState>>) -> impl IntoResponse {
     let current_song = state.current_song.read().await;
-    
+
     let status_code = if current_song.status == "error" {
         StatusCode::INTERNAL_SERVER_ERROR
     } else {
@@ -305,9 +312,7 @@ async fn get_recently_played(
 }
 
 // 2. POST /api/poems
-async fn get_poems(
-    Json(payload): Json<PasswordRequest>,
-) -> Result<Json<Vec<Poem>>, StatusCode> {
+async fn get_poems(Json(payload): Json<PasswordRequest>) -> Result<Json<Vec<Poem>>, StatusCode> {
     let expected_password = match std::env::var("POEM_PASSWORD") {
         Ok(pass) => pass,
         Err(_) => return Err(StatusCode::UNAUTHORIZED),
@@ -384,12 +389,12 @@ async fn get_daily_quote() -> Result<Json<Quote>, StatusCode> {
     // 2. Load/Update Quote State
     let resolved_state_path = find_file("quote-state.json")
         .unwrap_or_else(|| std::path::PathBuf::from("quote-state.json"));
-    
+
     let mut current_state = QuoteState {
         current_index: 0,
         last_update_date: "".to_string(),
     };
-    
+
     if let Ok(mut f) = File::open(&resolved_state_path) {
         let mut s_contents = String::new();
         if f.read_to_string(&mut s_contents).is_ok() {
@@ -408,17 +413,18 @@ async fn get_daily_quote() -> Result<Json<Quote>, StatusCode> {
             current_state.current_index = (current_state.current_index + 1) % quotes.len();
         }
         current_state.last_update_date = today;
-        
+
         // Write back to state file
         if let Ok(serialized) = serde_json::to_string_pretty(&current_state) {
             let _ = std::fs::write(&resolved_state_path, serialized);
         }
     }
 
-    let selected_quote = quotes.get(current_state.current_index).unwrap_or(&quotes[0]);
+    let selected_quote = quotes
+        .get(current_state.current_index)
+        .unwrap_or(&quotes[0]);
     Ok(Json(selected_quote.clone()))
 }
-
 
 #[tokio::main]
 async fn main() {
@@ -502,7 +508,8 @@ mod tests {
     #[tokio::test]
     async fn test_get_daily_quote_missing_file() {
         // Temporarily rename all possible paths of quotes.json
-        let _guard = TempRenameGuard::new(&["quotes.json", "backend/quotes.json", "../quotes.json"]);
+        let _guard =
+            TempRenameGuard::new(&["quotes.json", "backend/quotes.json", "../quotes.json"]);
 
         // Request the handler
         let result = get_daily_quote().await;
@@ -533,4 +540,3 @@ mod tests {
         std::env::remove_var("POEM_PASSWORD");
     }
 }
-
