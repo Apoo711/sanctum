@@ -436,6 +436,12 @@ async fn get_daily_quote() -> Result<Json<Quote>, StatusCode> {
 
 #[tokio::main]
 async fn main() {
+
+    #[cfg(target_arch = "aarch64")]
+    {
+        let _ = tikv_jemalloc_ctl::background_thread::write(true);
+    }
+
     // 0. Load env file
     load_env_file();
 
