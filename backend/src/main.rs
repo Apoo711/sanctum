@@ -237,14 +237,52 @@ async fn fetch_real_song() -> Result<SongState, Box<dyn std::error::Error + Send
     query_yt_history(yt).await
 }
 
+// Helper to listen for OS signals (SIGINT / SIGTERM) for graceful shutdown
+async fn shutdown_signal() {
+    let ctrl_c = async {
+        tokio::signal::ctrl_c()
+            .await
+            .expect("failed to install Ctrl+C handler");
+    };
+
+    #[cfg(unix)]
+    let terminate = async {
+        tokio::signal::unix::signal(tokio::signal::unix::SignalKind::terminate())
+            .expect("failed to install signal handler")
+            .recv()
+            .await;
+    };
+
+    #[cfg(not(unix))]
+    let terminate = std::future::pending::<()>();
+
+    tokio::select! {
+        _ = ctrl_c => {
+            println!("Received Ctrl+C signal, initiating graceful shutdown...");
+        },
+        _ = terminate => {
+            println!("Received SIGTERM signal, initiating graceful shutdown...");
+        },
+    }
+}
+
 // Background caching loop
-async fn update_song_cache(state: Arc<AppState>) {
+async fn update_song_cache(
+    state: Arc<AppState>,
+    mut shutdown_rx: tokio::sync::watch::Receiver<bool>,
+) {
     println!("Background cache worker loop engaged.");
     let mut mock_counter = 0;
 
     loop {
-        // Sleep for 20 seconds
-        tokio::time::sleep(tokio::time::Duration::from_secs(20)).await;
+        // Sleep for 20 seconds or interrupt early on shutdown signal
+        tokio::select! {
+            _ = tokio::time::sleep(tokio::time::Duration::from_secs(20)) => {},
+            _ = shutdown_rx.changed() => {
+                println!("Background worker: Shutdown signal received. Exiting cache loop.");
+                break;
+            }
+        }
 
         println!("Background worker: Querying YouTube Music history...");
 
@@ -460,8 +498,9 @@ async fn main() {
         current_song: Arc::new(RwLock::new(initial_song)),
     });
 
-    // 2. Spawn the background caching task loop
-    tokio::spawn(update_song_cache(Arc::clone(&shared_state)));
+    // 2. Create shutdown channel and spawn background caching task loop
+    let (shutdown_tx, shutdown_rx) = tokio::sync::watch::channel(false);
+    let worker_handle = tokio::spawn(update_song_cache(Arc::clone(&shared_state), shutdown_rx));
 
     // 3. Set up the Axum Router with CORS rules
     let cors = CorsLayer::new()
@@ -484,8 +523,18 @@ async fn main() {
     println!("Server starting on {}", addr);
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
 
-    // 5. Start the Axum hyper server using Axum 0.7 serve syntax
-    axum::serve(listener, app).await.unwrap();
+    // 5. Start the Axum hyper server with graceful shutdown enabled
+    axum::serve(listener, app)
+        .with_graceful_shutdown(async move {
+            shutdown_signal().await;
+            let _ = shutdown_tx.send(true);
+        })
+        .await
+        .unwrap();
+
+    // 6. Ensure background worker task shuts down cleanly
+    let _ = worker_handle.await;
+    println!("Server shutdown complete.");
 }
 
 #[cfg(test)]
@@ -552,5 +601,31 @@ mod tests {
         let result = get_poems(axum::Json(payload)).await;
         assert_eq!(result.unwrap_err(), StatusCode::UNAUTHORIZED);
         std::env::remove_var("POEM_PASSWORD");
+    }
+
+    #[tokio::test]
+    async fn test_update_song_cache_shutdown() {
+        let initial_song = SongState {
+            status: "idle".to_string(),
+            title: None,
+            artist: None,
+            album: None,
+            thumbnail: None,
+            video_id: None,
+            message: None,
+        };
+        let state = Arc::new(AppState {
+            current_song: Arc::new(RwLock::new(initial_song)),
+        });
+        let (shutdown_tx, shutdown_rx) = tokio::sync::watch::channel(false);
+
+        let handle = tokio::spawn(update_song_cache(state, shutdown_rx));
+
+        // Signal shutdown immediately
+        let _ = shutdown_tx.send(true);
+
+        // Worker handle should complete quickly (well within 2s timeout)
+        let result = tokio::time::timeout(tokio::time::Duration::from_secs(2), handle).await;
+        assert!(result.is_ok(), "Worker task did not shut down promptly");
     }
 }
