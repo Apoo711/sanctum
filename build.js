@@ -49,11 +49,12 @@ async function renderView(viewName, data, outputPath) {
         ...data
     };
 
-    const bodyContent = await ejs.renderFile(viewPath, locals);
+    const options = { cache: true };
+    const bodyContent = await ejs.renderFile(viewPath, locals, options);
     const fullHtml = await ejs.renderFile(layoutPath, {
         ...locals,
         body: bodyContent
-    });
+    }, options);
     
     await fs.mkdir(path.dirname(outputPath), { recursive: true });
     await fs.writeFile(outputPath, fullHtml, 'utf8');
@@ -135,11 +136,12 @@ async function build() {
                 const raw = await fs.readFile(path.join(LOGS_DIR, filename), 'utf8');
                 const { data, content } = matter(raw);
                 const slug = filename.replace(/\.md$/, '');
-                return { slug, rawContent: content, meta: data, ...data };
+                const timestamp = data.date ? new Date(data.date).getTime() : 0;
+                return { slug, rawContent: content, meta: data, timestamp, ...data };
             })
         );
 
-        posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        posts.sort((a, b) => b.timestamp - a.timestamp);
 
         // Render blog list
         await renderView('blog', {

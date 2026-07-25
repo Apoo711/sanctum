@@ -116,8 +116,15 @@ app.get('/pomodoro', (req, res) => {
     });
 });
 
-// Scriptorium Subjects Data
+// Scriptorium Subjects Data (pre-processed lowercased titles for efficient matching)
 const SUBJECTS_DATA = require('./content/subjects-data');
+Object.values(SUBJECTS_DATA).forEach(subject => {
+    if (subject.resources) {
+        subject.resources.forEach(r => {
+            r.lowercasedTitle = r.title.toLowerCase();
+        });
+    }
+});
 
 app.get('/resources', (req, res) => {
     res.render('resources', { 
@@ -145,7 +152,7 @@ app.get('/resources/download/:subject/:title', (req, res) => {
         return res.status(404).render('404', { title: '404 - Gateway Offline' });
     }
     const lowercasedTitle = title.toLowerCase();
-    const resource = subjectData.resources.find(r => r.title.toLowerCase() === lowercasedTitle);
+    const resource = subjectData.resources.find(r => r.lowercasedTitle === lowercasedTitle);
     if (!resource || !resource.downloadUrl) {
         return res.status(404).render('404', { title: '404 - Gateway Offline' });
     }

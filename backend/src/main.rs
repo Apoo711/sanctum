@@ -243,8 +243,8 @@ async fn update_song_cache(state: Arc<AppState>) {
     let mut mock_counter = 0;
 
     loop {
-        // Sleep for 45 seconds
-        tokio::time::sleep(tokio::time::Duration::from_secs(45)).await;
+        // Sleep for 20 seconds
+        tokio::time::sleep(tokio::time::Duration::from_secs(20)).await;
 
         println!("Background worker: Querying YouTube Music history...");
 

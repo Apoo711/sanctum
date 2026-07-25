@@ -34,27 +34,30 @@ async function generateSitemapXml() {
         const files = await fs.readdir(LOGS_DIR);
         const mdFiles = files.filter(f => f.endsWith('.md'));
         
-        for (const filename of mdFiles) {
-            const filePath = path.join(LOGS_DIR, filename);
-            const fileContent = await fs.readFile(filePath, 'utf8');
-            const { data } = matter(fileContent);
-            const slug = filename.replace(/\.md$/, '');
-            
-            let lastmod = currentDate;
-            if (data.date) {
-                const parsedDate = new Date(data.date);
-                if (!isNaN(parsedDate.getTime())) {
-                    lastmod = parsedDate.toISOString().split('T')[0];
+        const blogUrls = await Promise.all(
+            mdFiles.map(async (filename) => {
+                const filePath = path.join(LOGS_DIR, filename);
+                const fileContent = await fs.readFile(filePath, 'utf8');
+                const { data } = matter(fileContent);
+                const slug = filename.replace(/\.md$/, '');
+                
+                let lastmod = currentDate;
+                if (data.date) {
+                    const parsedDate = new Date(data.date);
+                    if (!isNaN(parsedDate.getTime())) {
+                        lastmod = parsedDate.toISOString().split('T')[0];
+                    }
                 }
-            }
-            
-            urls.push({
-                loc: `${SITE_URL}/blog/${slug}`,
-                lastmod,
-                changefreq: 'monthly',
-                priority: '0.7'
-            });
-        }
+                
+                return {
+                    loc: `${SITE_URL}/blog/${slug}`,
+                    lastmod,
+                    changefreq: 'monthly',
+                    priority: '0.7'
+                };
+            })
+        );
+        urls.push(...blogUrls);
     } catch (err) {
         console.error('[Sitemap Generator] Error reading blog logs:', err);
     }
